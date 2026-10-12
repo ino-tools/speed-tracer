@@ -226,11 +226,44 @@ footer{text-align:center;font-size:13px;color:#6c7480;padding:6px 0;}
 .throttle-seg{flex:1;border-radius:2px;background:#181d27;transition:background .1s,box-shadow .1s;}
 .throttle-val{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:#e7e9ea;}
 
+/* ===== エンジンモニター(使用域グラフ / 取得できる項目を探す) ===== */
+.engStrip{display:flex;align-items:stretch;gap:6px;background:var(--panel);border:1px solid var(--edge);
+  border-radius:9px;padding:6px 8px;cursor:pointer;}
+.engStrip:focus-visible{outline:2px solid var(--tgt);outline-offset:1px;}
+.engCell{flex:1;min-width:0;text-align:center;}
+.engCell .el{font-size:9px;letter-spacing:.06em;color:var(--dim);white-space:nowrap;}
+.engCell .ev{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink);white-space:nowrap;margin-top:1px;}
+.engCell .ev small,.engCard .ev small{font-size:10px;color:var(--dim);font-weight:600;margin-left:2px;}
+.engState{display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:9px;
+  color:var(--dim);min-width:42px;border-left:1px solid var(--edge);padding-left:6px;white-space:nowrap;}
+.engDot{width:8px;height:8px;border-radius:50%;background:#3a424d;margin-bottom:3px;}
+.engDot.on{background:var(--act);box-shadow:0 0 6px var(--act);}
+.engCards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.engCard{background:#161b24;border-radius:10px;padding:10px 8px;text-align:center;}
+.engCard .el{font-size:11px;color:var(--dim);}
+.engCard .ev{font-family:var(--mono);font-size:26px;font-weight:700;margin-top:2px;}
+.engCard .es{font-size:10px;color:var(--dim);margin-top:2px;min-height:13px;}
+.engTbl{width:100%;border-collapse:collapse;font-size:11px;}
+.engTbl th,.engTbl td{border-bottom:1px solid var(--edge);padding:6px 4px;text-align:left;vertical-align:middle;}
+.engTbl th{color:var(--dim);font-weight:600;font-size:10px;}
+.engTbl td.pid{font-family:var(--mono);color:var(--tgt);white-space:nowrap;}
+.engTbl td.num{font-family:var(--mono);font-weight:700;white-space:nowrap;}
+.engTbl td.raw{font-family:var(--mono);color:var(--dim);font-size:10px;word-break:break-all;}
+.engTbl td.num.dim{color:var(--dim);font-weight:400;}
+.engNote{font-size:11px;color:var(--dim);line-height:1.6;}
+.engIn{background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:6px;
+  font-size:12px;min-width:0;font-family:inherit;}
+.engPnl{margin-bottom:10px;}
+.engRow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.engMini{flex:none;padding:6px 12px;}
+#engXY{width:100%;height:270px;display:block;background:#080B10;border:1px solid var(--edge);border-radius:10px;}
+.engRead{font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:6px;min-height:16px;}
+
 /* landscape */
 @media(orientation:landscape){
   #app{display:grid;grid-template-columns:280px 1fr;
     padding:calc(env(safe-area-inset-top,4px) + 4px) 10px calc(env(safe-area-inset-bottom,4px) + 4px);gap:7px;}
-  header,.pnl,.srow,.trow2,.mmwrap,.trow,.rdrow,.crow,.crow2,.strow,footer{grid-column:1;}
+  header,.pnl,.srow,.trow2,.mmwrap,.trow,.rdrow,.engStrip,.crow,.crow2,.strow,footer{grid-column:1;}
   .gwrap{grid-column:2;grid-row:1/20;
     height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 16px);
     min-height:0;}
@@ -245,7 +278,7 @@ footer{text-align:center;font-size:13px;color:#6c7480;padding:6px 0;}
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-09-22.51</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-12.1</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
@@ -389,6 +422,12 @@ footer{text-align:center;font-size:13px;color:#6c7480;padding:6px 0;}
   <div class="rb act"><div class="rl" id="actLbl">実速度</div><div class="rv" id="actSpd">--</div></div>
   <div class="rb"><div class="rl" id="diffLbl">差分</div><div class="rv" id="diffV" style="color:var(--act)">--</div></div>
 </div>
+<div class="engStrip" id="engStrip" role="button" tabindex="0" aria-label="エンジンモニター(使用域グラフ・取得できる項目を探す)を開く">
+  <div class="engCell"><div class="el">回転数</div><div class="ev" id="engS0">--</div></div>
+  <div class="engCell"><div class="el">エンジン負荷</div><div class="ev" id="engS1">--</div></div>
+  <div class="engCell"><div class="el">エンジン稼働率</div><div class="ev" id="engS2">--</div></div>
+  <div class="engState"><div class="engDot" id="engDot"></div><span id="engStateTxt">監視 停止</span></div>
+</div>
 <div class="crow">
   <button class="ctrl" id="startBtn">開始</button>
   <button class="ctrl" id="resetBtn">リセット</button>
@@ -397,6 +436,76 @@ footer{text-align:center;font-size:13px;color:#6c7480;padding:6px 0;}
   <button class="ctrl" id="csvBtn">走行結果DL</button>
 </div>
 <div class="strow" id="stRow"></div>
+<div class="diagOverlay" id="engView">
+  <div class="diagTop">
+    <h2>エンジンモニター</h2>
+    <button class="diagCloseBtn" id="btnEngClose">✕ 閉じる</button>
+  </div>
+
+  <div class="pnl engPnl">
+    <div class="plbl">監視</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="sbtn" id="btnEngMon" style="flex:2;padding:10px 0;font-size:13px">▶ 監視を開始</button>
+      <select id="engIntervalSel" class="engIn" style="flex:1" aria-label="照会の間隔">
+        <option value="150">速い(0.15秒)</option>
+        <option value="400">標準(0.4秒)</option>
+        <option value="1500">ゆっくり(1.5秒)</option>
+      </select>
+    </div>
+    <div id="engMonStatus" class="engNote" style="margin-top:6px">接続後に「監視を開始」を押してください。回転数(PID 0C)とエンジン負荷(PID 04)を毎周照会します。</div>
+  </div>
+
+  <div class="pnl engPnl">
+    <div class="plbl">エンジン使用域(横軸: 回転数 / 縦軸: エンジン負荷)</div>
+    <canvas id="engXY" aria-label="回転数とエンジン負荷の使用域グラフ"></canvas>
+    <div class="engRead" id="engXYRead"></div>
+    <div class="engRow" style="margin-top:6px">
+      <button class="sbtn engMini" id="btnEngXYClear">🗑 クリア</button>
+      <button class="sbtn engMini" id="btnEngXYCsv">📥 点をCSVで保存</button>
+    </div>
+    <div class="engNote" style="margin-top:6px">
+      色が暖色に近いマスほど滞在が長い領域です。エンジン負荷は標準PID 04(計算負荷値)です。<br>
+      ハイブリッド車でエンジンが止まっている間(回転数 400rpm 未満)は点を足さず、「エンジン稼働率」として数えるだけにしています。
+    </div>
+  </div>
+
+  <div class="pnl engPnl">
+    <div class="plbl">現在値</div>
+    <div class="engCards">
+      <div class="engCard"><div class="el">回転数</div><div class="ev" id="engC0">--</div><div class="es" id="engCS0"></div></div>
+      <div class="engCard"><div class="el">エンジン負荷</div><div class="ev" id="engC1">--</div><div class="es" id="engCS1"></div></div>
+      <div class="engCard"><div class="el">エンジン稼働率</div><div class="ev" id="engC2">--</div><div class="es" id="engCS2"></div></div>
+      <div class="engCard"><div class="el">監視時間</div><div class="ev" id="engC3">--</div><div class="es" id="engCS3"></div></div>
+    </div>
+  </div>
+
+  <div class="pnl engPnl">
+    <div class="plbl">取得できる項目を探す(標準PID Mode01)</div>
+    <div class="engNote" style="margin-bottom:6px">
+      ①でこの車両が対応している標準PIDを調べ、②で対応PIDの値を1件ずつ読みます。複数のECUが応答する車両では、最初に応答したECUの結果になります。
+      応答が長いPID(マルチフレーム)は、ファーム 2026-10-07.1 より前だと「応答なし」になります。
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:6px">
+      <button class="sbtn" id="btnEngScan" style="flex:1">① 対応PIDを調べる</button>
+      <button class="sbtn" id="btnEngReadAll" style="flex:1">② 値を全部読む</button>
+    </div>
+    <button class="sbtn" id="btnEngCopy" style="width:100%">📋 結果をコピー</button>
+    <div id="engScanStatus" class="engNote" style="margin-top:6px"></div>
+    <div id="engScanWrap" style="margin-top:4px"></div>
+    <div id="engScanText" style="display:none"></div>
+    <div class="engNote" style="margin-top:6px">
+      名称は規格(SAE J1979)の一般的なもので、値の換算は主なPIDだけです。それ以外は生データだけを表示します。
+      メーカー独自の項目(Mode22)は、🔧 デバッグ画面の「Mode22 DID範囲スキャン」で探せます。
+    </div>
+  </div>
+
+  <div class="pnl engPnl">
+    <div class="engNote">
+      照会のたびに車速の読み取りがわずかに止まります。追従精度を厳密に見る走行では、監視を止めるか「ゆっくり」にしてください。
+    </div>
+  </div>
+</div>
+
 <div class="diagOverlay" id="diagView">
   <div class="diagTop">
     <h2>SPEED TRACER — ダイアグ</h2>
@@ -1596,6 +1705,7 @@ function appendRawLog(line){
 let statusAutoSynced=false; // 接続直後の1回だけ機体設定を取り込む(以降は手動statusで上書きしない)
 function handleUnmatched(t){
   if(t.length===0)return;
+  if(engHandleLine(t))return; // エンジンモニターが出した照会への応答
   let m;
   if(t.indexOf('CHCFGVAL:')===0){ if(handleChanCfgVal(t)){appendRawLog(t);return;} }
   // 接続直後に送る"status"の応答。機体(全端末共通)の現在設定にこちらを合わせる(最初の1回だけ)。
@@ -1711,7 +1821,7 @@ function logPidRaw(line){
   const ts=new Date().toLocaleTimeString('ja-JP',{hour12:false});
   let cls='dim';
   if(line.indexOf('PID22RESULT:')===0 || line.indexOf('PIDRESULT:')===0){
-    if(line.indexOf('resp=0x')>=0 && line.indexOf('NEGATIVE')<0) cls='hit';
+    if((line.indexOf('resp=0x')>=0 || /\blen=\d+\s+data=/.test(line)) && line.indexOf('NEGATIVE')<0) cls='hit';
     else if(line.indexOf('NEGATIVE')>=0) cls='neg';
     else cls='norsp';
     if(cls==='hit'||cls==='neg') pid22RangeHitCount++;
@@ -2363,6 +2473,506 @@ filterSlider.addEventListener('input',function(){
   filterAlpha=parseFloat(this.value);
   filterVal.textContent=filterAlpha.toFixed(2);
 });
+
+// =========================================================
+// エンジンモニター: エンジン使用域(回転数×エンジン負荷) / 取得できる項目を探す
+//  - ファームの "PID:XX" コマンドだけを使う(機体のチャンネル設定(CHCFG/NVS)には触らない)。
+//  - ハイブリッド車はエンジンが止まっている時間が長いので、回転数が ENG_RUN_RPM 未満の間は
+//    使用域グラフに点を足さず、「エンジン稼働率」として数えるだけにする。
+// =========================================================
+const ENG_RUN_RPM=400;
+// 標準PID(Mode01)の名称と、主なPIDの換算。dec(b)は応答データ(41 PIDの後ろ)から表示文字列を返す。
+function engU(b,i){return b.length>i?b[i]:null;}
+function engU16(b,i){return b.length>i+1?b[i]*256+b[i+1]:null;}
+function engF(v,d,unit){return v==null||!Number.isFinite(v)?null:(v.toFixed(d)+(unit?' '+unit:''));}
+const engPct=function(b){const a=engU(b,0);return engF(a==null?null:a*100/255,1,'%');};
+const engTemp=function(b){const a=engU(b,0);return engF(a==null?null:a-40,0,'°C');};
+const engTrim=function(b){const a=engU(b,0);return engF(a==null?null:(a-128)*100/128,1,'%');};
+const engTrq=function(b){const a=engU(b,0);return engF(a==null?null:a-125,0,'%');};
+const engMin=function(b){const v=engU16(b,0);return engF(v,0,'分');};
+const engKm=function(b){const v=engU16(b,0);return engF(v,0,'km');};
+const engCatT=function(b){const v=engU16(b,0);return engF(v==null?null:v/10-40,0,'°C');};
+const engO2v=function(b){const a=engU(b,0);return a==null?null:((a/200).toFixed(3)+' V');};
+const engLam=function(b){const v=engU16(b,0);return engF(v==null?null:v*2/65536,3,'λ');};
+const ENG_FUEL_TYPE={1:'ガソリン',2:'メタノール',3:'エタノール',4:'ディーゼル',5:'LPG',6:'CNG',7:'プロパン',8:'電気',
+  17:'ハイブリッド(ガソリン)',18:'ハイブリッド(エタノール)',19:'ハイブリッド(ディーゼル)',20:'ハイブリッド(電気)',
+  21:'ハイブリッド(電気と燃焼)',22:'ハイブリッド(回生)'};
+const ENG_PIDS={
+  0x01:['モニター状態(DTCクリア後)',function(b){const a=engU(b,0);return a==null?null:('MIL '+((a&0x80)?'点灯':'消灯')+' · DTC '+(a&0x7F)+'件');}],
+  0x03:['燃料系統の状態',null],
+  0x04:['エンジン負荷(計算値)',engPct],
+  0x05:['冷却水温',engTemp],
+  0x06:['短期燃料補正 バンク1',engTrim],0x07:['長期燃料補正 バンク1',engTrim],
+  0x08:['短期燃料補正 バンク2',engTrim],0x09:['長期燃料補正 バンク2',engTrim],
+  0x0A:['燃圧(ゲージ圧)',function(b){const a=engU(b,0);return engF(a==null?null:a*3,0,'kPa');}],
+  0x0B:['吸気管絶対圧',function(b){const a=engU(b,0);return engF(a,0,'kPa');}],
+  0x0C:['エンジン回転数',function(b){const v=engU16(b,0);return engF(v==null?null:v/4,0,'rpm');}],
+  0x0D:['車速',function(b){const a=engU(b,0);return engF(a,0,'km/h');}],
+  0x0E:['点火時期',function(b){const a=engU(b,0);return engF(a==null?null:a/2-64,1,'°');}],
+  0x0F:['吸気温',engTemp],
+  0x10:['吸入空気量(MAF)',function(b){const v=engU16(b,0);return engF(v==null?null:v/100,2,'g/s');}],
+  0x11:['スロットル位置',engPct],
+  0x12:['二次空気の状態',null],
+  0x13:['O2センサーの有無(2バンク)',null],
+  0x14:['O2センサー1(電圧)',engO2v],0x15:['O2センサー2(電圧)',engO2v],0x16:['O2センサー3(電圧)',engO2v],0x17:['O2センサー4(電圧)',engO2v],
+  0x18:['O2センサー5(電圧)',engO2v],0x19:['O2センサー6(電圧)',engO2v],0x1A:['O2センサー7(電圧)',engO2v],0x1B:['O2センサー8(電圧)',engO2v],
+  0x1C:['準拠するOBD規格',function(b){const a=engU(b,0);return a==null?null:('コード '+a);}],
+  0x1D:['O2センサーの有無(4バンク)',null],
+  0x1E:['補助入力の状態',null],
+  0x1F:['エンジン始動後の経過時間',function(b){const v=engU16(b,0);return engF(v,0,'秒');}],
+  0x21:['MIL点灯後の走行距離',engKm],
+  0x22:['燃料レール圧(負圧基準)',function(b){const v=engU16(b,0);return engF(v==null?null:v*0.079,1,'kPa');}],
+  0x23:['燃料レール圧(ゲージ圧)',function(b){const v=engU16(b,0);return engF(v==null?null:v*10,0,'kPa');}],
+  0x24:['O2センサー1(広域・電圧)',engLam],0x25:['O2センサー2(広域・電圧)',engLam],0x26:['O2センサー3(広域・電圧)',engLam],0x27:['O2センサー4(広域・電圧)',engLam],
+  0x28:['O2センサー5(広域・電圧)',engLam],0x29:['O2センサー6(広域・電圧)',engLam],0x2A:['O2センサー7(広域・電圧)',engLam],0x2B:['O2センサー8(広域・電圧)',engLam],
+  0x2C:['EGR指令値',engPct],
+  0x2D:['EGR偏差',engTrim],
+  0x2E:['エバポパージ指令値',engPct],
+  0x2F:['燃料残量',engPct],
+  0x30:['DTCクリア後の暖機回数',function(b){const a=engU(b,0);return engF(a,0,'回');}],
+  0x31:['DTCクリア後の走行距離',engKm],
+  0x32:['エバポ系統の蒸気圧',function(b){let v=engU16(b,0);if(v==null)return null;if(v>=32768)v-=65536;return engF(v/4,1,'Pa');}],
+  0x33:['大気圧',function(b){const a=engU(b,0);return engF(a,0,'kPa');}],
+  0x34:['O2センサー1(広域・電流)',engLam],0x35:['O2センサー2(広域・電流)',engLam],0x36:['O2センサー3(広域・電流)',engLam],0x37:['O2センサー4(広域・電流)',engLam],
+  0x38:['O2センサー5(広域・電流)',engLam],0x39:['O2センサー6(広域・電流)',engLam],0x3A:['O2センサー7(広域・電流)',engLam],0x3B:['O2センサー8(広域・電流)',engLam],
+  0x3C:['触媒温度 バンク1 センサー1',engCatT],0x3D:['触媒温度 バンク2 センサー1',engCatT],
+  0x3E:['触媒温度 バンク1 センサー2',engCatT],0x3F:['触媒温度 バンク2 センサー2',engCatT],
+  0x41:['モニター状態(今回の走行)',null],
+  0x42:['制御モジュール電圧',function(b){const v=engU16(b,0);return engF(v==null?null:v/1000,2,'V');}],
+  0x43:['絶対負荷',function(b){const v=engU16(b,0);return engF(v==null?null:v*100/255,1,'%');}],
+  0x44:['目標当量比',engLam],
+  0x45:['相対スロットル位置',engPct],
+  0x46:['外気温',engTemp],
+  0x47:['スロットル位置B',engPct],0x48:['スロットル位置C',engPct],
+  0x49:['アクセルペダル位置D',engPct],0x4A:['アクセルペダル位置E',engPct],0x4B:['アクセルペダル位置F',engPct],
+  0x4C:['スロットルアクチュエータ指令値',engPct],
+  0x4D:['MIL点灯中の走行時間',engMin],
+  0x4E:['DTCクリア後の経過時間',engMin],
+  0x4F:['当量比・O2・MAPの最大値',null],
+  0x50:['MAFの最大値',function(b){const a=engU(b,0);return engF(a==null?null:a*10,0,'g/s');}],
+  0x51:['燃料の種類',function(b){const a=engU(b,0);return a==null?null:((ENG_FUEL_TYPE[a]||'コード')+' ('+a+')');}],
+  0x52:['エタノール比率',engPct],
+  0x53:['エバポ系統の蒸気圧(絶対)',function(b){const v=engU16(b,0);return engF(v==null?null:v/200,1,'kPa');}],
+  0x54:['エバポ系統の蒸気圧',function(b){const v=engU16(b,0);return engF(v==null?null:v-32767,0,'Pa');}],
+  0x55:['二次O2 短期燃料補正 バンク1/3',engTrim],0x56:['二次O2 長期燃料補正 バンク1/3',engTrim],
+  0x57:['二次O2 短期燃料補正 バンク2/4',engTrim],0x58:['二次O2 長期燃料補正 バンク2/4',engTrim],
+  0x59:['燃料レール絶対圧',function(b){const v=engU16(b,0);return engF(v==null?null:v*10,0,'kPa');}],
+  0x5A:['相対アクセルペダル位置',engPct],
+  0x5B:['ハイブリッドバッテリー残量',engPct],
+  0x5C:['エンジンオイル温度',engTemp],
+  0x5D:['燃料噴射時期',function(b){const v=engU16(b,0);return engF(v==null?null:v/128-210,2,'°');}],
+  0x5E:['エンジン燃料流量',function(b){const v=engU16(b,0);return engF(v==null?null:v/20,2,'L/h');}],
+  0x5F:['準拠する排出ガス規制',null],
+  0x61:['ドライバー要求トルク(基準比)',engTrq],
+  0x62:['実トルク(基準比)',engTrq],
+  0x63:['基準トルク',function(b){const v=engU16(b,0);return engF(v,0,'Nm');}],
+  0x64:['エンジントルクの割合データ',null],
+  0x65:['補助入出力',null],
+  0x66:['吸入空気量センサー',null],
+  0x67:['冷却水温(センサー別)',null],
+  0x68:['吸気温(センサー別)',null],
+  0x69:['EGR指令・偏差',null],
+  0x6A:['ディーゼル吸気量制御',null],
+  0x6B:['EGR温度',null],
+  0x6C:['スロットルアクチュエータ制御',null],
+  0x6D:['燃圧制御',null],
+  0x6E:['噴射圧制御',null],
+  0x6F:['ターボ入口圧',null],
+  0x70:['過給圧制御',null],
+  0x71:['VGT制御',null],
+  0x72:['ウェイストゲート制御',null],
+  0x73:['排気圧',null],
+  0x74:['ターボ回転数',null],
+  0x75:['ターボ温度(1)',null],0x76:['ターボ温度(2)',null],
+  0x77:['インタークーラー温度',null],
+  0x78:['排気温度 バンク1',null],0x79:['排気温度 バンク2',null],
+  0x7A:['DPF差圧 バンク1',null],0x7B:['DPF差圧 バンク2',null],
+  0x7C:['DPF温度',null],
+  0x7D:['NOx NTE制御エリアの状態',null],0x7E:['PM NTE制御エリアの状態',null],
+  0x7F:['エンジン稼働時間',null],
+  0x81:['エンジン稼働時間(AECD)',null],0x82:['エンジン稼働時間(AECD)',null],
+  0x83:['NOxセンサー',null],
+  0x84:['マニホールド表面温度',null],
+  0x85:['NOx還元剤システム',null],
+  0x86:['PMセンサー',null],
+  0x87:['吸気管絶対圧(センサー別)',function(b){const v=engU16(b,1);return (b.length&&(b[0]&1))?engF(v==null?null:v/32,1,'kPa'):null;}],
+  0x88:['SCR誘導システム',null],
+  0x8B:['後処理の状態',null],
+  0x8C:['O2センサー(広域)',null],
+  0x8D:['スロットル位置G',engPct],
+  0x8E:['エンジン摩擦トルク(基準比)',engTrq],
+  0x8F:['PMセンサー バンク1・2',null],
+  0x9A:['ハイブリッド/EVの車両システムデータ',null],
+  0x9B:['DEFセンサー',null],
+  0x9D:['エンジン燃料流量(質量)',null],
+  0x9E:['エンジン排気流量',null],
+  0xA1:['NOxセンサー(補正値)',null],
+  0xA2:['シリンダー燃料流量',function(b){const v=engU16(b,0);return engF(v==null?null:v/32,2,'mg/行程');}],
+  0xA4:['トランスミッションのギア',null],
+  0xA5:['DEF噴射指令',null],
+  0xA6:['オドメーター',function(b){if(b.length<4)return null;return engF(((b[0]*16777216)+(b[1]<<16)+(b[2]<<8)+b[3])/10,1,'km');}],
+};
+function engIsBitmapPid(p){return p%0x20===0;}
+function engPidName(p){const e=ENG_PIDS[p];return e?e[0]:'(名称不明)';}
+
+const engView=$('engView'), engStrip=$('engStrip');
+const btnEngMon=$('btnEngMon'), engIntervalSel=$('engIntervalSel'), engMonStatus=$('engMonStatus');
+const engCv=$('engXY'), engCtx=engCv.getContext('2d'), engXYRead=$('engXYRead');
+const btnEngScan=$('btnEngScan'), btnEngReadAll=$('btnEngReadAll'), btnEngCopy=$('btnEngCopy');
+const engScanStatus=$('engScanStatus'), engScanWrap=$('engScanWrap'), engScanText=$('engScanText');
+function engLoadJson(k,def){try{const v=JSON.parse(localStorage.getItem(k));return v==null?def:v;}catch(e){return def;}}
+function engSaveJson(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function engSleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function engHex(n){return n.toString(16).toUpperCase().padStart(2,'0');}
+function engEsc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+let engIntervalMs=parseInt(localStorage.getItem('eng_interval')||'400',10)||400;
+let engSupport=engLoadJson('eng_support',null); // {list:[対応PID(数値)...], time:'...'}
+const engReads={};      // pid(数値) -> {st:'ok'|'noresp', bytes, t}
+const engNow={rpm:null,rpmT:0,load:null,loadT:0};
+let engXY=[];           // 使用域グラフの点 {t,rpm,load}(エンジンが回っている時だけ)
+let engRunMs=0, engAllMs=0, engLastSampleT=0; // エンジン稼働率の計算用
+let engMonOn=false, engLoopRunning=false, engPending=null, engChain=Promise.resolve();
+let engScanRunning=false, engReadAllRunning=false, engReadAllStop=false;
+
+// ---- 照会(1件ずつ直列に送り、対応する応答行を待つ) ----
+function engQuery(pidHex,timeoutMs){
+  const run=function(){return new Promise(function(res){
+    const p={key:'1:'+parseInt(pidHex,16).toString(16),done:null,timer:null};
+    p.done=function(r){if(engPending===p)engPending=null;clearTimeout(p.timer);res(r);};
+    p.timer=setTimeout(function(){p.done({st:'noresp',timeout:true});},timeoutMs||1200);
+    engPending=p;
+    sendCommand('PID:'+pidHex);
+  });};
+  const r=engChain.then(run,run);
+  engChain=r.then(function(){},function(){});
+  return r;
+}
+function engParseBytes(s){
+  return s.trim().split(/\s+/).filter(Boolean).map(function(h){return parseInt(h,16);}).filter(function(n){return !isNaN(n);});
+}
+// handleUnmatched()の先頭から呼ばれる。この画面が出した照会への応答なら取り込む(trueで生ログには流さない)。
+function engHandleLine(t){
+  if(!engPending)return false;
+  const m=t.match(/^PIDRESULT:0x([0-9a-f]+)\s+(.*)$/i);
+  if(!m)return false;
+  if('1:'+parseInt(m[1],16).toString(16)!==engPending.key)return false;
+  const d=m[2].match(/len=(\d+)\s+data=(.*)$/i);
+  engPending.done(d?{st:'ok',bytes:engParseBytes(d[2])}:{st:'noresp'});
+  // デバッグ画面のスキャンが同時に動いている時は、そちらのログにも行を残す
+  return !(pidScanRunning||pid22RangeRunning||pid22WatchRunning);
+}
+
+// ---- 監視ループ(回転数とエンジン負荷を毎周照会) ----
+function engTakeSample(rpm,load){
+  const now=Date.now();
+  if(engLastSampleT){
+    const dt=Math.min(5000,now-engLastSampleT); // 監視を止めていた間などの空白は数えない
+    engAllMs+=dt;
+    if(rpm>=ENG_RUN_RPM)engRunMs+=dt;
+  }
+  engLastSampleT=now;
+  if(rpm<ENG_RUN_RPM)return;
+  engXY.push({t:now,rpm:rpm,load:load});
+  if(engXY.length>9000)engXY.splice(0,engXY.length-9000); // 約1時間分
+}
+async function engLoop(){
+  if(engLoopRunning)return;
+  engLoopRunning=true;
+  let miss=0;
+  try{
+    while(engMonOn){
+      if(!isConnActive()){
+        engMonStatus.textContent='未接続です。接続すると自動で照会を始めます。';
+        engLastSampleT=0;engRender();await engSleep(1500);continue;
+      }
+      const r1=await engQuery('0C');
+      if(!engMonOn)break;
+      const r2=await engQuery('04');
+      if(!engMonOn)break;
+      const now=Date.now();
+      let rpm=null,load=null;
+      if(r1.st==='ok'&&r1.bytes.length>=2){rpm=(r1.bytes[0]*256+r1.bytes[1])/4;engNow.rpm=rpm;engNow.rpmT=now;}
+      if(r2.st==='ok'&&r2.bytes.length>=1){load=r2.bytes[0]*100/255;engNow.load=load;engNow.loadT=now;}
+      if(rpm!=null&&load!=null){miss=0;engTakeSample(rpm,load);}
+      else{miss++;engLastSampleT=0;}
+      engMonStatus.textContent=(miss>=3)
+        ?'回転数・エンジン負荷の応答がありません。IG ON(READY)と、機体がCANにつながっているかを確認してください。'
+        :('監視中 · '+new Date().toLocaleTimeString('ja-JP',{hour12:false}));
+      engRender();
+      await engSleep(engIntervalMs);
+    }
+  }finally{engLoopRunning=false;}
+}
+function engSetMon(on){
+  engMonOn=on;
+  btnEngMon.textContent=on?'■ 監視を止める':'▶ 監視を開始';
+  btnEngMon.className='sbtn'+(on?' agps':'');
+  engLastSampleT=0;
+  if(on)engLoop();
+  else engMonStatus.textContent='監視を止めました。';
+  engRender();
+}
+
+// ---- 表示 ----
+function engFmtDur(ms){
+  const s=Math.round(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),r=s%60;
+  return h?(h+':'+String(m).padStart(2,'0')+':'+String(r).padStart(2,'0')):(m+':'+String(r).padStart(2,'0'));
+}
+function engRender(){
+  const now=Date.now();
+  const rpmOk=engNow.rpm!=null&&now-engNow.rpmT<5000, loadOk=engNow.load!=null&&now-engNow.loadT<5000;
+  const rpmHtml=rpmOk?(engNow.rpm.toFixed(0)+'<small>rpm</small>'):'--';
+  const loadHtml=loadOk?(engNow.load.toFixed(0)+'<small>%</small>'):'--';
+  const rate=engAllMs>=1000?engRunMs*100/engAllMs:null;
+  const rateHtml=rate!=null?(rate.toFixed(0)+'<small>%</small>'):'--';
+  $('engS0').innerHTML=rpmHtml;$('engS1').innerHTML=loadHtml;$('engS2').innerHTML=rateHtml;
+  $('engC0').innerHTML=rpmHtml;$('engC1').innerHTML=loadHtml;$('engC2').innerHTML=rateHtml;
+  $('engCS0').textContent=rpmOk?(engNow.rpm<ENG_RUN_RPM?'エンジン停止中':'PID 0C'):'';
+  $('engCS1').textContent=loadOk?'PID 04':'';
+  $('engCS2').textContent=engAllMs>=1000?('稼働 '+engFmtDur(engRunMs)):'';
+  $('engC3').innerHTML=engAllMs>=1000?engFmtDur(engAllMs):'--';
+  $('engCS3').textContent=engXY.length?('グラフ '+engXY.length+'点'):'';
+  $('engDot').className='engDot'+(engMonOn?' on':'');
+  $('engStateTxt').textContent=engMonOn?'監視中':'監視 停止';
+}
+
+// ---- エンジン使用域グラフ(横軸: 回転数 / 縦軸: エンジン負荷) ----
+const ENG_NX=50, ENG_NY=25;
+const engBins=new Uint32Array(ENG_NX*ENG_NY);
+const engTrail=[];
+let engCvW=0, engCvH=0, engMark=null, engXYRaf=null, engXYLastDraw=0;
+const engReduceMotion=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+function engXYResize(){
+  const r=engCv.getBoundingClientRect();
+  if(r.width<10)return;
+  const d=window.devicePixelRatio||1;
+  engCvW=r.width;engCvH=r.height;
+  engCv.width=Math.round(r.width*d);engCv.height=Math.round(r.height*d);
+  engCtx.setTransform(d,0,0,d,0,0);
+}
+function engHeatColor(f){
+  const st=[[0,26,42,255],[0.4,79,209,197],[0.75,255,209,102],[1,255,68,0]];
+  let i=1;
+  while(i<st.length-1&&f>st[i][0])i++;
+  const a=st[i-1],b=st[i],k=(f-a[0])/((b[0]-a[0])||1);
+  const c=function(n){return Math.round(a[n]+(b[n]-a[n])*k);};
+  return 'rgba('+c(1)+','+c(2)+','+c(3)+','+(0.35+0.55*f).toFixed(2)+')';
+}
+function engXYDraw(){
+  const ctx=engCtx,W=engCvW,H=engCvH;
+  if(!W)return;
+  ctx.clearRect(0,0,W,H);
+  const L=40,R=20,T=12,B=26,pw=W-L-R,ph=H-T-B;
+  let maxR=0;
+  for(let i=0;i<engXY.length;i++)if(engXY[i].rpm>maxR)maxR=engXY[i].rpm;
+  const xmax=maxR>5800?8000:maxR>4800?6000:5000, ymax=100;
+  const X=function(r){return L+r/xmax*pw;}, Y=function(v){return T+ph-(v/ymax)*ph;};
+  ctx.font='10px ui-monospace,Menlo,Consolas,monospace';
+  ctx.lineWidth=1;ctx.strokeStyle='#1E2530';ctx.fillStyle='#8A9097';
+  ctx.textAlign='center';ctx.textBaseline='top';
+  for(let r=0;r<=xmax;r+=1000){
+    ctx.beginPath();ctx.moveTo(X(r)+.5,T);ctx.lineTo(X(r)+.5,T+ph);ctx.stroke();
+    ctx.fillText(String(r),X(r),T+ph+4);
+  }
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let v=0;v<=ymax;v+=20){
+    ctx.beginPath();ctx.moveTo(L,Y(v)+.5);ctx.lineTo(L+pw,Y(v)+.5);ctx.stroke();
+    ctx.fillText(String(v),L-5,Y(v));
+  }
+  ctx.textAlign='right';ctx.textBaseline='bottom';
+  ctx.fillText('rpm',L+pw,T+ph-3);
+  ctx.textAlign='left';ctx.textBaseline='top';
+  ctx.fillText('エンジン負荷 %',L+4,T+2);
+  if(!engXY.length){
+    ctx.fillStyle='#8A9097';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='12px -apple-system,BlinkMacSystemFont,sans-serif';
+    ctx.fillText(engAllMs>0?'エンジンが回ると、ここに点が溜まっていきます':'監視を開始すると、ここに点が溜まっていきます',L+pw/2,T+ph/2);
+    engXYRead.textContent=engAllMs>0?('エンジン停止中 · 稼働率 '+(engRunMs*100/engAllMs).toFixed(0)+'%'):'';
+    engMark=null;
+    return;
+  }
+  engBins.fill(0);
+  engTrail.length=0;
+  let binMax=0;
+  for(let i=0;i<engXY.length;i++){
+    const s=engXY[i];
+    const bx=Math.min(ENG_NX-1,Math.max(0,Math.floor(s.rpm/xmax*ENG_NX)));
+    const by=Math.min(ENG_NY-1,Math.max(0,Math.floor(s.load/ymax*ENG_NY)));
+    const c=++engBins[by*ENG_NX+bx];
+    if(c>binMax)binMax=c;
+    if(i>=engXY.length-40)engTrail.push(s.rpm,s.load);
+  }
+  const cw=pw/ENG_NX,ch=ph/ENG_NY,lg=Math.log(Math.max(binMax,8)+1);
+  for(let by=0;by<ENG_NY;by++){
+    for(let bx=0;bx<ENG_NX;bx++){
+      const c=engBins[by*ENG_NX+bx];
+      if(!c)continue;
+      ctx.fillStyle=engHeatColor(Math.log(c+1)/lg);
+      ctx.fillRect(L+bx*cw,T+ph-(by+1)*ch,cw+.5,ch+.5);
+    }
+  }
+  const tn=engTrail.length/2;
+  ctx.lineWidth=1.5;
+  for(let i=1;i<tn;i++){
+    ctx.strokeStyle='rgba(231,233,234,'+(0.08+0.6*i/tn).toFixed(2)+')';
+    ctx.beginPath();
+    ctx.moveTo(X(engTrail[(i-1)*2]),Y(engTrail[(i-1)*2+1]));
+    ctx.lineTo(X(engTrail[i*2]),Y(engTrail[i*2+1]));
+    ctx.stroke();
+  }
+  const last=engXY[engXY.length-1];
+  if(!engMark||engReduceMotion)engMark={r:last.rpm,y:last.load};
+  else{engMark.r+=(last.rpm-engMark.r)*0.25;engMark.y+=(last.load-engMark.y)*0.25;}
+  const live=Date.now()-last.t<5000;
+  const mx=X(Math.min(engMark.r,xmax)),my=Y(Math.min(engMark.y,ymax));
+  ctx.strokeStyle='rgba(231,233,234,.25)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(mx,T);ctx.lineTo(mx,T+ph);ctx.moveTo(L,my);ctx.lineTo(L+pw,my);ctx.stroke();
+  ctx.save();
+  ctx.shadowColor=live?'#A8E063':'#8A9097';ctx.shadowBlur=live?14:0;
+  ctx.fillStyle=live?'#A8E063':'#8A9097';
+  ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle='#0A0C0F';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.stroke();
+  engXYRead.textContent=last.rpm.toFixed(0)+' rpm · エンジン負荷 '+last.load.toFixed(0)+'% · '+engXY.length+'点'
+    +(engAllMs>0?(' · 稼働率 '+(engRunMs*100/engAllMs).toFixed(0)+'%'):'')
+    +(live?'':(engNow.rpm!=null&&Date.now()-engNow.rpmT<5000&&engNow.rpm<ENG_RUN_RPM?' · エンジン停止中':' · 更新停止中'));
+}
+function engXYFrame(ts){
+  engXYRaf=null;
+  if(!engView.classList.contains('show'))return;
+  if(ts-engXYLastDraw>=45){engXYLastDraw=ts;engXYDraw();}
+  engXYRaf=requestAnimationFrame(engXYFrame);
+}
+function engXYStart(){
+  engXYResize();engXYDraw();
+  if(!engXYRaf)engXYRaf=requestAnimationFrame(engXYFrame);
+}
+window.addEventListener('resize',function(){if(engView.classList.contains('show')){engXYResize();engXYDraw();}});
+$('btnEngXYClear').addEventListener('click',function(){
+  if(engXY.length&&!confirm('使用域グラフの点('+engXY.length+'点)と稼働率を消しますか?'))return;
+  engXY=[];engMark=null;engRunMs=0;engAllMs=0;engLastSampleT=0;engXYDraw();engRender();
+});
+$('btnEngXYCsv').addEventListener('click',function(){
+  if(!engXY.length){engXYRead.textContent='保存できる点がありません。';return;}
+  const t0=engXY[0].t;
+  let c='elapsed_s,rpm,load_pct\n';
+  for(const s of engXY)c+=((s.t-t0)/1000).toFixed(1)+','+s.rpm.toFixed(0)+','+s.load.toFixed(1)+'\n';
+  const b=new Blob([c],{type:'text/csv;charset=utf-8;'});
+  const u=URL.createObjectURL(b),a=document.createElement('a');
+  const ts=new Date(),pd=function(x){return String(x).padStart(2,'0');};
+  a.href=u;a.download='engine_map_'+ts.getFullYear()+pd(ts.getMonth()+1)+pd(ts.getDate())+'_'+pd(ts.getHours())+pd(ts.getMinutes())+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+});
+
+// ---- 取得できる項目を探す(対応PIDのビットマップ → 値を1件ずつ読む) ----
+function engScanPids(){
+  return (engSupport&&engSupport.list)?engSupport.list.filter(function(p){return !engIsBitmapPid(p);}):[];
+}
+function engRenderScan(){
+  const pids=engScanPids();
+  if(!engSupport||!engSupport.list){
+    engScanWrap.innerHTML='';engScanText.textContent='';
+    engScanStatus.textContent='まだ調べていません。接続してから①を押してください。';
+    btnEngReadAll.disabled=true;
+    return;
+  }
+  btnEngReadAll.disabled=!pids.length;
+  let h='<table class="engTbl"><tr><th>PID</th><th>内容</th><th>値</th><th>生データ</th></tr>';
+  const lines=['対応PID(Mode01) '+engSupport.time+' '+pids.length+'件'];
+  let got=0,tried=0;
+  for(const p of pids){
+    const r=engReads[p], e=ENG_PIDS[p];
+    let val='',raw='',cls='num dim';
+    if(r){
+      tried++;
+      if(r.st==='ok'){
+        got++;
+        raw=r.bytes.map(engHex).join(' ');
+        const v=(e&&e[1])?e[1](r.bytes):null;
+        if(v!=null){val=v;cls='num';}else val='(生データのみ)';
+      }else val='応答なし';
+    }
+    h+='<tr><td class="pid">'+engHex(p)+'</td><td>'+engEsc(engPidName(p))+'</td>'
+      +'<td class="'+cls+'">'+engEsc(val||'--')+'</td><td class="raw">'+engEsc(raw||'')+'</td></tr>';
+    lines.push(engHex(p)+' '+engPidName(p)+': '+(val||'--')+(raw?(' ['+raw+']'):''));
+  }
+  h+='</table>';
+  engScanWrap.innerHTML=h;
+  engScanText.textContent=lines.join('\n')+'\n'+'一覧: '+engSupport.list.map(engHex).join(' ');
+  if(!engScanRunning&&!engReadAllRunning){
+    engScanStatus.textContent='この車両が対応している標準PIDは'+pids.length+'件です('+engSupport.time+')。'
+      +(tried?(tried+'件を読み、'+got+'件で値を受信しました。'):'②で値を読めます。');
+  }
+}
+async function engRunScan(){
+  if(engScanRunning||engReadAllRunning)return;
+  if(!isConnActive()){engScanStatus.textContent='未接続です。先に接続してください。';return;}
+  engScanRunning=true;
+  btnEngScan.disabled=true;btnEngScan.textContent='照会中…';
+  const sup=[];
+  let failed=false;
+  for(const base of [0x00,0x20,0x40,0x60,0x80,0xA0,0xC0]){
+    engScanStatus.textContent='PID '+engHex(base)+' のビットマップを照会中…';
+    let r=await engQuery(engHex(base),1500);
+    if(r.st!=='ok'||r.bytes.length<4)r=await engQuery(engHex(base),1500); // 取りこぼし対策で1回だけ再試行
+    if(r.st!=='ok'||r.bytes.length<4){if(base===0)failed=true;break;}
+    for(let i=0;i<32;i++){if(r.bytes[i>>3]&(0x80>>(i&7)))sup.push(base+i+1);}
+    if(!(r.bytes[3]&1))break; // 次の範囲のビットマップが無い
+    await engSleep(150);
+  }
+  btnEngScan.disabled=false;btnEngScan.textContent='① 対応PIDを調べる';
+  engScanRunning=false;
+  if(failed){
+    engScanStatus.textContent='ECUから応答がありません。IG ON(READY)と、機体がCANにつながっているかを確認してください。';
+    return;
+  }
+  engSupport={list:sup,time:new Date().toLocaleString('ja-JP',{hour12:false})};
+  engSaveJson('eng_support',engSupport);
+  for(const k in engReads)delete engReads[k];
+  engRenderScan();
+}
+async function engRunReadAll(){
+  if(engReadAllRunning){engReadAllStop=true;return;} // 実行中に押されたら止める
+  if(engScanRunning)return;
+  if(!isConnActive()){engScanStatus.textContent='未接続です。先に接続してください。';return;}
+  const pids=engScanPids();
+  if(!pids.length)return;
+  engReadAllRunning=true;engReadAllStop=false;
+  btnEngScan.disabled=true;btnEngReadAll.textContent='■ 止める';
+  for(const k in engReads)delete engReads[k];
+  for(let i=0;i<pids.length&&!engReadAllStop;i++){
+    engScanStatus.textContent='値を読み取り中… '+(i+1)+' / '+pids.length+'(PID '+engHex(pids[i])+')';
+    const r=await engQuery(engHex(pids[i]),1500);
+    engReads[pids[i]]={st:r.st,bytes:r.bytes||[],t:Date.now()};
+    engRenderScan();
+  }
+  engReadAllRunning=false;
+  btnEngScan.disabled=false;btnEngReadAll.textContent='② 値を全部読む';
+  engRenderScan();
+}
+
+// ---- 画面の開閉・ボタン ----
+function engOpen(){engView.classList.add('show');engRender();engRenderScan();engXYStart();}
+engStrip.addEventListener('click',engOpen);
+engStrip.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();engOpen();}});
+$('btnEngClose').addEventListener('click',function(){engView.classList.remove('show');});
+btnEngMon.addEventListener('click',function(){engSetMon(!engMonOn);});
+engIntervalSel.value=String(engIntervalMs);
+if(!engIntervalSel.value){engIntervalSel.value='400';engIntervalMs=400;}
+engIntervalSel.addEventListener('change',function(){
+  engIntervalMs=parseInt(this.value,10)||400;
+  localStorage.setItem('eng_interval',String(engIntervalMs));
+});
+btnEngScan.addEventListener('click',engRunScan);
+btnEngReadAll.addEventListener('click',engRunReadAll);
+btnEngCopy.addEventListener('click',function(){
+  if(!engScanText.textContent){engScanStatus.textContent='コピーできる結果がありません。先に①を押してください。';return;}
+  copyLogEl(engScanText,btnEngCopy,'📋 結果をコピー');
+});
+setInterval(function(){if(!engMonOn)engRender();},2000); // 監視を止めた後、表示を古い値のままにしない
+engRender();engRenderScan();
 
 // =========================================================
 // MAIN LOOP
