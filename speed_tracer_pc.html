@@ -272,13 +272,271 @@ footer{text-align:center;font-size:13px;color:#6c7480;padding:6px 0;}
 </style>
 </head>
 <body>
+<!--OPENING_START (起動時オープニング。ファームには入れない: tools/make_webpage_header.py が取り除く) -->
+<style>
+@font-face{font-family:"OpTitle";src:url(data:font/woff2;base64,d09GMgABAAAAABkAABAAAAAAPKQAABigAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGnwbkTwcKAZgP1NUQVQqAIRYEQgKzAjATwuCeAABNgIkA4VsBCAFhHgHg2MMBxtgNEUH4p71yVcS/H84oMe4xlWBIpAE0RNjnHbHtBnj5Isdvm/v3Ukm3nsa/csgObHS+WZqVyCJH63NoWE7dQ0kmgwJjmBKnSgsp/y6MGKEJLM8H6xBe/Nnd880maVDtJuFrto8HURCgkbp4olKNs1mYxDN2VyCaBAPlgbIHSFY5CLwbQzq/n3MCo9UKYQaVSqWDUFKDbOKeCqUir6Y+k9T9T1JZyX/3enkOGN1DzYmmtyyUitzwW5kUxmRIrgIqf81l++A/gFtbVp54EorQ6Rw4mh2TWAmvlV1FSYUw7tCDJjGOLDvfvDu71DRLfTIMn6yQGduf984y6o5jU+9rNUVvpYA759zmahsgQrg//90lu18z84eoIL1wVLpQG8l3FFREb1eljyW5dEssHasA/bpwFp4t4aXJ50vL7ZCDiEcsS/MbbgKd9eFiiZ1iqaiKkXbRJeoHdju2IIomNL5Y9lP+xc7lh13lCJCCpFExHHjz893f6EK7AUQ3iiOKC5cUdx5ofgJQgkThcJgUMTEKBIJKHLvoWjpUAxGo0wwBWWmBShp0lAy5aIUKkbp1I2rTx8uCuwmosW57Y4JM8B75sHyxeCxA+Z/AYXz9KOli+HbvQ7wDIICcFJmDk4/Z3FCVVVxQFU2N+P8UMNXIz4Z8RqeHrCHcOeIr7kw4tSIQeiObN2zhRV3u/eiakGMTpofA5uhk+ZGH5rSqcCgVbhYqo8N78SNoV0digDXsZMALYLDM48Y2BE7Yx72wcE4BIdiIZbgOCzDKqzFOpYqevnhj4KCJDZnp1OXbn04nFCwo+XswI3bw+3Kdm5r3Rq3DduKTcsWiLfAjef/062/rB+tT9dra+dqWSvXWeuYVbSGLB8tN5a9S+WSuoT0Z/2413d55zeT//Iy7TFnZyYkrL6oltpQk8pY/v7xmx98hKJAcebCjTtvPvzwBQsRKowALZpYDIlEUjJyLIY4lcZg8vgCoUgskcrkCqVKTZAarU5v8OffaCbBCEzjZuKJTDSAJV4xG0FIKqIyFLZ4Q2uspDhLkBk5N4pmVBHURivGNC050jjUgYDcV/6J4Fwe4hjNZ0DL6RFfzqJvKMG1OhIieagBDXKmnjUQBtAyPJzkh9hIMyIDR6Ng6bojctBO6kaGVzNme5xCRQzvAkwISCOojBpBZDcWemTQlf0gW9qQKeH+RNzIdizP5IvmSpt0nSFefMaxUO5XJuJx8NMBEjJIjMxPyi3UTGZHDQv0eoHfaRNybM4AhIAIqQG7rHE1YyIrctJSpW7FJAtvKu2czliXuMgmI+FiWZSEOrsbIvwtDQRb2LpX4h0pskzazI52wakw0naIGYOSopoaVtIpIBMrRwLbfKAF9BjAGD5lAkI0hSNm4xuJXGeb0ASMZIBJTIxAsW4KPqn0roKaCyGdFtMF1cJoBYP+VEq+L2twluOJ42epMIYTMCIky8fa6DMwMKLLjTziiLBJRFCGkt8Ze7GxUSeVmj2R1CUjqs8pwxpJ2SYDRs/ZklSMCAcJDGvn5QxczbutxWQVQpx/AMOk5XLisqWTYwBkQEiGOiNyKIaWE0UelxKke2bvShl2bEVTxXamPqGEstceAD6mYiScdjCCiM3KNj2zySSBV8Y2Jk28XQTQ7MsKJvioW6tCntP90CqNkiaAB/DxEoDGc3fNpQMGqLJBrmVMLzPA6oA5pfD+QhxaK/wciVQ1uO1Q4FjO1sPyp2TgVf4rsnlHGwukqMQ47DeDYZcFpbODfOaXer49ar7kO1+DmB3l0s3DFyZYp8fwXQZoqdCiBV9waeoij0Q+FDAuEUc+39MH+frxRy8aXOKiELwCInS+JZjv2QudbyTOC9L5CDufGh9QDAFX4lwln2HjAg7pPCOfr3/DEBHxBtDfMTHdFmPqtewhr2cOuFe997qPtBZ42PdleBzcQv2j6//6uEBwzpv78wSgf/EzKCC3xQbO4KBQnFDgKAqcwHnx8dxyCiAooDbuWkBAg6O4KHCUXYzgFlr2OOKpLVTlgFa9Bh1zwn3DXvne7/71P5VY03Mtz/OyKS6X6yQ4KggShAqEApGg8+rM///jjAQaizRr1YO1uvMeeOaNH/35j0zDOOoRQaAgRNwEMHKPE635GccOTfGk4L9vPup2sDX+BC8prTn/7vVWFD24z0EfgR8AfFMcikf5F1t6oO4Af2xvqLbXOlaHtdpng43WarRSnRXWq7TKQS0OqHHkd0ew7+HMmMPTf4taW+0w+Cvkf/0mHTY7hDCp1+CkdqvZ4+ByZMeBE1deeDx4CuIvQKBwkUYQihKhWYJYceIppEuiovYejWQj6YxmlCLVFBNNMtks880x1wLz7JcrS7YcRUQWolDzvwOAt4F6AbwDe66HfR9A7wfqT0Bw5kGjzSi1hTKZ9cGvpwcfyhg5Ri4KdX4q5O6NE8kBjo9EcK76htoUD0t1Ia6OruoJh3Eq7YNuWRz8IICG4nuRp1M+72pgBH3Jq9oqnetqTrNlOe9Lb3d9Nh873rbKtrcoOybhxgafTy9MFV1TL1/OLZYLu9e0aDOr5ZxzrnBlcaE3Vy52FctYFi8ezbhUcVFzeT718LnP7l4KxZVu9+qufcpV2BmX+4xQXnDT/RYWLl6cnjaxqQfk1nRryZ6YrgXXdeYZvXyuC4WPw93QMzdX1u9vWcbMBe66sE7nM7nx8EZhMrTCYvSwJnBcQz+uIcRGTg8e4aNRTE5I2ScX3V1G5llS63q8tKIO5/gmAQxK9f3UPlkz9Z8dUbQHkVEboYjJ+ErubkmKkmhGj0TX8QQvngLicWQMLYwBV6lmKQmpMku3wilDsCkMYB8N4vVq1Aj7B7ChndoiXPunBqF9bbhLHqAFHsZQPHpq6xcx8CfQi4pzvttg7KGNrCkUIR/0OFCFwqs/dWqhvSrGZAg6ZkGg84zw/B2BU5btA091cqZjH/3P1NOaj224JvLokKpqZvsN+oHpYaP2/WSvIov9gB0dVibTXLAb6NH9FtBtB45Jsqk1LNkbjDeZudAjPQHDpBL+9Z2kOr529kVR4kcJ3QrBJswiWFJR4gCPofEVdBjGG32LvU6KXWeTFDTQ9zBu/jTPzJWojepXlYbcWIKVS6JvMK8mKssLW7ycV1QQWby8smaLkr3lQdHSHPn8kO7Kd6QK7kjk77czqIBtLy5xQ29evAAT0/Zax6Ma6iU+0LWcUma1mmthUTX60B/9qSGbNetj68HofuUrCz+advWNh+L5iLVKbfOo6IakL61RJpGPfiWME80HPV9ghIRnSgx9Mbe7oKvRwk91pEQwHFJEvIMijSjY90+7Is08XxPR3aUC3RxAl+d7Hzct7G0ke5BIKDe+75hg7q7v3pOLcbj4+UWNz01NLbdiKowuPG6elq0Z6JT0f2qux2gJxq1Zv69FUns6nrRrrB2Ni9q3qBmdY5JbpramnX1WV01g5GINBzU0rijUVX/gQKyNOoxRfwxspNXJxqKfyDNhSbapk/LyLFbx4o4tL9oC0UNxFKN5red8Qcfr4uUrnK7FN695cvAMKmAMohMs4ao3NXZUtwWYmhiqUDNkfHn4SfJW5Q3fek/4zbRnwDNoWIhUGPXRW2jRq1pROdFOiTGQokBQMuzqM1GJDWyup7qbZ3ZhVtGMzsWpmLfuAyrnGkOeyLw+PATNmrxGiIOh5S0ZmhFt28Iw7b6I80/so4N7Bzvc5d7+2ffacbesnUD902TmEPZNxm8iOd+Ez8P23iUmm96XJncv4vf9jllNTTrIcbtZ2wqjtgPr5S5MM317qz/XNvCvPPJmX5l+dM2OKJoXlCU64C/dc8synr2zdXJnom0Og193XHbDZLN251sTZgVvPpaNmdFwyDwK02lNM292+CAjcYdlKipXZ6uAFmxyoMrsUqvvruzh/c32XO3xn5cmZ2F0xtPCrU2T7tlAb3/v7GQwdh7xCW2RAf9xG/fvyEX6CEyVJmiSo2m9gWaOROtpRh+d3PCF+Yt6yxpzLwAzgF6wmJ3I6PUrU1v/rSJWUvWv1bztWYutgySbgPHz4mvdReqPEoP2MIxBT0cnWerNANYCUEcJKtEyggzcidbTdH1mazStv3OLGqu3p4fXLE94eluhsSVRM1tR7eZ6AlSNJgWx/hNbxT/Wpz+QjzuMgaYNTGuCtrEhuX3846JCq1XtGSIPals9v41ffx2McBuxwezNXlg/s52QNyTvgXl2K3/r10EtLBKRyLaQ17CVD/WDeoXCCpWt+WfhT8L9NuvHv9N/iD56MWPnm7cN7ra7332EWxFWtjLdRIx+p1B608mXhcszwHoTUN2XbDcDc2pWE77ZuIeOuPq0K9xOXPFY66g8pTm2P24fuqy4H4Z20jbUJ72EqlCTouV1Qc9jaGhq7t/wOpZPGwc532qz8uWeLze5Xp6J4a24gub7g7EukBjwwxAN+/uHrJ3Stq1hnzi4+AqWtt1rvYc4KCCFVLH/+jdXv9mvoKRUIstez9dXv4YR7hM+Ovku+G3w6YmX3XCj6d3uj6w2JQNXGR0t2hW+HkgGMEBOP18w0G/mT4HzBexCJd1aphKsidgLDF50WhMfAFhwyDmhuyE0ylgXM8LMB+AN4LDwCq2jaTugJ9GnSD9isZwXrRgPScQ5wjnj5ClI3J0Kx3m0hAIfNq6SeW0ZBhA5TIY7sPYTWOYAGP/BXjzCtDoyZohOxAhXBQelKk0xFoM9QDretakOyGEkRnMOLMSCcN0mcOo+LL8CWEHWMLRXgTJVM9XXsF2Trjy2yIe/hVa5hcyZNISrvrdSaskHUEGqwMJ4KidJ8/tCF1osGtUOn/bHU5wdKuf5ix2lnHaN0TdE+su8ZrRwfYsdzODh0gMXwe91P4X4dKAjFH5Wnbg+fejPIq73jLi/apeSY6AfhJao06m5aIcSvwqSKf8tEzupNZVbCKOhjhTDHNULa2qKfL1nanuUBy9qj409l0ybtdunbdfAxsE7ALC4jrWzF5HOYTLsDWCYvMY1ybvIAL/DMAMjDb02E7yDvaMMcMRvaKmUrJbs3pxQltDyzFBunbtnLuIgvf7L9a+kDVuPbDnSKCUKjbJEV0th3f0BSVi7j7Qxn2ojNXU+WDQscF/45gRlg7jN6CR0Kt3M0AYdwzTR6LWXaabXlHWlvdE5LRgFwG17LUa6jgKAb/G5079PvZpsUCNAlMVmANs6bmuInqsEY9po3VaVSWsKFd1iwoytIgltX9g6AIOEADABWAJARbTeYB0SFWx3ZaLfhfH3cPULbcZRDPRsPLdr45oPLB8MTJqAY7txGx1q1yzuvUzEAFYBMNMaY6abm1qa3W+8ElfIWftuB7PX5I5PhRegAnCWXI2wWevvUc1eO4uLd3pvHSa3OhJBuYuAYxdXWcAOrddhTTcin8YY82MBmOgAbe5GNpvD8m4hMh37sX0tYOjge/4sCCFQrIUPqYpclRIDRRssxGJuM4+QzYihYblR2wkLEX3SGhaob8CROJpvoA0Aj/DMjG5O9UVMGjxr+hjAXgBD5CVTYw4z/d8BSCEXMTtwKPax9JHBHwEYT6Y35x/5mfOEvHr3jk+4y1+v89br/Qx6b53BD+fssOYaFxQJ43YVRpZbyosi43YVCY0LVsxNXYBkxDWMJ8tH5FWT3vg9jdI9mxxq6DWQsrUNLScdkob6+IYtMQ0LWWzYbGADHPDekSstdxR4CNNmUfb4F5DZndRgPdEAaCzbS0OF5x0Guptm9/zQiQe7RbVL1lQsTY/pWs3ef/VK/ymlg8zPnL6rV/cbYkwtWrLUtKx2GLxxsLA9IppGDYEMRN2oJo9s0DwH2U+geAYy6zOcQxZ0eWWSo6iKqkqJPuxj246qMz47FD3wtqyK3JoS0+FAEEGrLIwYzCnKxYCIUs4V4+kfuGm+OfFTITS/4xa5BZ4MafE8Mi8CzXg5pCFyN00XkIIIWbMQwF0yBGE6MkrSN2P68RMqKbOU9db38ntJbwbn74afB4APgE1Dek2Mno4yMKOIBsDKapNYLxIZYurEUfqFxjE16STdFKMsrkKsJUkAVq43uWVoRXWMyKALxKZ0X+/IXDkW+nwDoLGqAZ9Bg8yrnIdsB/+dtP1EeMsqiwbAL4BdcSSuso5g50ysW01WryFr1pP16/itWj4VUtMR0yFpo2GhcWGTtOZQzRFpk3EBZMHhe5CviNrNJsR898s0RzMOhEfcb0I1aEH/F+u/WNfX8VsNejzR/rtpV1Xvl+u/rEXMg8jGLqFItDZVLNKG9dcZKCirOkFjPRq2Jcqs26QoYS5JmDGM5CIzlbmoQZey/FYhkifk8c9UtX/+lLaPpMf4V0IwhUrcmK30ufVTkmNiKocZBTNcyYxkKq8zoyTfANgBoBGAmCRax2VNA5AFYBqAa7RORGujT/ovmvhBZEE0rdNF0WkRlw90DlEAmAqgsODYIrK/1NC4efL4HyP2mQWuPi6s9XNOGb4EgAVf2CJKHDcJ/XgDTMol8oX+i/Sam4dvAjgMZEB/WI9zs5aumjEjp9Jx7bppeqpLbTaABQDUXEU6akktQqtnJ1bcIxkp1ZDearjtxvQnqLG36HimrGT96c0IrA5/GZ44JsnC74QnNpUapQDYuFrlzFr1XLVwYvlc5VdfxS4szUZqvay9QV8mZq3CNOM0cESgcMERQ7Vgi1YeOXLlmxRc0g44AOPuYXAdcfdVcojY77CDInnkEHkYIbyLC0iUNlbyyJFLWi5Bk0vkErmEyyu8kythejFs5JEjV75JTa3goQFiqJgL5JFDZBOwKqagjkwkWD6TCJ7SPDt4z/yvlUeOXFKeiTZ9/gzII4fIC92nTwFAUBUHp0RzomYJOuNupF1RKIpbth/O+e8sMMrn8sVKx7X/rB0m56v/dFwPwOm3oIHezR1WyZWgw2YyFP6SajLbgWMTyGd2akWukMONhwWBnzPmHtR+aTTHoC42mV/AJ9kq6J3cl1jZfeMOkysBh82n037U/J64SvdFDrnc44kqiF+RscOnkE1mqmOUkTCuxxMV4TceLwD8mDFDqL25RjMIdb7J/AQ+SrOQ154bc+NjgbBBgWZpEoX9ao9TibIlCIaKJyFLezw05ctcUz1CdJvfxQgR+EaFL+bBVvHIN170UbxsqPU9hd1kGuKBAqG/xXtUWx7Jv6253C+AT9s9Efj8dLLrf+MEK5f7Emw4gIJ1M63r/amR/9nLAeXhyXp7fuHbRpqT8oTVYFsrqVkqOCY9Tf5Dj9p6ZM49ndoT4YKCRs09OLayX9oNdh1K3a5Y10zV2iNNxrrW9yk6QKHcVNvfcH7n67bgaxFLfdtbS8S1aH4/tRRkOUY+crHsLfXYHCc7ufUCMki21TpBkQ7RsWJ9Sp4iBMAdGHwxP/l+UrIeW1PJ+yE2J8CD54ewhZDHjLV8w2M/TbeE1lHXZYoch6z257eEimhL49JFDOlT2NbXw2tRPZK6NeI5B124nDq7cVufnUzmS6yfFf3+BSsXyDIS6yWNhxQ5LDwH+FSZwrVDUIcSxBkOcYJ9icgrmqpGCKgRZOWDLV+y2CMpV7DN5mJmPRQr7y/rB0LfYWuLSH9LKj3ULdCnRaTSiPYlzGt0XeeFlS2kiCMcU1UxXug35Rn72i2wr0noeGy3U7SOqo6L9QQLMxamFqYTJg3GAmOEujNKmeOJNiQkTsj0JY/ahVe/mG2IHQq8bTp7ydoW8OKCAnvtxUUtzoDffVPXUULY6jh4LtVxSW0vtbOts8e3pM5BiHl1PHKiOk+e/Kd6ceE2hAL2AjAH8/szW5Y8OXKV0yuUJkOByUqly1OuVLHFVu5yJTTiwSqToek8JcqZFKds5xeKU6xUjniTpZqAVRobxpklS6m7WrsFpOIkQGmiJjzJJJNNkrLCmDBN5KjQB5c6RArcBsVKLFeauEpAC5lWEZgRQFYRJDZF4+TLkuFq6VR4kas4lekCjEy87CBy5FlaFdJ1YIZiReINVpZCZGnEjawYsoOKr0OjSQgsxWKCRFmZcMYS52QSSLVXKaUnSVMUgiZYmMIAoTgcD8c4VlIfz9vggpuuS9clQ7ftoohkojGy3HDL7fV1Q++46577K9tUCb982aRsHsjxSI9eMnIKLCWVx4bkekJNI0myr73HKE+BQvkWK9IsRapio41RolSZD9forW2CYeWWWKpijdyLmWKqZaZZbqVKK6zSt4rvjc2y0WxzVDGpUW2ueeZb4BunLFwxSFfo8aCVg38zXjyECtPBzgFCLWq5c+BtFFdu3veBkbQ89RugN+ioY46z54JbHIqLtRytw/O9H5wgMEK4NE4iONtgjUVjR9lTDpQj5UQ5Uy6oY7DVU68889zrHRXP5SUk6BLsUp4vLX56XVmCyvlPXZdn/Y/RjnPawxXlGmrDpeq96pzLnyzMrHOlyhP8f93LtgIAAA==) format("woff2");font-weight:900;font-display:block}
+#stOp{display:none;position:fixed;inset:0;z-index:20000;background:#02040a;touch-action:none;cursor:pointer}
+#stOp canvas{width:100%;height:100%;display:block}
+#stOpSkip{position:absolute;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));font:600 11px/1 system-ui,sans-serif;color:rgba(231,233,234,.45);letter-spacing:.08em}
+</style>
+<div id="stOp"><canvas id="opCv"></canvas><div id="stOpSkip">タップでスキップ</div></div>
+<script>
+(function(){
+"use strict";
+// ===== 起動時オープニング(メーターが振り切れる演出) =====
+const OP={title:'86',sub:'× SPEED TRACER',tag:'TASUKU TRACE SPECIAL',max:90,major:10,red:70,over:'TASUKU',dur:6.4};
+const BLUE='#58a8ff', BLUE_HI='#bfe0ff', RED='#ff2a1f';
+const op=document.getElementById('stOp'), cv=document.getElementById('opCv'), cx=cv.getContext('2d');
+// 表示する条件: GitHub Pages(https)で開いたときだけ / 期限まで / この端末で ?op=off を一度開いていない
+const OP_UNTIL=new Date(2026,10,30,23,59,59); // 2026年11月30日まで(月は0始まり)
+let show=location.protocol==='https:' && Date.now()<=OP_UNTIL.getTime();
+try{
+  const q=new URLSearchParams(location.search).get('op');
+  if(q==='off')localStorage.setItem('st_op_off','1');
+  if(q==='on')localStorage.removeItem('st_op_off');
+  if(localStorage.getItem('st_op_off')==='1')show=false;
+  if(q==='on')show=true;
+}catch(e){}
+if(!show){op.parentNode&&op.parentNode.removeChild(op);return;}
+op.style.display='block';
+let W=0,H=0,DPR=1,G=null,GC=null; // G: 目盛りなど動かない部分を描いておく別キャンバス
+// 文字盤: 左下(0)から右下(最大)まで270°。画面より大きく、左側を少しはみ出させる
+let CX=0,CY=0,R=0;
+const TILT=-0.16, SQ=0.84; // 少し斜めから見た感じ(回転と縦のつぶし)
+const A0=Math.PI*0.75, SW=Math.PI*1.5;
+const ang=function(v){return A0+SW*(v/OP.max);};
+const ease=function(t){return t<0?0:t>1?1:1-Math.pow(1-t,3);};
+const cl=function(t){return t<0?0:t>1?1:t;};
+
+function resize(){
+  DPR=Math.min(2,window.devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;
+  cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);
+  R=W*0.95;CX=W*0.40;CY=H*0.50;
+  buildDial();
+}
+function buildDial(){
+  const S=Math.round(R*2.5*DPR);
+  G=document.createElement('canvas');G.width=S;G.height=S;GC=G.getContext('2d');
+  const g=GC;g.setTransform(DPR,0,0,DPR,0,0);g.translate(R*1.25,R*1.25);
+  g.lineCap='round';
+  // 外周の細い光
+  g.save();g.shadowColor=BLUE;g.shadowBlur=18;g.strokeStyle='rgba(120,180,255,.55)';g.lineWidth=2;
+  g.beginPath();g.arc(0,0,R*1.02,A0-0.05,A0+SW+0.05);g.stroke();g.restore();
+  // 目盛り(大・小)
+  for(let i=0;i<=OP.max*4/OP.major;i++){
+    const v=i*OP.major/4,a=ang(v),big=i%4===0,mid=i%2===0;
+    const r1=R*0.97,r0=R*(big?0.80:mid?0.87:0.91);
+    g.save();g.shadowColor=BLUE;g.shadowBlur=big?22:12;
+    g.strokeStyle=big?BLUE_HI:'rgba(120,180,255,.85)';g.lineWidth=big?R*0.026:mid?R*0.014:R*0.008;
+    g.beginPath();g.moveTo(Math.cos(a)*r0,Math.sin(a)*r0);g.lineTo(Math.cos(a)*r1,Math.sin(a)*r1);g.stroke();g.restore();
+  }
+  // 数字
+  g.save();g.textAlign='center';g.textBaseline='middle';g.font='900 '+Math.round(R*0.11)+'px OpTitle, system-ui, sans-serif';
+  for(let v=0;v<=OP.max;v+=OP.major){
+    const a=ang(v),r=R*0.54;
+    g.save();g.translate(Math.cos(a)*r,Math.sin(a)*r);g.transform(1,0,-0.16,1,0,0);
+    g.shadowColor=BLUE;g.shadowBlur=16;g.fillStyle=v>=OP.red?'#ffb3a8':BLUE_HI;g.fillText(String(v),0,0);g.restore();
+  }
+  g.restore();
+  // 140から先は赤い帯
+  g.save();g.strokeStyle='rgba(255,60,40,.85)';g.shadowColor=RED;g.shadowBlur=16;g.lineWidth=R*0.03;
+  g.beginPath();g.arc(0,0,R*0.985,ang(OP.red),ang(OP.max));g.stroke();g.restore();
+  g.font='700 '+Math.round(R*0.05)+'px OpTitle, system-ui, sans-serif';g.textAlign='center';g.fillStyle='rgba(191,224,255,.7)';
+  g.fillText('km/h',0,R*0.36);
+  // にじみ用のぼかした写し
+  B=document.createElement('canvas');B.width=S;B.height=S;const b=B.getContext('2d');
+  b.filter='blur('+Math.round(8*DPR)+'px)';b.drawImage(G,0,0);
+  // 銀のリングは光らせないので、にじみ用の写しを作ったあとに描く
+  // 銀のリング(青い点線のすぐ外から大目盛りの手前まで)。
+  // 断面を一本の丸い膨らみにして、光の当たる向きで明暗をつける
+  { const r0=R*0.665, r1=R*0.792, w=r1-r0, rc=(r0+r1)/2;
+    const cg=g.createConicGradient?g.createConicGradient(-0.7,0,0):null; // 金属の映り込み(周方向の明暗)
+    if(cg)[[0,'#2a2e35'],[0.05,'#ffffff'],[0.09,'#7d838b'],[0.2,'#14161b'],[0.33,'#a9afb7'],[0.45,'#ffffff'],[0.5,'#7f858d'],[0.63,'#15181d'],[0.77,'#c7ccd2'],[0.83,'#ffffff'],[0.89,'#4c5259'],[1,'#2a2e35']]
+      .forEach(function(c){cg.addColorStop(c[0],c[1]);});
+    g.save();
+    g.shadowColor='rgba(0,0,0,.85)';g.shadowBlur=14;g.strokeStyle=cg||'#b8bec6';g.lineWidth=w;
+    g.beginPath();g.arc(0,0,rc,0,Math.PI*2);g.stroke();g.shadowBlur=0;
+    // 断面の形(0=内縁 → 1=外縁): 内側の細い膨らみと外側の太い膨らみ。間はなだらかな谷
+    const bump=function(u,c,hw){const d=(u-c)/hw;return Math.abs(d)>=1?0:Math.pow(Math.cos(d*Math.PI/2),2);};
+    const hgt=function(u){return Math.pow(Math.max(0,Math.sin(Math.PI*u)),0.55);}; // 全幅で一本の丸い膨らみ
+    // 面の向きから明るさを出す(光は斜め上の外側から。頂点付近にはつやの光)
+    const N=140, Lx=0.42, Ly=0.91;
+    for(let i=0;i<N;i++){
+      const u=(i+0.5)/N, du=0.004, sl=(hgt(Math.min(1,u+du))-hgt(Math.max(0,u-du)))/(2*du)*0.75;
+      const nl=Math.hypot(sl,1), nx=-sl/nl, ny=1/nl;
+      const diff=Math.max(0,nx*Lx+ny*Ly);
+      const hx=Lx, hy=Ly+1, hl=Math.hypot(hx,hy);
+      const sd=Math.max(0,(nx*hx+ny*hy)/hl), spec=Math.pow(sd,90)*1.4+Math.pow(sd,14)*0.35;
+      // クローム調: 面の傾きに応じて「暗い映り込み帯」と「明るい光」が交互に出る
+      const ang=Math.atan2(nx,ny), env=1.15*Math.exp(-Math.pow((ang+0.3)/0.38,2))+0.5*Math.exp(-Math.pow((ang+0.3)/0.12,2))-0.1;
+      const edge=Math.min(1,Math.max(0,(Math.abs(ang)-1.05)/0.35));
+      const v=0.2*diff+1.2*spec+1.3*env-0.12-1.1*edge;
+      g.lineWidth=w/N+0.7;
+      g.strokeStyle=v>0?'rgba(255,255,255,'+Math.min(0.97,v*1.1)+')':'rgba(0,0,0,'+Math.min(0.85,-v*1.25)+')';
+      g.beginPath();g.arc(0,0,r0+w*u,0,Math.PI*2);g.stroke();
+    }
+    // 光は左上から: 左上の面を明るく、右下を暗く
+    const lg=g.createLinearGradient(-r1,-r1,r1,r1);
+    lg.addColorStop(0,'rgba(255,255,255,.28)');lg.addColorStop(0.5,'rgba(255,255,255,0)');lg.addColorStop(1,'rgba(0,0,0,.38)');
+    g.strokeStyle=lg;g.lineWidth=w;g.beginPath();g.arc(0,0,rc,0,Math.PI*2);g.stroke();
+    // 縁の切れ目
+    g.lineWidth=1;g.strokeStyle='rgba(0,0,0,.6)';
+    g.beginPath();g.arc(0,0,r0,0,Math.PI*2);g.stroke();g.beginPath();g.arc(0,0,r1,0,Math.PI*2);g.stroke();
+    g.restore(); }
+}
+let B=null;
+function local(dx,dy){cx.setTransform(DPR,0,0,DPR,0,0);cx.translate(CX+dx,CY+dy);cx.rotate(TILT);cx.scale(1,SQ);}
+
+// 光の帯: 文字盤の外側を、針を追いかけるように走る弧
+const STREAKS=[['255,255,255',1.10,0.9],['255,226,90',1.16,0.8],['255,50,30',1.22,0.85],['70,140,255',1.28,0.8]];
+function drawStreaks(aNeedle,k,t){
+  if(k<=0)return;
+  cx.save();cx.globalCompositeOperation='lighter';cx.lineCap='round';
+  STREAKS.forEach(function(st,i){
+    const tail=0.9+0.25*Math.sin(t*3+i), a1=aNeedle+0.05*i, a0=Math.max(A0-0.3,a1-tail);
+    const g=cx.createConicGradient?cx.createConicGradient(a0,0,0):null;
+    if(g){g.addColorStop(0,'rgba('+st[0]+',0)');g.addColorStop(Math.max(0.001,(a1-a0)/(Math.PI*2)),'rgba('+st[0]+','+(st[2]*k)+')');g.addColorStop(Math.min(1,(a1-a0)/(Math.PI*2)+0.001),'rgba('+st[0]+',0)');cx.strokeStyle=g;}
+    else cx.strokeStyle='rgba('+st[0]+','+(st[2]*k*0.6)+')';
+    cx.lineWidth=R*0.035;cx.shadowColor='rgba('+st[0]+',1)';cx.shadowBlur=20;
+    cx.beginPath();cx.arc(0,0,R*st[1],a0,a1);cx.stroke();
+  });
+  cx.restore();
+}
+
+function drawGlints(t,on,shake){
+  const rc=R*0.7285, w=R*0.127; if(on<0.95)return;
+  cx.save();cx.globalCompositeOperation='lighter';
+  const gl=[[-1.95,0.9],[-0.55,0.5]]; // [角度, 強さ]
+  gl.forEach(function(g0){
+    const th=g0[0], k=g0[1]*(1+0.6*shake);
+    if(cx.createConicGradient){
+      const cg=cx.createConicGradient(th-0.35,0,0);
+      cg.addColorStop(0,'rgba(255,255,255,0)');cg.addColorStop(0.035,'rgba(255,255,255,'+(0.55*k)+')');cg.addColorStop(0.055,'rgba(255,255,255,'+(0.95*k)+')');cg.addColorStop(0.075,'rgba(255,255,255,'+(0.55*k)+')');cg.addColorStop(0.11,'rgba(255,255,255,0)');cg.addColorStop(1,'rgba(255,255,255,0)');
+      cx.strokeStyle=cg;cx.lineWidth=w*0.75;cx.beginPath();cx.arc(0,0,rc-w*0.05,0,Math.PI*2);cx.stroke();
+    }
+    // 星形のきらめき
+    const px=Math.cos(th)*(rc-w*0.12), py=Math.sin(th)*(rc-w*0.12), tw=0.75+0.25*Math.sin(t*9+th*3), L=w*1.6*k*tw;
+    const rg=cx.createRadialGradient(px,py,0,px,py,w*0.55);rg.addColorStop(0,'rgba(255,255,255,'+(0.95*k)+')');rg.addColorStop(0.3,'rgba(220,235,255,'+(0.4*k)+')');rg.addColorStop(1,'rgba(255,255,255,0)');
+    cx.fillStyle=rg;cx.beginPath();cx.arc(px,py,w*0.55,0,Math.PI*2);cx.fill();
+    cx.strokeStyle='rgba(255,255,255,'+(0.85*k)+')';cx.lineCap='round';
+    [[0,1.0],[Math.PI/2,1.0],[Math.PI/4,0.45],[-Math.PI/4,0.45]].forEach(function(r){
+      const ra=r[0]+0.2, l=L*r[1];
+      const lg=cx.createLinearGradient(px-Math.cos(ra)*l,py-Math.sin(ra)*l,px+Math.cos(ra)*l,py+Math.sin(ra)*l);
+      lg.addColorStop(0,'rgba(255,255,255,0)');lg.addColorStop(0.5,'rgba(255,255,255,'+(0.9*k)+')');lg.addColorStop(1,'rgba(255,255,255,0)');
+      cx.strokeStyle=lg;cx.lineWidth=r[1]>0.9?2:1.2;cx.beginPath();cx.moveTo(px-Math.cos(ra)*l,py-Math.sin(ra)*l);cx.lineTo(px+Math.cos(ra)*l,py+Math.sin(ra)*l);cx.stroke();
+    });
+  });
+  cx.restore();
+}
+function frame(t){
+  cx.setTransform(DPR,0,0,DPR,0,0);cx.globalCompositeOperation='source-over';cx.globalAlpha=1;
+  cx.fillStyle='#02040a';cx.fillRect(0,0,W,H);
+  const outA=1-ease((t-5.8)/0.6);
+  // 針の動き: 0.5秒で一度全域を確かめる → 1.5〜2.9秒で一気に加速 → 振り切れてブルブル → 4.0秒でタイトルへ
+  let v=0,shake=0;
+  if(t<0.55)v=0;
+  else if(t<1.25){const k=(t-0.55)/0.7;v=OP.max*Math.sin(Math.PI*k)*0.98;}
+  else if(t<1.5)v=0;
+  else if(t<2.9){const k=(t-1.5)/1.4;v=OP.max*1.06*Math.pow(k,1.7);}
+  else{v=OP.max*1.06;shake=cl((t-2.9)/0.15)*(1-cl((t-4.1)/0.3));}
+  const jitter=shake*(Math.sin(t*95)*2.2+(Math.random()-0.5)*2.4); // 針のブルブル(km/h換算)
+  const dx=(Math.random()-0.5)*9*shake, dy=(Math.random()-0.5)*9*shake;
+  cx.save();local(dx,dy);cx.globalAlpha=outA;
+  // 赤い光(針の手前側が赤く染まる)
+  const vv=Math.max(0,v+jitter), a=ang(vv), heat=cl((vv-OP.max*0.5)/(OP.max*0.5));
+  if(heat>0){
+    cx.save();
+    const rg=cx.createRadialGradient(0,0,R*0.15,0,0,R*0.95);rg.addColorStop(0,'rgba(255,40,20,0)');rg.addColorStop(0.55,'rgba(255,40,20,'+(0.45*heat)+')');rg.addColorStop(1,'rgba(255,40,20,0)');
+    cx.fillStyle=rg;cx.beginPath();cx.moveTo(0,0);cx.arc(0,0,R*0.95,a-0.9,a+0.05);cx.closePath();cx.fill();cx.restore();
+  }
+  // 文字盤(電源が入るように順に点く)
+  const on=ease(t/0.5);
+  cx.save();cx.beginPath();cx.moveTo(0,0);cx.arc(0,0,R*1.3,A0-0.1,A0-0.1+(SW+0.2)*on);cx.closePath();cx.clip();
+  cx.globalAlpha=outA*(0.85+0.15*Math.sin(t*40)*shake);
+  cx.drawImage(G,-R*1.25,-R*1.25,R*2.5,R*2.5);
+  cx.globalCompositeOperation='lighter';cx.globalAlpha=outA*(0.55+0.3*heat);cx.drawImage(B,-R*1.25,-R*1.25,R*2.5,R*2.5);
+  // リングのギラつき: 光の反射がリングの上を走る + 星形のきらめき
+  cx.globalAlpha=outA;drawGlints(t,on,shake);
+  cx.restore();
+  // 光の帯
+  drawStreaks(a,cl((t-1.6)/0.4)*(1-cl((t-4.2)/0.4)),t);
+  // 針
+  cx.save();cx.rotate(a);
+  cx.shadowColor=RED;cx.shadowBlur=22;
+  const ng=cx.createLinearGradient(-R*0.12,0,R*0.95,0);ng.addColorStop(0,'#7a0d08');ng.addColorStop(0.3,'#ff3a24');ng.addColorStop(1,'#ffd2c8');
+  cx.fillStyle=ng;cx.beginPath();cx.moveTo(-R*0.14,-R*0.022);cx.lineTo(R*0.94,-R*0.006);cx.lineTo(R*0.94,R*0.006);cx.lineTo(-R*0.14,R*0.022);cx.closePath();cx.fill();
+  cx.restore();
+  // 中心のキャップ
+  cx.save();const cg=cx.createRadialGradient(-R*0.03,-R*0.03,0,0,0,R*0.11);cg.addColorStop(0,'#5d6676');cg.addColorStop(1,'#151a22');
+  cx.fillStyle=cg;cx.beginPath();cx.arc(0,0,R*0.1,0,Math.PI*2);cx.fill();
+  cx.strokeStyle='rgba(150,190,255,.5)';cx.lineWidth=1.5;cx.stroke();cx.restore();
+  // 振り切れた瞬間の閃光と「OVER」表示
+  if(shake>0){
+    const f=0.5+0.5*Math.sin(t*30);
+    cx.save();cx.textAlign='center';cx.textBaseline='middle';cx.font='900 '+Math.round(R*0.13)+'px OpTitle, system-ui, sans-serif';
+    cx.shadowColor=RED;cx.shadowBlur=24;cx.fillStyle='rgba(255,70,50,'+(0.6+0.4*f)*shake+')';cx.fillText(OP.over,0,R*0.5);cx.restore();
+  }
+  cx.restore();
+  cx.setTransform(DPR,0,0,DPR,0,0);
+  if(t>2.9&&t<3.15){cx.fillStyle='rgba(255,255,255,'+(0.5*(1-(t-2.9)/0.25))+')';cx.fillRect(0,0,W,H);}
+  // タイトル
+  if(t>4.0){
+    if(t<4.45){cx.fillStyle='rgba(255,255,255,'+(0.85*(1-(t-4.0)/0.45))+')';cx.fillRect(0,0,W,H);}
+    drawTitle(t,outA);
+  }
+}
+function drawTitle(t,outA){
+  const k=ease((t-4.05)/0.35), sh=t<4.45?(1-(t-4.05)/0.4)*6:0;
+  cx.save();cx.globalAlpha=outA;
+  cx.fillStyle='rgba(2,4,10,'+(0.7*k)+')';cx.fillRect(0,0,W,H);
+  cx.translate(W/2+(Math.random()-0.5)*sh,H*0.40+(Math.random()-0.5)*sh);
+  cx.strokeStyle='rgba(88,168,255,'+(0.18*k)+')';cx.lineWidth=1.2;
+  for(let i=0;i<48;i++){const a=i/48*Math.PI*2+t*0.15,r0=W*0.38,r1=W*1.2;cx.beginPath();cx.moveTo(Math.cos(a)*r0,Math.sin(a)*r0);cx.lineTo(Math.cos(a)*r1,Math.sin(a)*r1);cx.stroke();}
+  const sc=1.9-0.9*k;cx.scale(sc,sc);
+  cx.textAlign='center';cx.textBaseline='middle';
+  cx.font='900 '+Math.round(W*0.42)+'px OpTitle, system-ui, sans-serif';
+  cx.transform(1,0,-0.18,1,0,0);
+  cx.shadowColor='rgba(88,168,255,.9)';cx.shadowBlur=24;
+  cx.lineWidth=3;cx.strokeStyle=BLUE;cx.strokeText(OP.title,0,0);
+  cx.fillStyle='#f2f4f7';cx.fillText(OP.title,0,0);
+  cx.restore();
+  const k2=ease((t-4.4)/0.45);
+  cx.save();cx.globalAlpha=k2*outA;cx.textAlign='center';cx.textBaseline='middle';
+  cx.font='900 '+Math.round(W*0.075)+'px OpTitle, system-ui, sans-serif';
+  cx.fillStyle='#e7e9ea';cx.fillText(OP.sub,W/2+(1-k2)*60,H*0.40+W*0.27);
+  const n=Math.floor(cl((t-4.7)/0.6)*OP.tag.length);
+  cx.font='700 '+Math.round(W*0.038)+'px OpTitle, system-ui, sans-serif';
+  cx.fillStyle=BLUE;cx.fillText(OP.tag.slice(0,n).split('').join(' '),W/2,H*0.40+W*0.37);
+  cx.fillRect(W*0.2,H*0.40+W*0.325,W*0.6*k2,1.5);
+  cx.restore();
+}
+
+// ---- 再生 ----
+let t0=0,raf=0,running=false;
+const clock=function(){return (window.__opT!=null)?window.__opT:(performance.now()-t0)/1000;};
+function loop(){const t=clock();try{frame(t);}catch(e){finish();return;}if(t>=OP.dur){finish();return;}raf=requestAnimationFrame(loop);}
+function finish(){running=false;cancelAnimationFrame(raf);op.style.transition='opacity .35s';op.style.opacity='0';setTimeout(function(){op.style.display='none';if(op.parentNode)op.parentNode.removeChild(op);G=null;B=null;},360);}
+function start(){
+  op.style.transition='none';op.style.opacity='1';op.style.display='block';
+  resize();t0=performance.now();running=true;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){frame(5.2);setTimeout(finish,1500);return;}
+  if(window.__opT==null)raf=requestAnimationFrame(loop);
+}
+op.addEventListener('click',function(){if(running)finish();});
+window.addEventListener('resize',function(){if(running)resize();});
+window.__opFrame=function(t){frame(t);};
+try{(document.fonts&&document.fonts.load?document.fonts.load('900 40px OpTitle'):Promise.resolve()).then(start,start);}catch(e){finish();}
+setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文字の読み込みが遅いときも待たせない
+})();
+</script>
+<!--OPENING_END-->
 <video id="noSleepVideo" playsinline loop muted style="position:fixed;top:-100px;left:-100px;width:2px;height:2px;opacity:0.01;pointer-events:none" src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAMXbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAkF0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAIAAAACAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAPoAAAAAAABAAAAAAG5bWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABAAAAAQABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABZG1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAASRzdGJsAAAAwHN0c2QAAAAAAAAAAQAAALBhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAIAAgBIAAAASAAAAAAAAAABFUxhdmM2MC4zMS4xMDIgbGlieDI2NAAAAAAAAAAAAAAAGP//AAAANmF2Y0MBZAAK/+EAGWdkAAqs2V+IiMBEAAADAAQAAAMACDxIllgBAAZo6+PLIsD9+PgAAAAAEHBhc3AAAAABAAAAAQAAABRidHJ0AAAAAAAAFigAABYoAAAAGHN0dHMAAAAAAAAAAQAAAAEAAEAAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAABAAAAAQAAABRzdHN6AAAAAAAAAsUAAAABAAAAFHN0Y28AAAAAAAAAAQAAA0cAAABidWR0YQAAAFptZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAAC1pbHN0AAAAJal0b28AAAAdZGF0YQAAAAEAAAAATGF2ZjYwLjE2LjEwMAAAAAhmcmVlAAACzW1kYXQAAAKtBgX//6ncRem95tlIt5Ys2CDZI+7veDI2NCAtIGNvcmUgMTY0IHIzMTA4IDMxZTE5ZjkgLSBILjI2NC9NUEVHLTQgQVZDIGNvZGVjIC0gQ29weWxlZnQgMjAwMy0yMDIzIC0gaHR0cDovL3d3dy52aWRlb2xhbi5vcmcveDI2NC5odG1sIC0gb3B0aW9uczogY2FiYWM9MSByZWY9MyBkZWJsb2NrPTE6MDowIGFuYWx5c2U9MHgzOjB4MTEzIG1lPWhleCBzdWJtZT03IHBzeT0xIHBzeV9yZD0xLjAwOjAuMDAgbWl4ZWRfcmVmPTEgbWVfcmFuZ2U9MTYgY2hyb21hX21lPTEgdHJlbGxpcz0xIDh4OGRjdD0xIGNxbT0wIGRlYWR6b25lPTIxLDExIGZhc3RfcHNraXA9MSBjaHJvbWFfcXBfb2Zmc2V0PS0yIHRocmVhZHM9MSBsb29rYWhlYWRfdGhyZWFkcz0xIHNsaWNlZF90aHJlYWRzPTAgbnI9MCBkZWNpbWF0ZT0xIGludGVybGFjZWQ9MCBibHVyYXlfY29tcGF0PTAgY29uc3RyYWluZWRfaW50cmE9MCBiZnJhbWVzPTMgYl9weXJhbWlkPTIgYl9hZGFwdD0xIGJfYmlhcz0wIGRpcmVjdD0xIHdlaWdodGI9MSBvcGVuX2dvcD0wIHdlaWdodHA9MiBrZXlpbnQ9MjUwIGtleWludF9taW49MSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTQwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAABBliIQAFf/+98nvwKbr29+B"></video>
 
 <div id="mcuWatermark">マイコンで稼働中</div>
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-14.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-15.1</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
