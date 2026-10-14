@@ -82,6 +82,10 @@
 //   (BLE/WiFi/CAN/Preferences/Updateは標準搭載)
 //
 // 変更履歴:
+//   2026-10-14.1
+//     - 機能アドレス(0x7DF)の照会で、別のECUが先に否定応答を返すと、本命のECUの応答を待たずに
+//       「応答なし」にしていた不具合を修正(86で回転数・車速が読めなかった)
+//     - 受信キューを32→64フレームに広げた(OBD2端子に制御フレームが多く流れる車種向け)
 //   2026-10-07.1
 //     - マルチフレーム(ISO-TP)応答の受信に対応。PID: / PID22: / 監視チャンネル / ELM327互換ポート / DTC読取で有効
 //     - WiFi経由のファーム更新ページ(/update)を追加
@@ -108,7 +112,7 @@
 #include "webpage_html.h"
 
 // ファームウェアの版。更新ページ(http://192.168.4.1/update)と status コマンドに表示される
-#define FW_VERSION "2026-10-07.1"
+#define FW_VERSION "2026-10-14.1"
 
 Preferences prefs;
 
@@ -225,9 +229,9 @@ void setupTWAI() {
                      (g_listenOnly ? TWAI_MODE_LISTEN_ONLY : TWAI_MODE_NORMAL);
   twai_general_config_t g_config =
       TWAI_GENERAL_CONFIG_DEFAULT(CAN_TX_PIN, CAN_RX_PIN, mode);
-  // マルチフレーム応答の後続フレームは約0.3ms間隔で連続して届く。既定(5フレーム)では
-  // 取りこぼすことがあるため、受信キューを広げる
-  g_config.rx_queue_len = 32;
+  // マルチフレーム応答の後続フレームは約0.3ms間隔で連続して届く。また車種によってはOBD2端子に
+  // 走行中の制御フレームが毎秒1000件以上流れている(86など)。既定(5フレーム)では応答を取りこぼすため広げる
+  g_config.rx_queue_len = 64;
   twai_timing_config_t t_config = (g_canBaud == 250) ?
       (twai_timing_config_t)TWAI_TIMING_CONFIG_250KBITS() :
       (twai_timing_config_t)TWAI_TIMING_CONFIG_500KBITS();
@@ -308,6 +312,9 @@ int isoTpQuery(uint32_t reqId, bool extended, const uint8_t* req, uint8_t reqLen
   for (int i = 0; i < 7; i++) msg.data[1 + i] = (i < reqLen) ? req[i] : 0x00;
   if (twai_transmit(&msg, pdMS_TO_TICKS(20)) != ESP_OK) return 0;
 
+  // 機能アドレス(0x7DF / 0x18DB33F1)宛ては複数のECUが聞いている。そのうちの1台が「その項目は無い」と
+  // 否定応答を返しても、本命のECUがあとから肯定応答を返すことがある(86で、回転数と車速だけ読めなかった原因)。
+  const bool functional = extended ? (((reqId >> 16) & 0xFF) == 0xDB) : (reqId == OBD_REQUEST_ID);
   const uint8_t posSid  = req[0] + 0x40;                 // 肯定応答のSID(01→41、22→62)
   const uint8_t echoLen = reqLen - 1;                    // SIDの後ろにそのまま返ってくるバイト数(PIDやDID)
   int slots = 0, doneCount = 0;
@@ -338,7 +345,8 @@ int isoTpQuery(uint32_t reqId, bool extended, const uint8_t* req, uint8_t reqLen
             isoTpExtendDeadline(deadline, hardLimit, ISOTP_PENDING_MS);
           } else {
             if (negId && *negId == 0) { *negId = rx.identifier; if (negNrc) *negNrc = p[2]; }
-            if (maxOut == 1 && slots == 0) giveUp = true;
+            // 物理アドレス宛て(1台だけに聞いた)なら、それが答え。機能アドレス宛ては時間いっぱい待つ
+            if (maxOut == 1 && slots == 0 && !functional) giveUp = true;
           }
         }
         continue;
