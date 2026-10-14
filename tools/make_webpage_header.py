@@ -18,6 +18,11 @@ def main() -> int:
     src, dst = sys.argv[1], sys.argv[2]
     with open(src, encoding="utf-8", newline="") as f:
         html = f.read()
+    # 起動時オープニング(GitHub Pages版だけの演出)はファームに入れない
+    import re
+    html, n = re.subn(r"<!--OPENING_START.*?<!--OPENING_END-->\n?", "", html, flags=re.S)
+    if n:
+        print(f"オープニング部分を {n} か所取り除きました")
     if ")" + DELIM + '"' in html:
         print(f'{src} に )' + DELIM + '" が含まれているため、生文字列として埋め込めません', file=sys.stderr)
         return 1
