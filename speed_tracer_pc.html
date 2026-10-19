@@ -260,14 +260,51 @@ footer{text-align:center;font-size:13px;color:#6c7480;padding:6px 0;}
 .engRead{font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:6px;min-height:16px;}
 
 /* landscape */
+/* ===== モード切り替え(トレース / メーター / サーチ / セッティング) ===== */
+#app{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 72px);}
+.mode{display:none;flex-direction:column;gap:6px;}
+.mode.active{display:flex;}
+#modeTrace.active{flex:1;}
+#modeBar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;gap:4px;
+  background:rgba(10,12,15,.96);border-top:1px solid var(--edge);
+  padding:5px 8px calc(env(safe-area-inset-bottom,0px) + 5px);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+.modeBtn{flex:1;background:none;border:1px solid transparent;color:var(--dim);font-family:inherit;padding:6px 0 5px;
+  border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;max-width:200px;margin:0 auto;}
+.modeBtn .mi{font-size:19px;line-height:1;filter:grayscale(1);opacity:.55;}
+.modeBtn .ml{font-size:10px;letter-spacing:.06em;font-weight:700;}
+.modeBtn.on{color:var(--tgt);background:#0A1C1A;border-color:#1a4040;}
+.modeBtn.on .mi{filter:none;opacity:1;}
+.modeBtn:focus-visible{outline:2px solid var(--tgt);outline-offset:1px;}
+.connHint{display:none;align-items:center;justify-content:space-between;gap:8px;background:#1A0F04;
+  border:1px solid #5A3410;color:var(--wifi);border-radius:8px;padding:6px 10px;font-size:12px;}
+.connHint.show{display:flex;}
+.connHintBtn{font-family:inherit;font-size:12px;font-weight:700;padding:5px 10px;border-radius:7px;
+  border:1px solid #8A5420;background:#5A3410;color:var(--wifi);cursor:pointer;white-space:nowrap;}
+body.gfsOn #modeBar{display:none;}
+.advd > summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--ink);padding:4px 0;list-style:none;}
+.advd > summary::-webkit-details-marker{display:none;}
+.advd > summary::after{content:" ▾";color:var(--dim);}
+.advd[open] > summary{margin-bottom:8px;}
+.advd[open] > summary::after{content:" ▴";}
+.mmrow{display:flex;gap:6px;align-items:stretch;}
+.mmrow .mmwrap{flex:1;min-width:0;}
+.mmrow .gfsbtn{margin-left:0;white-space:nowrap;}
+#modeMeter .dash-pnl{margin-bottom:0;}
+#modeMeter .engPnl,#modeSearch .engPnl{margin-bottom:0;}
+
+/* landscape */
 @media(orientation:landscape){
-  #app{display:grid;grid-template-columns:280px 1fr;
-    padding:calc(env(safe-area-inset-top,4px) + 4px) 10px calc(env(safe-area-inset-bottom,4px) + 4px);gap:7px;}
-  header,.pnl,.srow,.trow2,.mmwrap,.trow,.rdrow,.engStrip,.crow,.crow2,.strow,footer{grid-column:1;}
-  .gwrap{grid-column:2;grid-row:1/20;
-    height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 16px);
+  #app{padding:calc(env(safe-area-inset-top,4px) + 4px) 10px calc(env(safe-area-inset-bottom,0px) + 66px);}
+  #modeBar{padding-top:3px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 3px);}
+  .modeBtn{flex-direction:row;justify-content:center;gap:6px;padding:7px 0;}
+  #modeTrace.active{display:grid;grid-template-columns:280px 1fr;gap:7px;align-content:start;}
+  #modeTrace > *{grid-column:1;}
+  #modeTrace > .gwrap{grid-column:2;grid-row:1/20;
+    height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 120px);
     min-height:0;}
+  #modeTrace > .gwrap.gfs{height:auto;}
   canvas#graph{height:100%;}
+  #modeMeter.active,#modeSearch.active,#modeSetting.active{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;}
 }
 </style>
 </head>
@@ -536,7 +573,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-15.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-20.1</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
@@ -544,12 +581,8 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   </div>
 </header>
 
-<div class="row" style="display:flex;gap:6px;margin-bottom:10px">
-  <button class="gfsbtn" id="btnGraphFs" style="flex:1">⛶ 全画面</button>
-  <button class="gfsbtn" id="btnDiagView" style="flex:1">📟 ダイアグ</button>
-  <button class="gfsbtn" id="btnDebugView" style="flex:1">🔧 デバッグ</button>
-</div>
-
+<section class="mode" id="modeTrace" data-mode="trace">
+<div class="connHint" id="connHint">未接続です。<button type="button" class="connHintBtn" data-goto="setting">⚙️ セッティングで接続</button></div>
 <div class="pnl">
   <div class="plbl">走行パターン</div>
   <div class="prow">
@@ -562,82 +595,13 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   </div>
   <div class="pinfo" id="patInfo" style="display:none"></div>
 </div>
-
-<div class="srow">
-  <button class="sbtn" id="btnBle">🔵 Bluetooth</button>
-  <button class="sbtn" id="btnWifi">📶 WiFi</button>
-  <button class="sbtn" id="btnSer">🔌 USB</button>
-  <button class="sbtn" id="btnGps">📡 GPS</button>
-  <button class="sbtn" id="btnTest" style="display:none">🧪 テスト</button>
-</div>
-<div class="crow3" id="connRow" style="display:none">
-  <button id="connBtn">接続</button>
-</div>
-
-<div class="mcuLinkRow" id="mcuLinkRow" style="display:none">
-  <label>マイコン内アプリ使用</label>
-  <a id="wifiFallbackLink" href="http://192.168.4.1/" target="_blank" rel="noopener">wifi接続先 変更後クリック</a>
-</div>
-
-<div class="pnl" id="canPnl" style="display:none">
-  <div class="plbl">計測入力ソース(マイコン側)</div>
-  <div class="srow">
-    <button class="sbtn" id="btnSrcAnalog">📈 アナログ</button>
-    <button class="sbtn" id="btnSrcCan">🚗 CAN</button>
-  </div>
-  <div class="srow" id="canDetailRow" style="display:none;margin-top:5px">
-    <button class="sbtn" id="btnCanRep">代表(車速のみ)</button>
-    <button class="sbtn" id="btnCanAll">全部(RPM等も)</button>
-  </div>
-  <div id="canConfirmRow" style="display:none;margin-top:8px;display:flex;gap:8px">
-    <div style="flex:1;background:#161b24;border-radius:8px;padding:8px;text-align:center">
-      <div style="font-size:10px;color:var(--dim)">水温(CAN受信確認用)</div>
-      <div id="canWaterTemp" style="font-size:20px;font-weight:700;color:#4ade80">--°C</div>
-    </div>
-    <div style="flex:1;background:#161b24;border-radius:8px;padding:8px;text-align:center">
-      <div style="font-size:10px;color:var(--dim)">スロットル弁開度(PID 11 · ペダル開度ではありません)</div>
-      <div id="canThrottlePos" style="font-size:20px;font-weight:700;color:#4ade80">--%</div>
-    </div>
-  </div>
-  <div class="pinfo" id="canExtraInfo"></div>
-</div>
-
-<div class="pnl" id="calPnl" style="display:none">
-  <div class="plbl">アナログ校正(CDY個体差の調整、デフォルト: 10V=200km/h)</div>
-  <div class="prow">
-    <label style="font-size:11px;color:var(--dim);min-width:110px">0km/h時 電圧(V)</label>
-    <input type="number" id="calV0In" step="0.01" style="width:70px;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:4px 6px" value="0">
-  </div>
-  <div class="prow" style="margin-top:4px">
-    <label style="font-size:11px;color:var(--dim);min-width:110px">最大速度時 電圧(V)</label>
-    <input type="number" id="calVMaxIn" step="0.01" style="width:70px;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:4px 6px" value="10">
-  </div>
-  <div class="prow" style="margin-top:4px">
-    <label style="font-size:11px;color:var(--dim);min-width:110px">最大速度(km/h)</label>
-    <input type="number" id="calSpeedMaxIn" step="1" style="width:70px;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:4px 6px" value="200">
-  </div>
-  <div class="prow" style="margin-top:6px">
-    <button class="pbtn add" id="calApplyBtn">適用</button>
-    <button class="pbtn del" id="calResetBtn">デフォルトに戻す</button>
-  </div>
-  <div class="pinfo" id="calInfo"></div>
-</div>
-
 <div class="trow2" id="testRow">
   <label>模擬速度</label>
   <input type="range" id="testSlider" min="0" max="140" value="0" step="1">
   <span id="testVal">0 km/h</span>
 </div>
-
-<div class="frow">
-  <label>🔧 スムージング</label>
-  <input type="range" id="filterSlider" min="0" max="0.98" value="0.7" step="0.02">
-  <span id="filterVal">0.7</span>
-</div>
-
-<div class="mmwrap"><canvas id="minimap"></canvas></div>
+<div class="mmrow"><div class="mmwrap"><canvas id="minimap"></canvas></div><button class="gfsbtn" id="btnGraphFs">⛶ 全画面</button></div>
 <div class="trow"><span id="tNow">00:00</span><span id="tTotal">/ --:--</span></div>
-
 <div class="gwrap" id="gwrap">
   <div class="gfs-watermark" id="gfsWatermark">
     <div class="gfw-gauges">
@@ -694,81 +658,9 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <button class="ctrl" id="csvBtn">走行結果DL</button>
 </div>
 <div class="strow" id="stRow"></div>
-<div class="diagOverlay" id="engView">
-  <div class="diagTop">
-    <h2>エンジンモニター</h2>
-    <button class="diagCloseBtn" id="btnEngClose">✕ 閉じる</button>
-  </div>
+</section>
 
-  <div class="pnl engPnl">
-    <div class="plbl">監視</div>
-    <div style="display:flex;gap:6px;align-items:center">
-      <button class="sbtn" id="btnEngMon" style="flex:2;padding:10px 0;font-size:13px">▶ 監視を開始</button>
-      <select id="engIntervalSel" class="engIn" style="flex:1" aria-label="照会の間隔">
-        <option value="150">速い(0.15秒)</option>
-        <option value="400">標準(0.4秒)</option>
-        <option value="1500">ゆっくり(1.5秒)</option>
-      </select>
-    </div>
-    <div id="engMonStatus" class="engNote" style="margin-top:6px">接続後に「監視を開始」を押してください。回転数(PID 0C)とエンジン負荷(PID 04)を毎周照会します。</div>
-  </div>
-
-  <div class="pnl engPnl">
-    <div class="plbl">エンジン使用域(横軸: 回転数 / 縦軸: エンジン負荷)</div>
-    <canvas id="engXY" aria-label="回転数とエンジン負荷の使用域グラフ"></canvas>
-    <div class="engRead" id="engXYRead"></div>
-    <div class="engRow" style="margin-top:6px">
-      <button class="sbtn engMini" id="btnEngXYClear">🗑 クリア</button>
-      <button class="sbtn engMini" id="btnEngXYCsv">📥 点をCSVで保存</button>
-    </div>
-    <div class="engNote" style="margin-top:6px">
-      色が暖色に近いマスほど滞在が長い領域です。エンジン負荷は標準PID 04(計算負荷値)です。<br>
-      ハイブリッド車でエンジンが止まっている間(回転数 400rpm 未満)は点を足さず、「エンジン稼働率」として数えるだけにしています。
-    </div>
-  </div>
-
-  <div class="pnl engPnl">
-    <div class="plbl">現在値</div>
-    <div class="engCards">
-      <div class="engCard"><div class="el">回転数</div><div class="ev" id="engC0">--</div><div class="es" id="engCS0"></div></div>
-      <div class="engCard"><div class="el">エンジン負荷</div><div class="ev" id="engC1">--</div><div class="es" id="engCS1"></div></div>
-      <div class="engCard"><div class="el">エンジン稼働率</div><div class="ev" id="engC2">--</div><div class="es" id="engCS2"></div></div>
-      <div class="engCard"><div class="el">監視時間</div><div class="ev" id="engC3">--</div><div class="es" id="engCS3"></div></div>
-    </div>
-  </div>
-
-  <div class="pnl engPnl">
-    <div class="plbl">取得できる項目を探す(標準PID Mode01)</div>
-    <div class="engNote" style="margin-bottom:6px">
-      ①でこの車両が対応している標準PIDを調べ、②で対応PIDの値を1件ずつ読みます。複数のECUが応答する車両では、最初に応答したECUの結果になります。
-      応答が長いPID(マルチフレーム)は、ファーム 2026-10-07.1 より前だと「応答なし」になります。
-    </div>
-    <div style="display:flex;gap:6px;margin-bottom:6px">
-      <button class="sbtn" id="btnEngScan" style="flex:1">① 対応PIDを調べる</button>
-      <button class="sbtn" id="btnEngReadAll" style="flex:1">② 値を全部読む</button>
-    </div>
-    <button class="sbtn" id="btnEngCopy" style="width:100%">📋 結果をコピー</button>
-    <div id="engScanStatus" class="engNote" style="margin-top:6px"></div>
-    <div id="engScanWrap" style="margin-top:4px"></div>
-    <div id="engScanText" style="display:none"></div>
-    <div class="engNote" style="margin-top:6px">
-      名称は規格(SAE J1979)の一般的なもので、値の換算は主なPIDだけです。それ以外は生データだけを表示します。
-      メーカー独自の項目(Mode22)は、🔧 デバッグ画面の「Mode22 DID範囲スキャン」で探せます。
-    </div>
-  </div>
-
-  <div class="pnl engPnl">
-    <div class="engNote">
-      照会のたびに車速の読み取りがわずかに止まります。追従精度を厳密に見る走行では、監視を止めるか「ゆっくり」にしてください。
-    </div>
-  </div>
-</div>
-
-<div class="diagOverlay" id="diagView">
-  <div class="diagTop">
-    <h2>SPEED TRACER — ダイアグ</h2>
-    <button class="diagCloseBtn" id="btnDiagClose">✕ 閉じる</button>
-  </div>
+<section class="mode" id="modeMeter" data-mode="meter">
   <div class="dash-pnl">
     <div class="dash-speed">
       <div class="val" id="dashSpeed">0</div>
@@ -805,14 +697,67 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
       <div class="throttle-track" id="throttleTrack"></div>
     </div>
   </div>
-</div>
-
-<div class="diagOverlay" id="debugView">
-  <div class="diagTop">
-    <h2>SPEED TRACER — デバッグ/調査</h2>
-    <button class="diagCloseBtn" id="btnDebugClose">✕ 閉じる</button>
+  <div class="pnl engPnl">
+    <div class="plbl">エンジン使用域(横軸: 回転数 / 縦軸: エンジン負荷)</div>
+    <canvas id="engXY" aria-label="回転数とエンジン負荷の使用域グラフ"></canvas>
+    <div class="engRead" id="engXYRead"></div>
+    <div class="engRow" style="margin-top:6px">
+      <button class="sbtn engMini" id="btnEngXYClear">🗑 クリア</button>
+      <button class="sbtn engMini" id="btnEngXYCsv">📥 点をCSVで保存</button>
+    </div>
+    <div class="engNote" style="margin-top:6px">
+      色が暖色に近いマスほど滞在が長い領域です。エンジン負荷は標準PID 04(計算負荷値)です。<br>
+      ハイブリッド車でエンジンが止まっている間(回転数 400rpm 未満)は点を足さず、「エンジン稼働率」として数えるだけにしています。
+    </div>
   </div>
+  <div class="pnl engPnl">
+    <div class="plbl">監視</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="sbtn" id="btnEngMon" style="flex:2;padding:10px 0;font-size:13px">▶ 監視を開始</button>
+      <select id="engIntervalSel" class="engIn" style="flex:1" aria-label="照会の間隔">
+        <option value="150">速い(0.15秒)</option>
+        <option value="400">標準(0.4秒)</option>
+        <option value="1500">ゆっくり(1.5秒)</option>
+      </select>
+    </div>
+    <div id="engMonStatus" class="engNote" style="margin-top:6px">接続後に「監視を開始」を押してください。回転数(PID 0C)とエンジン負荷(PID 04)を毎周照会します。</div>
+  </div>
+  <div class="pnl engPnl">
+    <div class="plbl">現在値</div>
+    <div class="engCards">
+      <div class="engCard"><div class="el">回転数</div><div class="ev" id="engC0">--</div><div class="es" id="engCS0"></div></div>
+      <div class="engCard"><div class="el">エンジン負荷</div><div class="ev" id="engC1">--</div><div class="es" id="engCS1"></div></div>
+      <div class="engCard"><div class="el">エンジン稼働率</div><div class="ev" id="engC2">--</div><div class="es" id="engCS2"></div></div>
+      <div class="engCard"><div class="el">監視時間</div><div class="ev" id="engC3">--</div><div class="es" id="engCS3"></div></div>
+    </div>
+  </div>
+  <div class="pnl engPnl">
+    <div class="engNote">
+      照会のたびに車速の読み取りがわずかに止まります。追従精度を厳密に見る走行では、監視を止めるか「ゆっくり」にしてください。
+    </div>
+  </div>
+</section>
 
+<section class="mode" id="modeSearch" data-mode="search">
+  <div class="pnl engPnl">
+    <div class="plbl">取得できる項目を探す(標準PID Mode01)</div>
+    <div class="engNote" style="margin-bottom:6px">
+      ①でこの車両が対応している標準PIDを調べ、②で対応PIDの値を1件ずつ読みます。複数のECUが応答する車両では、最初に応答したECUの結果になります。
+      応答が長いPID(マルチフレーム)は、ファーム 2026-10-07.1 より前だと「応答なし」になります。
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:6px">
+      <button class="sbtn" id="btnEngScan" style="flex:1">① 対応PIDを調べる</button>
+      <button class="sbtn" id="btnEngReadAll" style="flex:1">② 値を全部読む</button>
+    </div>
+    <button class="sbtn" id="btnEngCopy" style="width:100%">📋 結果をコピー</button>
+    <div id="engScanStatus" class="engNote" style="margin-top:6px"></div>
+    <div id="engScanWrap" style="margin-top:4px"></div>
+    <div id="engScanText" style="display:none"></div>
+    <div class="engNote" style="margin-top:6px">
+      名称は規格(SAE J1979)の一般的なもので、値の換算は主なPIDだけです。それ以外は生データだけを表示します。
+      メーカー独自の項目(Mode22)は、下の「Mode22 DID範囲スキャン」で探せます。
+    </div>
+  </div>
   <div class="pnl">
     <div class="plbl">ダイアグ(DTC) ※CANモード時のみ有効です</div>
     <div class="row">
@@ -822,58 +767,8 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
     <div id="dtcResult" style="margin-top:10px;font-family:var(--mono);font-size:13px;
       background:#0d1017;border-radius:6px;padding:10px;min-height:20px;white-space:pre-wrap;color:var(--dim)">まだ読み取っていません</div>
   </div>
-
-  <div class="pnl">
-    <button class="sbtn" id="btnDebugCmdToggle" style="width:100%">🔧 ハードウェアデバッグコマンドを表示</button>
-  </div>
-  <div class="pnl" id="debugCmdPnl" style="display:none">
-    <div class="plbl">コマンド送信</div>
-    <div class="row" style="margin-bottom:6px">
-      <button class="sbtn" id="btnQuickCanAll" style="border-color:#107a3a;color:#66ffb0">🚗 CAN全部(RPM等も)にする</button>
-      <button class="sbtn" id="btnQuickCanRep" style="border-color:#2a5a8a;color:#6fb8ff">🚗 CAN代表(車速のみ)にする</button>
-    </div>
-    <div class="row" style="margin-bottom:6px">
-      <button class="sbtn" id="btnQuickChanReset" style="border-color:#7a3a10;color:#ffb066">⚠️ 監視パラメータを初期設定に戻す</button>
-    </div>
-    <div class="row">
-      <button class="sbtn" id="btnLogOn">📡 log on</button>
-      <button class="sbtn" id="btnLogOff">⏹ log off</button>
-      <button class="sbtn" id="btnStatus">ℹ️ status</button>
-      <button class="sbtn" id="btnHeap">🧠 heap</button>
-      <button class="sbtn" id="btnCanStat">📊 canstat</button>
-      <button class="sbtn" id="btnCanReset" style="border-color:#4a1f18;color:#E85D4F">🔄 canreset</button>
-    </div>
-    <div class="row" style="margin-top:6px">
-      <button class="sbtn" id="btnBaud500">500kbps</button>
-      <button class="sbtn" id="btnBaud250">250kbps</button>
-    </div>
-    <div class="row" style="margin-top:6px">
-      <button class="sbtn" id="btnListenOn">👂 LISTEN ON(受信のみ)</button>
-      <button class="sbtn" id="btnListenOff">🔁 LISTEN OFF(通常)</button>
-    </div>
-    <div class="row" style="margin-top:6px">
-      <button class="sbtn" id="btnSelfOn" style="border-color:#a78bfa;color:#a78bfa">🧪 自己診断ON(車不要)</button>
-      <button class="sbtn" id="btnSelfSend" style="border-color:#a78bfa;color:#a78bfa">📤 テスト送信</button>
-      <button class="sbtn" id="btnSelfOff">自己診断OFF</button>
-    </div>
-    <div class="row" style="margin-top:6px">
-      <button class="sbtn" id="btnGpioTest" style="border-color:#4ade80;color:#4ade80">🔬 GPIOループバックテスト</button>
-      <button class="sbtn" id="btnGpioTest2" style="border-color:#facc15;color:#facc15">🔬 D0/D1で同テスト</button>
-    </div>
-    <div class="row" style="margin-top:6px">
-      <button class="sbtn" id="btnI2cScan" style="border-color:#4fa3ff;color:#4fa3ff">🔍 I2Cスキャン(ADS1015確認)</button>
-    </div>
-    <div class="row" style="margin-top:6px">
-      <input id="cmdInput" type="text" placeholder="コマンドを直接入力(例: SRC:CAN)"
-        style="flex:1;background:#161b24;border:1px solid var(--edge);color:var(--ink);border-radius:7px;padding:8px 10px;font-size:13px">
-      <button class="sbtn" id="btnCmdSend">送信</button>
-    </div>
-    <div id="rawLog" style="margin-top:10px;font-family:var(--mono);font-size:11px;
-      background:#0d1017;border-radius:6px;padding:10px;height:180px;overflow-y:auto;
-      white-space:pre-wrap;color:var(--dim)"></div>
-  </div>
-
-  <div style="margin-top:10px;border-top:1px solid var(--edge);padding-top:10px">
+<div class="pnl">
+  <div class="searchBlk">
     <div class="plbl">PID探索(燃料残量・過給圧・PM・アドブルー候補を総当たり)</div>
     <div style="font-size:11px;color:var(--dim);margin-bottom:6px">
       標準PID(Mode01)13件＋ネット上の実車情報から見つけたMode22拡張DID 3件を順に送信し、生の応答をログに残します。車両側が対応していないPID/DIDは無応答/エラーになります。
@@ -956,9 +851,78 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
       border:1px solid var(--edge);border-radius:8px;padding:6px;font-family:var(--mono);
       font-size:11px;line-height:1.5;white-space:pre-wrap;color:#9fe3b0"></div>
   </div>
+</div>
+</section>
 
-  <div style="margin-top:10px;border-top:1px solid var(--edge);padding-top:10px">
-    <div class="plbl">監視パラメータ設定(車種プロファイル)</div>
+<section class="mode" id="modeSetting" data-mode="setting">
+<div class="pnl"><div class="plbl">接続</div>
+<div class="srow">
+  <button class="sbtn" id="btnBle">🔵 Bluetooth</button>
+  <button class="sbtn" id="btnWifi">📶 WiFi</button>
+  <button class="sbtn" id="btnSer">🔌 USB</button>
+  <button class="sbtn" id="btnGps">📡 GPS</button>
+  <button class="sbtn" id="btnTest" style="display:none">🧪 テスト</button>
+</div>
+<div class="crow3" id="connRow" style="display:none">
+  <button id="connBtn">接続</button>
+</div>
+
+<div class="mcuLinkRow" id="mcuLinkRow" style="display:none">
+  <label>マイコン内アプリ使用</label>
+  <a id="wifiFallbackLink" href="http://192.168.4.1/" target="_blank" rel="noopener">wifi接続先 変更後クリック</a>
+</div>
+</div>
+<div class="pnl" id="canPnl" style="display:none">
+  <div class="plbl">計測入力ソース(マイコン側)</div>
+  <div class="srow">
+    <button class="sbtn" id="btnSrcAnalog">📈 アナログ</button>
+    <button class="sbtn" id="btnSrcCan">🚗 CAN</button>
+  </div>
+  <div class="srow" id="canDetailRow" style="display:none;margin-top:5px">
+    <button class="sbtn" id="btnCanRep">代表(車速のみ)</button>
+    <button class="sbtn" id="btnCanAll">全部(RPM等も)</button>
+  </div>
+  <div id="canConfirmRow" style="display:none;margin-top:8px;display:flex;gap:8px">
+    <div style="flex:1;background:#161b24;border-radius:8px;padding:8px;text-align:center">
+      <div style="font-size:10px;color:var(--dim)">水温(CAN受信確認用)</div>
+      <div id="canWaterTemp" style="font-size:20px;font-weight:700;color:#4ade80">--°C</div>
+    </div>
+    <div style="flex:1;background:#161b24;border-radius:8px;padding:8px;text-align:center">
+      <div style="font-size:10px;color:var(--dim)">スロットル弁開度(PID 11 · ペダル開度ではありません)</div>
+      <div id="canThrottlePos" style="font-size:20px;font-weight:700;color:#4ade80">--%</div>
+    </div>
+  </div>
+  <div class="pinfo" id="canExtraInfo"></div>
+</div>
+
+<div class="pnl" id="calPnl" style="display:none">
+  <div class="plbl">アナログ校正(CDY個体差の調整、デフォルト: 10V=200km/h)</div>
+  <div class="prow">
+    <label style="font-size:11px;color:var(--dim);min-width:110px">0km/h時 電圧(V)</label>
+    <input type="number" id="calV0In" step="0.01" style="width:70px;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:4px 6px" value="0">
+  </div>
+  <div class="prow" style="margin-top:4px">
+    <label style="font-size:11px;color:var(--dim);min-width:110px">最大速度時 電圧(V)</label>
+    <input type="number" id="calVMaxIn" step="0.01" style="width:70px;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:4px 6px" value="10">
+  </div>
+  <div class="prow" style="margin-top:4px">
+    <label style="font-size:11px;color:var(--dim);min-width:110px">最大速度(km/h)</label>
+    <input type="number" id="calSpeedMaxIn" step="1" style="width:70px;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:4px 6px" value="200">
+  </div>
+  <div class="prow" style="margin-top:6px">
+    <button class="pbtn add" id="calApplyBtn">適用</button>
+    <button class="pbtn del" id="calResetBtn">デフォルトに戻す</button>
+  </div>
+  <div class="pinfo" id="calInfo"></div>
+</div>
+<div class="frow">
+  <label>🔧 スムージング</label>
+  <input type="range" id="filterSlider" min="0" max="0.98" value="0.7" step="0.02">
+  <span id="filterVal">0.7</span>
+</div>
+<details class="pnl advd">
+  <summary>🚗 監視パラメータ設定(車種プロファイル)</summary>
+  <div>
     <div style="font-size:11px;color:var(--dim);margin-bottom:8px">
       「全部(RPM等も)」モードで取得する10項目を、車種ごとに自由に設定できます。
       「よく使うパラメータ」で標準的な項目を選ぶか、PID探索で見つけたPID/DIDを直接入力してください。
@@ -985,10 +949,65 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
       </div>
     </div>
   </div>
-</div>
-
+</details>
+  <div class="pnl">
+    <button class="sbtn" id="btnDebugCmdToggle" style="width:100%">🔧 ハードウェアデバッグコマンドを表示</button>
+  </div>
+  <div class="pnl" id="debugCmdPnl" style="display:none">
+    <div class="plbl">コマンド送信</div>
+    <div class="row" style="margin-bottom:6px">
+      <button class="sbtn" id="btnQuickCanAll" style="border-color:#107a3a;color:#66ffb0">🚗 CAN全部(RPM等も)にする</button>
+      <button class="sbtn" id="btnQuickCanRep" style="border-color:#2a5a8a;color:#6fb8ff">🚗 CAN代表(車速のみ)にする</button>
+    </div>
+    <div class="row" style="margin-bottom:6px">
+      <button class="sbtn" id="btnQuickChanReset" style="border-color:#7a3a10;color:#ffb066">⚠️ 監視パラメータを初期設定に戻す</button>
+    </div>
+    <div class="row">
+      <button class="sbtn" id="btnLogOn">📡 log on</button>
+      <button class="sbtn" id="btnLogOff">⏹ log off</button>
+      <button class="sbtn" id="btnStatus">ℹ️ status</button>
+      <button class="sbtn" id="btnHeap">🧠 heap</button>
+      <button class="sbtn" id="btnCanStat">📊 canstat</button>
+      <button class="sbtn" id="btnCanReset" style="border-color:#4a1f18;color:#E85D4F">🔄 canreset</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="sbtn" id="btnBaud500">500kbps</button>
+      <button class="sbtn" id="btnBaud250">250kbps</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="sbtn" id="btnListenOn">👂 LISTEN ON(受信のみ)</button>
+      <button class="sbtn" id="btnListenOff">🔁 LISTEN OFF(通常)</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="sbtn" id="btnSelfOn" style="border-color:#a78bfa;color:#a78bfa">🧪 自己診断ON(車不要)</button>
+      <button class="sbtn" id="btnSelfSend" style="border-color:#a78bfa;color:#a78bfa">📤 テスト送信</button>
+      <button class="sbtn" id="btnSelfOff">自己診断OFF</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="sbtn" id="btnGpioTest" style="border-color:#4ade80;color:#4ade80">🔬 GPIOループバックテスト</button>
+      <button class="sbtn" id="btnGpioTest2" style="border-color:#facc15;color:#facc15">🔬 D0/D1で同テスト</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <button class="sbtn" id="btnI2cScan" style="border-color:#4fa3ff;color:#4fa3ff">🔍 I2Cスキャン(ADS1015確認)</button>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <input id="cmdInput" type="text" placeholder="コマンドを直接入力(例: SRC:CAN)"
+        style="flex:1;background:#161b24;border:1px solid var(--edge);color:var(--ink);border-radius:7px;padding:8px 10px;font-size:13px">
+      <button class="sbtn" id="btnCmdSend">送信</button>
+    </div>
+    <div id="rawLog" style="margin-top:10px;font-family:var(--mono);font-size:11px;
+      background:#0d1017;border-radius:6px;padding:10px;height:180px;overflow-y:auto;
+      white-space:pre-wrap;color:var(--dim)"></div>
+  </div>
+</section>
 
 </div><!-- /#app -->
+<nav id="modeBar" aria-label="画面の切り替え">
+  <button type="button" class="modeBtn" data-mode="trace"><span class="mi">🏁</span><span class="ml">トレース</span></button>
+  <button type="button" class="modeBtn" data-mode="meter"><span class="mi">📟</span><span class="ml">メーター</span></button>
+  <button type="button" class="modeBtn" data-mode="search"><span class="mi">🔍</span><span class="ml">サーチ</span></button>
+  <button type="button" class="modeBtn" data-mode="setting"><span class="mi">⚙️</span><span class="ml">セッティング</span></button>
+</nav>
 <script>
 (function(){
 "use strict";
@@ -1050,6 +1069,7 @@ let canDetail=localStorage.getItem('canDetail')||'rep';       // 'rep' | 'all'
 let audioCtx=null,lastBeep=0,lastBeepAdv='';
 let currentAdv=null,animFrame=0;
 let plotIcon='dot';
+let curMode='trace'; // 画面モード(setModeで切り替え)
 
 // =========================================================
 // DOM refs
@@ -1420,6 +1440,7 @@ let graphFsOn=false;
 function setGraphFullscreen(on){
   graphFsOn=on;
   gwrapEl.classList.toggle('gfs',on);
+  document.body.classList.toggle('gfsOn',on); // 全画面中は下のモード切り替えバーを隠す
   btnGraphFs.textContent=on?'✕ 閉じる':'⛶ 全画面';
     // レイアウト確定後にキャンバスを再計算・再描画
   setTimeout(()=>{ rszAll(); drawG(running?pausedAt:0); drawMM(running?pausedAt:0); },50);
@@ -1858,6 +1879,7 @@ function isConnActive(){
 function updateConnBtn(){
   const isConnType=(src==='serial'||src==='ble'||src==='wifi');
   connRow.style.display=isConnType?'':'none';
+  const ch=$('connHint'); if(ch) ch.classList.toggle('show', isConnType&&!isConnActive());
   updatePanelVisibility();
   if(!isConnType)return;
   const conn=isConnActive();
@@ -1918,21 +1940,11 @@ function updateSrcButtons(){
   updatePanelVisibility();
 }
 // ===== ダイアグ画面(診断アプリ統合分): SVGゲージ・スロットルバー =====
-const btnDiagView=$('btnDiagView');
-const btnDiagClose=$('btnDiagClose');
-const diagView=$('diagView');
 const dashSpeed=$('dashSpeed'),valRpm=$('valRpm'),valBoost=$('valBoost'),valCoolant=$('valCoolant');
 const valBattery=$('valBattery');
 const throttleTrack=$('throttleTrack'),valThrottleLabel=$('valThrottleLabel');
-btnDiagView.addEventListener('click',()=>{diagView.classList.add('show');});
-btnDiagClose.addEventListener('click',()=>{diagView.classList.remove('show');});
 
 // ===== デバッグ/調査画面(診断アプリのハードウェアコマンド + CAN PID/DID調査ツール統合) =====
-const btnDebugView=$('btnDebugView');
-const btnDebugClose=$('btnDebugClose');
-const debugView=$('debugView');
-btnDebugView.addEventListener('click',()=>{debugView.classList.add('show');});
-btnDebugClose.addEventListener('click',()=>{debugView.classList.remove('show');});
 
 const dtcResult=$('dtcResult');
 const btnDtcRead=$('btnDtcRead'),btnDtcClear=$('btnDtcClear');
@@ -2873,7 +2885,7 @@ const ENG_PIDS={
 function engIsBitmapPid(p){return p%0x20===0;}
 function engPidName(p){const e=ENG_PIDS[p];return e?e[0]:'(名称不明)';}
 
-const engView=$('engView'), engStrip=$('engStrip');
+const engStrip=$('engStrip');
 const btnEngMon=$('btnEngMon'), engIntervalSel=$('engIntervalSel'), engMonStatus=$('engMonStatus');
 const engCv=$('engXY'), engCtx=engCv.getContext('2d'), engXYRead=$('engXYRead');
 const btnEngScan=$('btnEngScan'), btnEngReadAll=$('btnEngReadAll'), btnEngCopy=$('btnEngCopy');
@@ -3015,7 +3027,7 @@ function engHeatColor(f){
   while(i<st.length-1&&f>st[i][0])i++;
   const a=st[i-1],b=st[i],k=(f-a[0])/((b[0]-a[0])||1);
   const c=function(n){return Math.round(a[n]+(b[n]-a[n])*k);};
-  return 'rgba('+c(1)+','+c(2)+','+c(3)+','+(0.35+0.55*f).toFixed(2)+')';
+  return 'rgba('+c(1)+','+c(2)+','+c(3)+','+(0.2+0.45*f).toFixed(2)+')'; // 背景の滞在マップは控えめに(光る軌跡を主役にする)
 }
 function engXYDraw(){
   const ctx=engCtx,W=engCvW,H=engCvH;
@@ -3070,36 +3082,60 @@ function engXYDraw(){
       ctx.fillRect(L+bx*cw,T+ph-(by+1)*ch,cw+.5,ch+.5);
     }
   }
-  const tn=engTrail.length/2;
-  ctx.lineWidth=1.5;
-  for(let i=1;i<tn;i++){
-    ctx.strokeStyle='rgba(231,233,234,'+(0.08+0.6*i/tn).toFixed(2)+')';
-    ctx.beginPath();
-    ctx.moveTo(X(engTrail[(i-1)*2]),Y(engTrail[(i-1)*2+1]));
-    ctx.lineTo(X(engTrail[i*2]),Y(engTrail[i*2+1]));
-    ctx.stroke();
-  }
+  // ---- 最近の軌跡: トレース画面の実速度と同じ「光って尾を引く」線 ----
   const last=engXY[engXY.length-1];
   if(!engMark||engReduceMotion)engMark={r:last.rpm,y:last.load};
   else{engMark.r+=(last.rpm-engMark.r)*0.25;engMark.y+=(last.load-engMark.y)*0.25;}
-  const live=Date.now()-last.t<5000;
+  const now=Date.now(), live=now-last.t<5000;
+  const ENG_TRAIL_MS=6000;
+  const col=function(rpm,a){return speedColor(Math.min(rpm,xmax)/xmax*135,a);}; // 回転数が高いほど青→緑→黄→赤
+  const pts=[];
+  for(let i=Math.max(0,engXY.length-80);i<engXY.length;i++){
+    const s=engXY[i], age=(now-s.t)/ENG_TRAIL_MS;
+    if(age>1)continue;
+    pts.push({x:X(Math.min(s.rpm,xmax)),y:Y(Math.min(s.load,ymax)),r:s.rpm,age:age});
+  }
   const mx=X(Math.min(engMark.r,xmax)),my=Y(Math.min(engMark.y,ymax));
-  ctx.strokeStyle='rgba(231,233,234,.25)';ctx.lineWidth=1;
+  if(pts.length){pts.push({x:mx,y:my,r:engMark.r,age:0});}
+  const N=pts.length;
+  if(N>=2){
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+    // パス1: グロー(太め・半透明、新しい部分ほど明るく)
+    for(let i=1;i<N;i++){
+      const age=pts[i].age; if(age>0.6)continue;
+      const fade=Math.pow(1-age/0.6,2);
+      ctx.globalAlpha=fade*0.32;ctx.strokeStyle=col(pts[i].r,1);ctx.lineWidth=10;
+      ctx.beginPath();ctx.moveTo(pts[i-1].x,pts[i-1].y);
+      catmull(ctx,pts[Math.max(0,i-2)],pts[i-1],pts[i],pts[Math.min(N-1,i+1)]);ctx.stroke();
+    }
+    // パス2: コア(細め、先端ほど不透明)
+    for(let i=1;i<N;i++){
+      const fade=Math.pow(1-pts[i].age,1.8);
+      ctx.globalAlpha=Math.max(0.02,fade*0.95);ctx.strokeStyle=col(pts[i].r,1);ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(pts[i-1].x,pts[i-1].y);
+      catmull(ctx,pts[Math.max(0,i-2)],pts[i-1],pts[i],pts[Math.min(N-1,i+1)]);ctx.stroke();
+    }
+    ctx.restore();
+  }
+  // 現在位置の目安線
+  ctx.strokeStyle='rgba(231,233,234,.14)';ctx.lineWidth=1;ctx.setLineDash([3,5]);
   ctx.beginPath();ctx.moveTo(mx,T);ctx.lineTo(mx,T+ph);ctx.moveTo(L,my);ctx.lineTo(L+pw,my);ctx.stroke();
-  ctx.save();
-  ctx.shadowColor=live?'#A8E063':'#8A9097';ctx.shadowBlur=live?14:0;
-  ctx.fillStyle=live?'#A8E063':'#8A9097';
-  ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.fill();
-  ctx.restore();
-  ctx.strokeStyle='#0A0C0F';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.stroke();
+  ctx.setLineDash([]);
+  // 先端: 光の玉(トレース画面の光点と同じ作り)
+  const tc=live?col(engMark.r,1):'rgba(138,144,151,1)';
+  const gr=ctx.createRadialGradient(mx,my,0,mx,my,18);
+  gr.addColorStop(0,live?col(engMark.r,0.55):'rgba(138,144,151,0.25)');gr.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath();ctx.fillStyle=gr;ctx.arc(mx,my,18,0,Math.PI*2);ctx.fill();
+  ctx.save();ctx.shadowColor=tc;ctx.shadowBlur=live?12:0;
+  ctx.beginPath();ctx.fillStyle=tc;ctx.arc(mx,my,5,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.beginPath();ctx.fillStyle='rgba(255,255,255,'+(live?0.9:0.4)+')';ctx.arc(mx,my,2,0,Math.PI*2);ctx.fill();
   engXYRead.textContent=last.rpm.toFixed(0)+' rpm · エンジン負荷 '+last.load.toFixed(0)+'% · '+engXY.length+'点'
     +(engAllMs>0?(' · 稼働率 '+(engRunMs*100/engAllMs).toFixed(0)+'%'):'')
     +(live?'':(engNow.rpm!=null&&Date.now()-engNow.rpmT<5000&&engNow.rpm<ENG_RUN_RPM?' · エンジン停止中':' · 更新停止中'));
 }
 function engXYFrame(ts){
   engXYRaf=null;
-  if(!engView.classList.contains('show'))return;
+  if(curMode!=='meter')return;
   if(ts-engXYLastDraw>=45){engXYLastDraw=ts;engXYDraw();}
   engXYRaf=requestAnimationFrame(engXYFrame);
 }
@@ -3107,7 +3143,7 @@ function engXYStart(){
   engXYResize();engXYDraw();
   if(!engXYRaf)engXYRaf=requestAnimationFrame(engXYFrame);
 }
-window.addEventListener('resize',function(){if(engView.classList.contains('show')){engXYResize();engXYDraw();}});
+window.addEventListener('resize',function(){if(curMode==='meter'){engXYResize();engXYDraw();}});
 $('btnEngXYClear').addEventListener('click',function(){
   if(engXY.length&&!confirm('使用域グラフの点('+engXY.length+'点)と稼働率を消しますか?'))return;
   engXY=[];engMark=null;engRunMs=0;engAllMs=0;engLastSampleT=0;engXYDraw();engRender();
@@ -3212,10 +3248,9 @@ async function engRunReadAll(){
 }
 
 // ---- 画面の開閉・ボタン ----
-function engOpen(){engView.classList.add('show');engRender();engRenderScan();engXYStart();}
+function engOpen(){setMode('meter');}
 engStrip.addEventListener('click',engOpen);
 engStrip.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();engOpen();}});
-$('btnEngClose').addEventListener('click',function(){engView.classList.remove('show');});
 btnEngMon.addEventListener('click',function(){engSetMon(!engMonOn);});
 engIntervalSel.value=String(engIntervalMs);
 if(!engIntervalSel.value){engIntervalSel.value='400';engIntervalMs=400;}
@@ -3231,6 +3266,26 @@ btnEngCopy.addEventListener('click',function(){
 });
 setInterval(function(){if(!engMonOn)engRender();},2000); // 監視を止めた後、表示を古い値のままにしない
 engRender();engRenderScan();
+// =========================================================
+// 画面モード(トレース / メーター / サーチ / セッティング)
+// =========================================================
+const MODES=['trace','meter','search','setting'];
+function setMode(m){
+  if(MODES.indexOf(m)<0)m='trace';
+  if(m!=='trace'&&graphFsOn)setGraphFullscreen(false);
+  curMode=m;
+  document.querySelectorAll('.mode').forEach(function(s){s.classList.toggle('active',s.dataset.mode===m);});
+  document.querySelectorAll('.modeBtn').forEach(function(b){const on=b.dataset.mode===m;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on?'true':'false');});
+  try{localStorage.setItem('st_mode',m);}catch(e){}
+  if(m==='trace'){rszAll();drawG(running?pausedAt:0);drawMM(running?pausedAt:0);}
+  else if(m==='meter'){engRender();engXYStart();}
+  else if(m==='search'){engRenderScan();}
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.modeBtn,[data-goto]').forEach(function(b){
+  b.addEventListener('click',function(){setMode(b.dataset.mode||b.dataset.goto);});
+});
+
 
 // =========================================================
 // MAIN LOOP
@@ -3449,6 +3504,9 @@ rszAll();drawG(0);drawMM(0);
 setSrc((MCU_MODE||!BLE_SUPPORTED)?'wifi':'ble');refreshSel();updateInfo();
 patSel.value='WLTC_Class3b';selectPat('WLTC_Class3b'); // WLTCをデフォルトの走行パターンにする
 
+// 起動時: 前回のモードで開く(すべての定義が済んだ最後に呼ぶ)
+setMode((function(){try{return localStorage.getItem('st_mode')||'trace';}catch(e){return 'trace';}})());
+updateConnBtn();
 })();
 
 // PWA化: service workerの登録(HTTPS/localhost等の安全なコンテキストでのみ有効。
