@@ -292,6 +292,68 @@ body.gfsOn #modeBar{display:none;}
 #modeMeter .dash-pnl{margin-bottom:0;}
 #modeMeter .engPnl,#modeSearch .engPnl{margin-bottom:0;}
 
+/* ===== サーキットモード(ゴーストと勝負) ===== */
+.cirRow{display:flex;gap:6px;}
+.cirRow > *{flex:1;}
+.cirLbl{font-size:11px;color:var(--dim);white-space:nowrap;}
+.cirDash{position:relative;overflow:hidden;border-radius:16px;padding:12px 14px 14px;
+  background:radial-gradient(ellipse at 50% -20%,#0f1a24 0%,#030405 72%);border:1px solid #16202c;
+  transition:box-shadow .25s,border-color .25s;}
+.cirDash.ahead{border-color:#1f5a2a;box-shadow:inset 0 0 60px rgba(80,255,120,.10);}
+.cirDash.behind{border-color:#5a1f1f;box-shadow:inset 0 0 60px rgba(255,70,50,.12);}
+.cirTop{display:flex;justify-content:space-between;align-items:center;font-family:'Rajdhani',sans-serif;
+  font-weight:700;letter-spacing:.14em;font-size:13px;color:#6c8494;}
+.cirLapNo{color:#cfeaff;}
+.cirMode{font-size:11px;border:1px solid #1c2836;border-radius:6px;padding:1px 7px;}
+.cirGps{font-family:var(--mono);font-size:10px;letter-spacing:0;}
+.cirGps.ok{color:var(--act);}.cirGps.weak{color:var(--warn);}.cirGps.ng{color:var(--danger);}
+.cirDelta{font-family:'Orbitron',monospace;font-style:italic;font-weight:900;text-align:center;
+  font-size:clamp(64px,22vw,150px);line-height:1.05;margin-top:6px;font-variant-numeric:tabular-nums;
+  color:#8a9097;transition:color .2s;}
+.cirDelta.ahead{color:#5dff8a;text-shadow:0 0 14px rgba(93,255,138,.75),0 0 44px rgba(60,220,110,.35);}
+.cirDelta.behind{color:#ff5a45;text-shadow:0 0 14px rgba(255,90,69,.8),0 0 44px rgba(255,60,40,.35);}
+.cirDeltaSub{text-align:center;font-size:11px;color:#6c8494;letter-spacing:.12em;margin-top:2px;}
+.cirBar{position:relative;height:10px;border-radius:5px;background:#10151d;margin:10px 4px 0;overflow:hidden;}
+.cirBarMid{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:#3a4656;z-index:1;}
+.cirBarFill{position:absolute;top:0;bottom:0;left:50%;width:0;transition:left .2s,width .2s,background .2s;}
+.cirSecs{display:flex;gap:4px;margin:10px 4px 0;}
+.cirSec{flex:1;border-radius:6px;padding:4px 2px;text-align:center;background:#10151d;border:1px solid #1c2836;
+  font-family:var(--mono);font-size:11px;color:#6c8494;}
+.cirSec .sn{font-size:9px;letter-spacing:.1em;}
+.cirSec.cur{border-color:#4fa3ff;color:#cfeaff;}
+.cirSec.win{background:#0d2a14;border-color:#2b7a3c;color:#7dffa0;}
+.cirSec.lose{background:#2a0f0d;border-color:#7a2b22;color:#ff8a78;}
+.cirTimes{display:flex;gap:6px;margin-top:12px;}
+.cirTimes > div{flex:1;text-align:center;background:#0a0d13;border:1px solid #1c2836;border-radius:10px;padding:6px 2px;}
+.cirTimes .cl{font-size:9px;color:#6c8494;letter-spacing:.08em;}
+.cirTimes .cv{font-family:var(--mono);font-size:15px;font-weight:700;color:#e7e9ea;margin-top:2px;}
+.cirBanner{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(3,4,5,.94);text-align:center;pointer-events:none;}
+.cirBanner.show{display:flex;animation:cirPop .35s ease-out;}
+.cirBanner .bt{font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.3em;font-size:14px;color:#6c8494;}
+.cirBanner .bv{font-family:'Orbitron',monospace;font-style:italic;font-weight:900;font-size:clamp(36px,11vw,70px);color:#eaf7ff;margin-top:4px;}
+.cirBanner .bd{font-family:'Orbitron',monospace;font-style:italic;font-weight:900;font-size:clamp(28px,9vw,54px);margin-top:4px;}
+.cirBanner .bd.ahead{color:#5dff8a;text-shadow:0 0 16px rgba(93,255,138,.7);}
+.cirBanner .bd.behind{color:#ff5a45;text-shadow:0 0 16px rgba(255,90,69,.7);}
+.cirBanner .bb{font-family:'Orbitron',monospace;font-weight:900;font-size:22px;color:#ffd166;margin-top:8px;
+  letter-spacing:.12em;text-shadow:0 0 14px rgba(255,209,102,.8);animation:cirBlink .5s steps(2) infinite;}
+@keyframes cirPop{from{transform:scale(1.15);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes cirBlink{50%{opacity:.35}}
+#cirStartBtn{background:var(--tgt);color:#0B1011;}
+#cirStartBtn.run{background:var(--danger);color:#1A0E0C;}
+#cirMap{width:100%;height:260px;display:block;background:#050810;border:1px solid var(--edge);border-radius:10px;}
+.cirLapTbl{width:100%;border-collapse:collapse;font-size:12px;}
+.cirLapTbl td{border-bottom:1px solid var(--edge);padding:6px 4px;}
+.cirLapTbl td.t{font-family:var(--mono);font-weight:700;}
+.cirLapTbl td.best{color:#ffd166;}
+.cirLapTbl td.g{color:#8fefff;font-size:11px;}
+.cirLapTbl button{font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid var(--edge);background:var(--panel);color:var(--dim);cursor:pointer;}
+@media(orientation:landscape){
+  #modeCircuit.active{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;}
+  #modeCircuit > .cirDash{grid-column:1;grid-row:1/4;}
+  .cirDelta{font-size:clamp(56px,10vw,120px);}
+}
+
 /* landscape */
 @media(orientation:landscape){
   #app{padding:calc(env(safe-area-inset-top,4px) + 4px) 10px calc(env(safe-area-inset-bottom,0px) + 66px);}
@@ -573,7 +635,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-20.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-26.1</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
@@ -658,6 +720,89 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <button class="ctrl" id="csvBtn">走行結果DL</button>
 </div>
 <div class="strow" id="stRow"></div>
+</section>
+
+<section class="mode" id="modeCircuit" data-mode="circuit">
+<div class="pnl">
+  <div class="plbl">コース</div>
+  <div class="prow">
+    <select class="psel" id="cirTrackSel" aria-label="コース"></select>
+    <button class="pbtn del" id="cirTrackDel" title="このコースを削除">🗑</button>
+    <button class="pbtn add" id="cirTrackNew">＋新規</button>
+  </div>
+  <div class="cirRow" style="margin-top:6px">
+    <button class="sbtn" id="cirLineBtn">📍 ここをスタート/ゴールに設定</button>
+  </div>
+  <div class="engNote" id="cirLineInfo" style="margin-top:4px"></div>
+</div>
+
+<div class="cirDash" id="cirDash">
+  <div class="cirTop">
+    <span class="cirLapNo" id="cirLapNo">LAP --</span>
+    <span class="cirMode" id="cirModeLbl">周回</span>
+    <span class="cirGps" id="cirGps">GPS --</span>
+  </div>
+  <div class="cirDelta" id="cirDelta">--.--</div>
+  <div class="cirDeltaSub" id="cirDeltaSub">ゴーストとの差</div>
+  <div class="cirBar"><div class="cirBarMid"></div><div class="cirBarFill" id="cirBarFill"></div></div>
+  <div class="cirSecs" id="cirSecs"></div>
+  <div class="cirTimes">
+    <div><div class="cl">いまのラップ</div><div class="cv" id="cirNow">--:--.---</div></div>
+    <div><div class="cl">前のラップ</div><div class="cv" id="cirLast">--:--.---</div></div>
+    <div><div class="cl">ゴースト</div><div class="cv" id="cirGhostT">--:--.---</div></div>
+  </div>
+  <div class="cirBanner" id="cirBanner"></div>
+</div>
+
+<div class="cirRow">
+  <button class="ctrl" id="cirStartBtn">▶ 計測スタート</button>
+</div>
+
+<div class="pnl">
+  <div class="plbl">コース図(白い半透明の点がゴースト)</div>
+  <canvas id="cirMap" aria-label="コース図とゴーストの位置"></canvas>
+</div>
+
+<div class="pnl">
+  <div class="plbl">ゴーストとの比べ方</div>
+  <div class="srow">
+    <button class="sbtn" id="cirCmpLap">🔁 周回ごと</button>
+    <button class="sbtn" id="cirCmpSec">🧩 区間ごと</button>
+  </div>
+  <div class="prow" style="margin-top:6px" id="cirSecRow">
+    <label class="cirLbl">区間の数</label>
+    <select class="engIn" id="cirSecN">
+      <option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+    </select>
+    <span class="engNote">ゴーストの1周を距離で等分します</span>
+  </div>
+  <div class="plbl" style="margin-top:10px">ゴースト</div>
+  <div class="prow">
+    <select class="psel" id="cirGhostSel" aria-label="ゴーストにするラップ"></select>
+  </div>
+  <div class="cirRow" style="margin-top:6px">
+    <label class="sbtn" style="text-align:center;cursor:pointer">📂 ラップを読み込む
+      <input type="file" id="cirImportIn" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+    </label>
+    <button class="sbtn" id="cirExportBtn">📤 ゴーストを書き出す</button>
+  </div>
+  <div class="engNote" id="cirIoInfo" style="margin-top:4px"></div>
+</div>
+
+<div class="pnl">
+  <div class="plbl">このコースのラップ</div>
+  <div id="cirLapList"></div>
+</div>
+
+<div class="pnl">
+  <div class="engNote">
+    位置はスマホのGPSを使います(だいたい1秒に1回・誤差数m)。差のタイムは目安で、0.1秒単位の勝ち負けは参考程度に見てください。<br>
+    運転中は画面を操作しないでください。計測スタートは走り出す前に押し、表示は同乗者が見るか、固定したスマホをチラ見する程度にしてください。サーキットなど公道以外で使ってください。
+  </div>
+  <div class="cirRow" style="margin-top:8px">
+    <button class="sbtn" id="cirDemoBtn">🧪 デモ走行(GPSなしで動きを試す)</button>
+  </div>
+</div>
 </section>
 
 <section class="mode" id="modeMeter" data-mode="meter">
@@ -1004,6 +1149,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 </div><!-- /#app -->
 <nav id="modeBar" aria-label="画面の切り替え">
   <button type="button" class="modeBtn" data-mode="trace"><span class="mi">🏁</span><span class="ml">トレース</span></button>
+  <button type="button" class="modeBtn" data-mode="circuit"><span class="mi">🏎️</span><span class="ml">サーキット</span></button>
   <button type="button" class="modeBtn" data-mode="meter"><span class="mi">📟</span><span class="ml">メーター</span></button>
   <button type="button" class="modeBtn" data-mode="search"><span class="mi">🔍</span><span class="ml">サーチ</span></button>
   <button type="button" class="modeBtn" data-mode="setting"><span class="mi">⚙️</span><span class="ml">セッティング</span></button>
@@ -3269,7 +3415,7 @@ engRender();engRenderScan();
 // =========================================================
 // 画面モード(トレース / メーター / サーチ / セッティング)
 // =========================================================
-const MODES=['trace','meter','search','setting'];
+const MODES=['trace','circuit','meter','search','setting'];
 function setMode(m){
   if(MODES.indexOf(m)<0)m='trace';
   if(m!=='trace'&&graphFsOn)setGraphFullscreen(false);
@@ -3280,6 +3426,7 @@ function setMode(m){
   if(m==='trace'){rszAll();drawG(running?pausedAt:0);drawMM(running?pausedAt:0);}
   else if(m==='meter'){engRender();engXYStart();}
   else if(m==='search'){engRenderScan();}
+  if(m==='circuit'){if(window.__circuitShow)window.__circuitShow();}else if(window.__circuitHide)window.__circuitHide();
   window.scrollTo(0,0);
 }
 document.querySelectorAll('.modeBtn,[data-goto]').forEach(function(b){
@@ -3504,6 +3651,7 @@ rszAll();drawG(0);drawMM(0);
 setSrc((MCU_MODE||!BLE_SUPPORTED)?'wifi':'ble');refreshSel();updateInfo();
 patSel.value='WLTC_Class3b';selectPat('WLTC_Class3b'); // WLTCをデフォルトの走行パターンにする
 
+window.__stUtil={speedColor:speedColor,catmull:catmull}; // サーキットモード用
 // 起動時: 前回のモードで開く(すべての定義が済んだ最後に呼ぶ)
 setMode((function(){try{return localStorage.getItem('st_mode')||'trace';}catch(e){return 'trace';}})());
 updateConnBtn();
@@ -3518,6 +3666,591 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+</script>
+<script>
+(function(){
+"use strict";
+// =========================================================
+// サーキットモード: 保存したラップ(ゴースト)と勝負する
+//  - 位置はスマホのGPS(watchPosition)。スタート/ゴールは「その場でボタン」で登録
+//  - 比べ方: 周回ごと(1周の累積差) / 区間ごと(区間の中だけの差)
+//  - ゴースト: 自動(このコースのベスト) / 保存したラップ / 読み込んだラップ
+// =========================================================
+const $=function(id){return document.getElementById(id);};
+const U=window.__stUtil||{};
+const speedColor=U.speedColor||function(v,a){return 'rgba(79,209,197,'+(a==null?1:a)+')';};
+const catmull=U.catmull||function(ctx,p0,p1,p2){ctx.lineTo(p2.x,p2.y);};
+const SK='st_circuit_v1', MAX_LAPS=30, MIN_LAP_MS=20000, LINE_HALF_W=30, OFF_TRACK_M=45;
+const R_EARTH=6371000;
+
+// ---------- 保存 ----------
+function load(){try{const d=JSON.parse(localStorage.getItem(SK)||'null');if(d&&d.tracks)return d;}catch(e){}return {v:1,tracks:{},cur:null};}
+let store=load();
+function save(){
+  try{localStorage.setItem(SK,JSON.stringify(store));return true;}
+  catch(e){toastIo('端末の保存容量がいっぱいです。古いラップを消してください。');return false;}
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function track(){return store.cur?store.tracks[store.cur]:null;}
+function newTrack(name,line){
+  const id=uid();
+  store.tracks[id]={id:id,name:name,line:line||null,laps:[],ghostSel:'auto',cmp:'lap',secN:3};
+  store.cur=id;save();return store.tracks[id];
+}
+
+// ---------- 座標(スタートラインを原点にした平面 m) ----------
+let O={lat:35,lon:137,k:Math.cos(35*Math.PI/180)};
+function setOrigin(lat,lon){O={lat:lat,lon:lon,k:Math.cos(lat*Math.PI/180)};if(typeof prev!=='undefined'&&prev){const q=xy(prev.lat,prev.lon);prev.x=q.x;prev.y=q.y;}}
+function xy(lat,lon){return {x:(lon-O.lon)*Math.PI/180*R_EARTH*O.k, y:(lat-O.lat)*Math.PI/180*R_EARTH};}
+function originFromTrack(){
+  const tr=track();
+  if(tr&&tr.line)setOrigin(tr.line.lat,tr.line.lon);
+  else if(tr&&tr.laps.length&&tr.laps[0].pts.length)setOrigin(tr.laps[0].pts[0][1],tr.laps[0].pts[0][2]);
+}
+
+// ---------- 表示用 ----------
+function fmtT(ms){
+  if(ms==null||!isFinite(ms))return '--:--.---';
+  ms=Math.max(0,ms);const m=Math.floor(ms/60000),s=(ms%60000)/1000;
+  return m+':'+(s<10?'0':'')+s.toFixed(3);
+}
+function fmtD(ms){
+  if(ms==null||!isFinite(ms))return '--.--';
+  const s=ms/1000,a=Math.abs(s);
+  return (s<0?'−':s>0?'+':'±')+(a>=10?a.toFixed(1):a.toFixed(2));
+}
+function cls(el,ms){el.classList.toggle('ahead',ms!=null&&ms<-5);el.classList.toggle('behind',ms!=null&&ms>5);}
+
+// ---------- DOM ----------
+const sec=$('modeCircuit');
+const elTrackSel=$('cirTrackSel'),elLineInfo=$('cirLineInfo'),elDash=$('cirDash'),elDelta=$('cirDelta'),
+  elDeltaSub=$('cirDeltaSub'),elBar=$('cirBarFill'),elSecs=$('cirSecs'),elNow=$('cirNow'),elLast=$('cirLast'),
+  elGhostT=$('cirGhostT'),elLapNo=$('cirLapNo'),elModeLbl=$('cirModeLbl'),elGps=$('cirGps'),elBanner=$('cirBanner'),
+  elStart=$('cirStartBtn'),elMap=$('cirMap'),elGhostSel=$('cirGhostSel'),elSecN=$('cirSecN'),
+  elLapList=$('cirLapList'),elIo=$('cirIoInfo'),elDemo=$('cirDemoBtn');
+const mctx=elMap.getContext('2d');
+function toastIo(t){elIo.textContent=t;}
+
+// ---------- 実行中の状態 ----------
+let running=false, watchId=null, demo=null;
+let prev=null;            // 直前のGPS点 {t,lat,lon,x,y,spd,acc}
+let lastFixPerf=0, lastFixT=0, clockRate=1;
+let lineReq=false;        // スタートライン登録待ち
+let lap=null;             // 走行中のラップ {no,start,pts:[[t,lat,lon,spd]],xy:[{x,y,v,t}],gIdx,s,secCross:[],secRes:[]}
+let lapNo=0, lastLapMs=null;
+let ghost=null;           // {lap,time,P:[{x,y,s,t}],L,secS:[],secT:[]}
+let curDelta=null, shownDelta=null, offTrack=false, bannerT=0;
+let audio=null;
+
+// ---------- ゴースト ----------
+function selfLaps(tr){return tr.laps.filter(function(l){return l.src!=='import';});}
+function bestLap(tr){let b=null;selfLaps(tr).forEach(function(l){if(!b||l.time<b.time)b=l;});return b;}
+function ghostLapOf(tr){
+  if(!tr)return null;
+  if(tr.ghostSel&&tr.ghostSel!=='auto'){const g=tr.laps.find(function(l){return l.id===tr.ghostSel;});if(g)return g;}
+  return bestLap(tr);
+}
+function prepGhost(){
+  const tr=track(), gl=ghostLapOf(tr);
+  if(!gl||gl.pts.length<3){ghost=null;return;}
+  const P=[];let s=0;
+  gl.pts.forEach(function(p,i){
+    const q=xy(p[1],p[2]);
+    if(i)s+=Math.hypot(q.x-P[i-1].x,q.y-P[i-1].y);
+    P.push({x:q.x,y:q.y,s:s,t:p[0],v:p[3]});
+  });
+  const N=tr.secN||3, secS=[], secT=[];
+  for(let k=0;k<=N;k++){const sk=s*k/N;secS.push(sk);secT.push(tAtS(P,sk));}
+  ghost={lap:gl,time:gl.time,P:P,L:s,secS:secS,secT:secT,N:N};
+}
+function tAtS(P,s){
+  if(s<=0)return P[0].t; if(s>=P[P.length-1].s)return P[P.length-1].t;
+  let lo=0,hi=P.length-1;
+  while(hi-lo>1){const m=(lo+hi)>>1;if(P[m].s<=s)lo=m;else hi=m;}
+  const a=P[lo],b=P[hi],u=(s-a.s)/((b.s-a.s)||1);return a.t+(b.t-a.t)*u;
+}
+function posAtT(P,t){
+  if(t<=P[0].t)return P[0]; if(t>=P[P.length-1].t)return P[P.length-1];
+  let lo=0,hi=P.length-1;
+  while(hi-lo>1){const m=(lo+hi)>>1;if(P[m].t<=t)lo=m;else hi=m;}
+  const a=P[lo],b=P[hi],u=(t-a.t)/((b.t-a.t)||1);return {x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*u};
+}
+// 自分の位置をゴーストの走行線に当てはめる(前回の場所から少し先までだけ探す=コースが近接していても飛ばない)
+function matchGhost(p){
+  const P=ghost.P,n=P.length;
+  const i0=Math.max(0,lap.gIdx-3), i1=Math.min(n-2,lap.gIdx+40);
+  let best=null;
+  for(let i=i0;i<=i1;i++){
+    const a=P[i],b=P[i+1],dx=b.x-a.x,dy=b.y-a.y,l2=dx*dx+dy*dy||1;
+    let u=((p.x-a.x)*dx+(p.y-a.y)*dy)/l2;u=Math.max(0,Math.min(1,u));
+    const qx=a.x+dx*u,qy=a.y+dy*u,d=Math.hypot(p.x-qx,p.y-qy);
+    if(!best||d<best.d)best={d:d,i:i,u:u};
+  }
+  if(!best||best.d>OFF_TRACK_M)return null;
+  const a=P[best.i],b=P[best.i+1];
+  lap.gIdx=best.i;
+  return {s:a.s+(b.s-a.s)*best.u, t:a.t+(b.t-a.t)*best.u};
+}
+
+// ---------- GPS ----------
+function startWatch(){
+  if(watchId!=null||demo)return;
+  if(!navigator.geolocation||window.isSecureContext===false){
+    elGps.textContent='GPS ×';elGps.className='cirGps ng';
+    toastIo('この開き方ではスマホのGPSが使えません。https://inoueminiyuki-cyber.github.io/speed-tracer/ のアプリで開いてください(マイコンの192.168.4.1から開いた画面では使えません)。');
+    return;
+  }
+  watchId=navigator.geolocation.watchPosition(function(pos){
+    const c=pos.coords;
+    onFix({t:pos.timestamp||Date.now(),lat:c.latitude,lon:c.longitude,spd:(c.speed!=null&&c.speed>=0)?c.speed:null,acc:c.accuracy});
+  },function(err){
+    elGps.textContent='GPS ×';elGps.className='cirGps ng';
+    if(err&&err.code===1)toastIo('位置情報の使用が許可されていません。ブラウザの設定で許可してください。');
+  },{enableHighAccuracy:true,maximumAge:0,timeout:15000});
+}
+function stopWatch(){if(watchId!=null){navigator.geolocation.clearWatch(watchId);watchId=null;}}
+
+function onFix(f){
+  const q=xy(f.lat,f.lon);f.x=q.x;f.y=q.y;
+  if(f.spd==null&&prev){const dt=(f.t-prev.t)/1000;f.spd=dt>0?Math.hypot(f.x-prev.x,f.y-prev.y)/dt:0;}
+  lastFixPerf=performance.now();lastFixT=f.t;
+  if(f.acc!=null){elGps.textContent='GPS ±'+Math.round(f.acc)+'m';elGps.className='cirGps '+(f.acc<=8?'ok':f.acc<=20?'weak':'ng');}
+  handleLine(f);
+  const tr=track();
+  if(running&&tr&&tr.line&&tr.line.h!=null&&prev){
+    const c=crossing(prev,f,tr.line);
+    if(c!=null){
+      const cp={t:c.t,lat:prev.lat+(f.lat-prev.lat)*c.u,lon:prev.lon+(f.lon-prev.lon)*c.u,spd:prev.spd+(f.spd-prev.spd)*c.u};
+      const cq=xy(cp.lat,cp.lon);cp.x=cq.x;cp.y=cq.y;
+      if(lap&&c.t-lap.start>=MIN_LAP_MS){addPoint(cp);finishLap(c.t);beginLap(cp);}
+      else if(!lap){beginLap(cp);}
+    }
+  }
+  if(running&&lap)addPoint(f);
+  prev=f;
+}
+function crossing(a,b,L){
+  const hx=Math.sin(L.h),hy=Math.cos(L.h); // 進行方向(北=0, 時計回り)
+  const pa=xy(L.lat,L.lon);
+  const da=(a.x-pa.x)*hx+(a.y-pa.y)*hy, db=(b.x-pa.x)*hx+(b.y-pa.y)*hy;
+  if(!(da<0&&db>=0))return null;
+  const u=-da/(db-da);
+  const cx=a.x+(b.x-a.x)*u-pa.x, cy=a.y+(b.y-a.y)*u-pa.y;
+  const lat=Math.abs(cx*hy-cy*hx);
+  if(lat>LINE_HALF_W)return null;
+  return {t:a.t+(b.t-a.t)*u,u:u};
+}
+function handleLine(f){
+  const tr=track();
+  if(lineReq&&tr){
+    lineReq=false;
+    tr.line={lat:f.lat,lon:f.lon,h:null};
+    if(prev&&f.spd>2&&Math.hypot(f.x-prev.x,f.y-prev.y)>2)tr.line.h=Math.atan2(f.x-prev.x,f.y-prev.y);
+    setOrigin(f.lat,f.lon);save();prepGhost();
+    const q=xy(f.lat,f.lon);f.x=q.x;f.y=q.y;
+    renderLineInfo();
+    return;
+  }
+  if(tr&&tr.line&&tr.line.h==null){
+    const p=xy(tr.line.lat,tr.line.lon);
+    if(Math.hypot(f.x-p.x,f.y-p.y)>15){tr.line.h=Math.atan2(f.x-p.x,f.y-p.y);save();renderLineInfo();}
+  }
+}
+
+// ---------- ラップ ----------
+function beginLap(cp){
+  prepGhost();
+  lapNo++;
+  lap={no:lapNo,start:cp.t,pts:[],xy:[],gIdx:0,s:0,myT:0,secCross:[0],secRes:[],secK:0};
+  addPoint(cp);
+  curDelta=ghost?0:null;offTrack=false;
+  renderSecs();
+}
+function addPoint(f){
+  const t=f.t-lap.start;
+  const last=lap.pts[lap.pts.length-1];
+  if(last&&t<=last[0])return;
+  lap.pts.push([Math.round(t),+f.lat.toFixed(7),+f.lon.toFixed(7),+(f.spd||0).toFixed(2)]);
+  lap.xy.push({x:f.x,y:f.y,v:(f.spd||0)*3.6,t:t});
+  if(!ghost)return;
+  const m=matchGhost(f);
+  if(!m){offTrack=true;return;}
+  offTrack=false;
+  // 区間の境目を越えたか(越えた時刻は距離で内分)
+  const N=ghost.N;
+  while(lap.secK<N-1&&m.s>=ghost.secS[lap.secK+1]){
+    const sb=ghost.secS[lap.secK+1];
+    const tb=lap.s<sb&&m.s>lap.s?lap.myT+(t-lap.myT)*(sb-lap.s)/(m.s-lap.s):t;
+    closeSector(tb);
+  }
+  lap.s=m.s;lap.myT=t;
+  if(tr0().cmp==='sec'){
+    const k=lap.secK;
+    curDelta=(t-lap.secCross[k])-(m.t-ghost.secT[k]);
+  }else curDelta=t-m.t;
+}
+function tr0(){return track()||{cmp:'lap'};}
+function closeSector(tb){
+  const k=lap.secK;
+  const d=(tb-lap.secCross[k])-(ghost.secT[k+1]-ghost.secT[k]);
+  lap.secRes[k]=d;lap.secCross[k+1]=tb;lap.secK=k+1;
+  if(tr0().cmp==='sec'){showBanner('SECTOR '+(k+1),fmtT(tb-lap.secCross[k]),d,false,1800);beep(d<0?880:520,0.08);}
+  renderSecs();
+}
+function finishLap(tEnd){
+  const ms=Math.round(tEnd-lap.start);
+  const tr=track();
+  if(ghost){
+    if(lap.secK<ghost.N){ // 最終区間
+      const k=lap.secK;lap.secRes[k]=(ms-lap.secCross[k])-(ghost.secT[ghost.N]-ghost.secT[k]);lap.secK=ghost.N;
+    }
+  }
+  const prevBest=bestLap(tr);
+  const rec={id:uid(),date:new Date().toISOString(),time:ms,pts:lap.pts,src:'self',no:lap.no};
+  tr.laps.push(rec);
+  // 古いラップから整理(ベストと読み込んだラップ、ゴースト指定中のラップは残す)
+  while(tr.laps.length>MAX_LAPS){
+    const b=bestLap(tr);
+    const i=tr.laps.findIndex(function(l){return l!==b&&l.src!=='import'&&l.id!==tr.ghostSel;});
+    if(i<0)break;tr.laps.splice(i,1);
+  }
+  save();
+  const isBest=!prevBest||ms<prevBest.time;
+  const d=ghost?ms-ghost.time:null;
+  lastLapMs=ms;
+  showBanner('LAP '+lap.no,fmtT(ms),d,isBest&&!!prevBest,3500);
+  beep(isBest?1175:660,isBest?0.25:0.12);if(isBest&&prevBest)setTimeout(function(){beep(1568,0.3);},180);
+  renderSecs();renderLaps();renderGhostSel();
+}
+function showBanner(title,val,d,best,dur){
+  elBanner.innerHTML='<div class="bt"></div><div class="bv"></div>'+(d!=null?'<div class="bd"></div>':'')+(best?'<div class="bb">NEW BEST!</div>':'');
+  elBanner.querySelector('.bt').textContent=title;elBanner.querySelector('.bv').textContent=val;
+  if(d!=null){const e=elBanner.querySelector('.bd');e.textContent=fmtD(d);cls(e,d);}
+  elBanner.classList.remove('show');void elBanner.offsetWidth;elBanner.classList.add('show');
+  bannerT=performance.now()+dur;
+}
+function beep(f,dur){
+  try{
+    if(!audio)return;
+    const o=audio.createOscillator(),g=audio.createGain();o.type='triangle';o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,audio.currentTime);g.gain.exponentialRampToValueAtTime(0.25,audio.currentTime+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,audio.currentTime+dur);
+    o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+dur+0.02);
+  }catch(e){}
+}
+
+// ---------- 開始/停止 ----------
+let wake=null;
+function setRunning(on){
+  running=on;
+  elStart.textContent=on?'■ 計測ストップ':'▶ 計測スタート';elStart.classList.toggle('run',on);
+  if(on){
+    try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
+    try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(function(w){wake=w;}).catch(function(){});}catch(e){}
+    lap=null;lapNo=0;curDelta=null;prepGhost();
+    try{elDash.scrollIntoView({block:'start',behavior:'smooth'});}catch(e){}
+    if(!demo)startWatch();
+  }else{
+    lap=null;curDelta=null;
+    try{if(wake){wake.release();wake=null;}}catch(e){}
+    if(demo){clearInterval(demo.timer);demo=null;prev=null;elDemo.textContent='🧪 デモ走行(GPSなしで動きを試す)';if(sec.classList.contains('active'))startWatch();}
+    if(!sec.classList.contains('active'))stopWatch();
+  }
+  renderSecs();
+}
+elStart.addEventListener('click',function(){
+  const tr=track();
+  if(!running&&(!tr||!tr.line)){toastIo('');elLineInfo.textContent='先にスタート/ゴールを設定してください(コース上のラインで「📍」を押します)。';return;}
+  setRunning(!running);
+});
+$('cirLineBtn').addEventListener('click',function(){
+  if(running){elLineInfo.textContent='計測中は変更できません。';return;}
+  let tr=track();
+  if(!tr)tr=newTrack('コース '+(Object.keys(store.tracks).length+1),null);
+  if(tr.line&&!confirm('このコースのスタート/ゴールを今の位置に設定し直しますか?'))return;
+  lineReq=true;startWatch();
+  elLineInfo.textContent='GPSを待っています…(ライン上で、できれば進行方向にゆっくり動きながら押すと向きも記録できます)';
+  if(prev&&performance.now()-lastFixPerf<3000)handleLine(prev);
+});
+
+// ---------- コース・ゴースト・比べ方の操作 ----------
+function renderTracks(){
+  const ids=Object.keys(store.tracks);
+  elTrackSel.innerHTML='';
+  if(!ids.length){const o=document.createElement('option');o.value='';o.textContent='― コースがありません(＋新規)―';elTrackSel.appendChild(o);}
+  ids.forEach(function(id){const o=document.createElement('option');o.value=id;o.textContent=store.tracks[id].name;elTrackSel.appendChild(o);});
+  if(store.cur)elTrackSel.value=store.cur;
+}
+elTrackSel.addEventListener('change',function(){if(running)return renderTracks();store.cur=this.value||null;save();onTrackChange();});
+$('cirTrackNew').addEventListener('click',function(){
+  if(running)return;
+  const n=prompt('コースの名前(例: 鈴鹿ツインサーキット)','コース '+(Object.keys(store.tracks).length+1));
+  if(!n)return;newTrack(n.slice(0,40),null);onTrackChange();
+});
+$('cirTrackDel').addEventListener('click',function(){
+  const tr=track();if(!tr||running)return;
+  if(!confirm('「'+tr.name+'」とラップ '+tr.laps.length+' 件を消しますか?'))return;
+  delete store.tracks[tr.id];store.cur=Object.keys(store.tracks)[0]||null;save();onTrackChange();
+});
+function onTrackChange(){originFromTrack();prepGhost();renderTracks();renderLineInfo();renderCmp();renderGhostSel();renderLaps();renderSecs();}
+function renderLineInfo(){
+  const tr=track();
+  if(!tr){elLineInfo.textContent='＋新規でコースを作るか、そのまま「📍」を押すとコースが作られます。';return;}
+  if(!tr.line)elLineInfo.textContent='スタート/ゴールが未設定です。コース上のラインで「📍」を押してください。';
+  else if(tr.line.h==null)elLineInfo.textContent='ラインの位置を記録しました。進行方向は、走り出して15m進むと自動で記録します。';
+  else elLineInfo.textContent='スタート/ゴール設定済み(ラインの左右'+LINE_HALF_W+'mの範囲を通過で計測)。';
+}
+function renderCmp(){
+  const tr=tr0();
+  $('cirCmpLap').classList.toggle('agps',tr.cmp!=='sec');$('cirCmpSec').classList.toggle('agps',tr.cmp==='sec');
+  elModeLbl.textContent=tr.cmp==='sec'?'区間':'周回';
+  elSecN.value=String(tr.secN||3);
+}
+$('cirCmpLap').addEventListener('click',function(){const tr=track();if(!tr)return;tr.cmp='lap';save();renderCmp();});
+$('cirCmpSec').addEventListener('click',function(){const tr=track();if(!tr)return;tr.cmp='sec';save();renderCmp();});
+elSecN.addEventListener('change',function(){const tr=track();if(!tr)return;tr.secN=parseInt(this.value,10)||3;save();if(!lap)prepGhost();renderSecs();
+  if(lap)toastIo('区間の数は次のラップから変わります。');});
+function lapLabel(l,tr){
+  const b=bestLap(tr);
+  return (l.src==='import'?'👤 '+(l.who||'読み込み')+' ':'Lap '+(l.no||'')+' ')+fmtT(l.time)+(l===b?' ★':'')+' ('+new Date(l.date).toLocaleDateString()+')';
+}
+function renderGhostSel(){
+  const tr=track();elGhostSel.innerHTML='';
+  const o=document.createElement('option');o.value='auto';
+  const b=tr?bestLap(tr):null;
+  o.textContent='自動: このコースのベスト'+(b?' ('+fmtT(b.time)+')':'(まだありません)');elGhostSel.appendChild(o);
+  if(tr)tr.laps.slice().sort(function(a,b){return a.time-b.time;}).forEach(function(l){
+    const e=document.createElement('option');e.value=l.id;e.textContent=lapLabel(l,tr);elGhostSel.appendChild(e);
+  });
+  elGhostSel.value=tr&&tr.ghostSel&&tr.laps.some(function(l){return l.id===tr.ghostSel;})?tr.ghostSel:'auto';
+  const g=ghostLapOf(tr);elGhostT.textContent=g?fmtT(g.time):'--:--.---';
+}
+elGhostSel.addEventListener('change',function(){const tr=track();if(!tr)return;tr.ghostSel=this.value;save();
+  if(!lap)prepGhost();else toastIo('ゴーストは次のラップから切り替わります。');renderGhostSel();});
+function renderLaps(){
+  const tr=track();
+  if(!tr||!tr.laps.length){elLapList.innerHTML='<div class="engNote">まだラップがありません。</div>';return;}
+  const b=bestLap(tr),g=ghostLapOf(tr);
+  const t=document.createElement('table');t.className='cirLapTbl';
+  tr.laps.slice().reverse().forEach(function(l){
+    const r=t.insertRow();
+    r.insertCell().textContent=l.src==='import'?('👤 '+(l.who||'読み込み')):('Lap '+(l.no||''));
+    const c=r.insertCell();c.className='t'+(l===b?' best':'');c.textContent=fmtT(l.time)+(l===b?' ★':'');
+    const c2=r.insertCell();c2.className='g';c2.textContent=l===g?'👻 ゴースト':'';
+    const c3=r.insertCell();c3.style.textAlign='right';
+    const bg=document.createElement('button');bg.textContent='👻';bg.title='これをゴーストにする';
+    bg.addEventListener('click',function(){tr.ghostSel=l.id;save();if(!lap)prepGhost();renderGhostSel();renderLaps();});
+    const bd=document.createElement('button');bd.textContent='🗑';bd.title='消す';bd.style.marginLeft='4px';
+    bd.addEventListener('click',function(){if(!confirm(fmtT(l.time)+' のラップを消しますか?'))return;
+      tr.laps=tr.laps.filter(function(x){return x!==l;});if(tr.ghostSel===l.id)tr.ghostSel='auto';save();if(!lap)prepGhost();renderGhostSel();renderLaps();});
+    c3.appendChild(bg);c3.appendChild(bd);
+  });
+  elLapList.innerHTML='';elLapList.appendChild(t);
+}
+function renderSecs(){
+  const N=ghost?ghost.N:(tr0().secN||3);
+  let h='';
+  for(let k=0;k<N;k++){
+    const r=lap&&lap.secRes[k]!=null?lap.secRes[k]:null;
+    const c=r==null?(lap&&ghost&&lap.secK===k?' cur':''):(r<0?' win':' lose');
+    h+='<div class="cirSec'+c+'"><div class="sn">S'+(k+1)+'</div><div>'+(r==null?'--':fmtD(r))+'</div></div>';
+  }
+  elSecs.innerHTML=h;
+}
+
+// ---------- 書き出し / 読み込み ----------
+$('cirExportBtn').addEventListener('click',function(){
+  const tr=track(),g=ghostLapOf(tr);
+  if(!g){toastIo('書き出せるラップがありません。');return;}
+  const who=prompt('名前(相手の画面に表示されます)',g.who||'')||'';
+  const data={format:'speedtracer-lap',v:1,track:{name:tr.name,line:tr.line},lap:{time:g.time,date:g.date,who:who.slice(0,20),pts:g.pts}};
+  const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='ghost_'+tr.name.replace(/[\\/:*?"<>|\s]+/g,'_')+'_'+fmtT(g.time).replace(/[:.]/g,'-')+'.json';
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+  toastIo('ファイルを保存しました。LINEなどで相手に送り、相手は「📂 ラップを読み込む」で開きます。');
+});
+$('cirImportIn').addEventListener('change',function(){
+  const f=this.files&&this.files[0];this.value='';if(!f)return;
+  const rd=new FileReader();
+  rd.onload=function(){
+    try{
+      const d=JSON.parse(rd.result);
+      if(!d||d.format!=='speedtracer-lap'||!d.lap||!Array.isArray(d.lap.pts)||d.lap.pts.length<3)throw new Error('形式が違います');
+      // 近くにスタートラインがあるコースを探し、なければ新しいコースにする
+      let tr=null;
+      if(d.track&&d.track.line){
+        Object.keys(store.tracks).forEach(function(id){const t=store.tracks[id];
+          if(!tr&&t.line&&dist(t.line,d.track.line)<300)tr=t;});
+      }
+      if(!tr)tr=newTrack((d.track&&d.track.name)||'読み込んだコース',d.track&&d.track.line||null);
+      store.cur=tr.id;
+      const rec={id:uid(),date:d.lap.date||new Date().toISOString(),time:+d.lap.time,pts:d.lap.pts,src:'import',who:(d.lap.who||f.name.replace(/\.json$/,'')).slice(0,20)};
+      tr.laps.push(rec);tr.ghostSel=rec.id;save();onTrackChange();
+      toastIo('「'+rec.who+'」のラップ('+fmtT(rec.time)+')をゴーストにしました。');
+    }catch(e){toastIo('読み込めませんでした: '+e.message);}
+  };
+  rd.readAsText(f);
+});
+function dist(a,b){const k=Math.cos(a.lat*Math.PI/180);return Math.hypot((a.lon-b.lon)*Math.PI/180*R_EARTH*k,(a.lat-b.lat)*Math.PI/180*R_EARTH);}
+
+// ---------- デモ走行(仮想コースを走る。ラップごとに速さが少し変わる) ----------
+elDemo.addEventListener('click',function(){
+  if(demo){setRunning(false);return;}
+  if(running)setRunning(false);
+  stopWatch();prev=null;
+  let tr=Object.keys(store.tracks).map(function(id){return store.tracks[id];}).find(function(t){return t.name==='デモコース';});
+  const LAT=34.8431,LON=136.5410; // 架空の場所(海の上)
+  if(!tr)tr=newTrack('デモコース',{lat:LAT,lon:LON,h:Math.PI/2});
+  store.cur=tr.id;save();onTrackChange();
+  const k=Math.cos(LAT*Math.PI/180);
+  // コース形: スタートラインから東へ。角の丸い長方形+ヘアピン
+  const path=function(u){ // u:0..1 → 原点(ライン)からのm
+    const th=u*Math.PI*2;
+    const r=260+60*Math.cos(2*th)+35*Math.sin(3*th);
+    return {x:Math.sin(th)*r*1.25, y:(Math.cos(th)-1)*r*0.7+ (Math.cos(th)-1)*30};
+  };
+  let u=-0.02, t=Date.now(), lapK=0, factor=1;
+  const simStart=t;
+  demo={timer:null};
+  elDemo.textContent='⏹ デモを止める';
+  setRunning(true);
+  demo.timer=setInterval(function(){
+    // 1回で1秒ぶん進める(実時間の4倍速)
+    const dt=1;
+    const p0=path(u),p1=path(u+0.001),p2=path(u+0.002);
+    let dA=Math.atan2(p2.x-p1.x,p2.y-p1.y)-Math.atan2(p1.x-p0.x,p1.y-p0.y);
+    dA=Math.atan2(Math.sin(dA),Math.cos(dA));const curv=Math.abs(dA);
+    const vBase=Math.max(12,38-curv*2600);                  // 曲がりがきついほど遅く
+    const v=vBase*factor*(1+0.04*Math.sin(u*40+lapK*1.7));  // ラップごとの揺らぎ
+    let len=0,uu=u;while(len<v*dt){const a=path(uu),b=path(uu+0.0005);len+=Math.hypot(b.x-a.x,b.y-a.y);uu+=0.0005;}
+    const lapBefore=Math.floor(u);u=uu;t+=dt*1000;
+    if(Math.floor(u)>lapBefore){lapK++;factor=1+(Math.random()-0.55)*0.06;}
+    const p=path(u),jx=(Math.random()-0.5)*3,jy=(Math.random()-0.5)*3;
+    clockRate=4;
+    onFix({t:t,lat:LAT+(p.y+jy)/R_EARTH*180/Math.PI,lon:LON+(p.x+jx)/(R_EARTH*k)*180/Math.PI,spd:v,acc:4});
+  },250);
+});
+
+// ---------- 画面の更新 ----------
+function nowLapMs(){
+  if(!lap)return null;
+  return lastFixT+(performance.now()-lastFixPerf)*(demo?4:1)-lap.start;
+}
+function updateDash(){
+  const tr=track();
+  elLapNo.textContent=running?(lap?'LAP '+lap.no:'OUT LAP'):'LAP --';
+  elNow.textContent=lap?fmtT(nowLapMs()):'--:--.---';
+  elLast.textContent=fmtT(lastLapMs);
+  if(curDelta!=null&&!offTrack){shownDelta=shownDelta==null?curDelta:shownDelta+(curDelta-shownDelta)*0.25;}
+  else if(curDelta==null)shownDelta=null;
+  elDelta.textContent=fmtD(shownDelta);cls(elDelta,shownDelta);cls(elDash,shownDelta);
+  let sub;
+  if(!running)sub=tr&&tr.line?'「▶ 計測スタート」を押して走り出してください':'スタート/ゴールを設定してください';
+  else if(!lap)sub='スタートラインを通過すると計測が始まります';
+  else if(!ghost)sub='ゴーストなし: この周を走りきると、次からゴーストになります';
+  else if(offTrack)sub='ゴーストの走行線から離れています';
+  else sub=tr0().cmp==='sec'?('S'+(lap.secK+1)+' の中での差(−は勝ち)'):'ゴーストとの差(−は勝ち)';
+  elDeltaSub.textContent=sub;
+  const d=shownDelta==null?0:Math.max(-2000,Math.min(2000,shownDelta)), w=Math.abs(d)/2000*50;
+  elBar.style.left=(d<0?50:50-w)+'%';elBar.style.width=w+'%';
+  elBar.style.background=d<0?'linear-gradient(90deg,#1f8a3a,#5dff8a)':'linear-gradient(270deg,#8a2a1f,#ff5a45)';
+  if(bannerT&&performance.now()>bannerT){elBanner.classList.remove('show');bannerT=0;}
+  if(!running&&!prev){elGps.textContent='GPS --';elGps.className='cirGps';}
+}
+let mapW=0,mapH=0;
+function mapResize(){
+  const r=elMap.getBoundingClientRect();if(r.width<10)return;
+  const dpr=window.devicePixelRatio||1;mapW=r.width;mapH=r.height;
+  elMap.width=Math.round(r.width*dpr);elMap.height=Math.round(r.height*dpr);mctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function drawMap(){
+  if(!mapW)mapResize();
+  const c=mctx,W=mapW,H=mapH;if(!W)return;
+  c.clearRect(0,0,W,H);
+  const tr=track();
+  const base=ghost?ghost.P:(lap&&lap.xy.length>2?lap.xy:null);
+  let pts=base?base.slice():[];
+  if(lap)pts=pts.concat(lap.xy);
+  if(tr&&tr.line)pts.push(xy(tr.line.lat,tr.line.lon));
+  if(prev)pts.push({x:prev.x,y:prev.y});
+  if(!pts.length){
+    c.fillStyle='#8A9097';c.font='12px -apple-system,sans-serif';c.textAlign='center';c.textBaseline='middle';
+    c.fillText('走るとここにコースが描かれます',W/2,H/2);return;
+  }
+  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+  pts.forEach(function(p){x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y);});
+  const sc=Math.min((W-30)/Math.max(x1-x0,30),(H-30)/Math.max(y1-y0,30));
+  const cx=(x0+x1)/2,cy=(y0+y1)/2;
+  const X=function(x){return W/2+(x-cx)*sc;},Y=function(y){return H/2-(y-cy)*sc;};
+  // ゴーストの走行線(コース)
+  if(ghost){
+    c.save();c.strokeStyle='rgba(120,150,180,.22)';c.lineWidth=9;c.lineCap='round';c.lineJoin='round';
+    c.beginPath();ghost.P.forEach(function(p,i){i?c.lineTo(X(p.x),Y(p.y)):c.moveTo(X(p.x),Y(p.y));});c.stroke();
+    c.strokeStyle='rgba(160,190,220,.35)';c.lineWidth=1;c.stroke();c.restore();
+  }
+  // スタート/ゴール(白黒のチェッカー)
+  if(tr&&tr.line){
+    const p=xy(tr.line.lat,tr.line.lon),h=tr.line.h;
+    const px=X(p.x),py=Y(p.y);
+    c.save();c.translate(px,py);c.rotate(h==null?0:h);
+    for(let i=-3;i<3;i++)for(let j=0;j<2;j++){c.fillStyle=(i+j)%2?'#fff':'#111';c.fillRect(i*4,-4+j*4,4,4);}
+    c.restore();
+  }
+  // 自分の軌跡(トレース画面と同じ、光って尾を引く線)
+  if(lap&&lap.xy.length>1){
+    const a=lap.xy,n=a.length,now=a[n-1].t,TR=12000;
+    const P=a.map(function(p){return {x:X(p.x),y:Y(p.y),v:p.v,age:(now-p.t)/TR};});
+    c.save();c.lineCap='round';c.lineJoin='round';
+    for(let i=1;i<n;i++){
+      const age=P[i].age;if(age>1)continue;
+      c.globalAlpha=Math.pow(1-age,2)*0.3;c.strokeStyle=speedColor(P[i].v,1);c.lineWidth=10;
+      c.beginPath();c.moveTo(P[i-1].x,P[i-1].y);catmull(c,P[Math.max(0,i-2)],P[i-1],P[i],P[Math.min(n-1,i+1)]);c.stroke();
+    }
+    for(let i=1;i<n;i++){
+      const age=Math.min(1,P[i].age);
+      c.globalAlpha=Math.max(0.12,Math.pow(1-age,1.6)*0.95);c.strokeStyle=speedColor(P[i].v,1);c.lineWidth=2.5;
+      c.beginPath();c.moveTo(P[i-1].x,P[i-1].y);catmull(c,P[Math.max(0,i-2)],P[i-1],P[i],P[Math.min(n-1,i+1)]);c.stroke();
+    }
+    c.restore();
+  }
+  // ゴースト(同じ経過時間のときにゴーストがいた場所)
+  const tl=nowLapMs();
+  if(ghost&&lap&&tl!=null){
+    const g=posAtT(ghost.P,tl),gx=X(g.x),gy=Y(g.y);
+    const pul=0.75+0.25*Math.sin(performance.now()/180);
+    const gr=c.createRadialGradient(gx,gy,0,gx,gy,16);gr.addColorStop(0,'rgba(220,235,255,'+(0.45*pul)+')');gr.addColorStop(1,'rgba(220,235,255,0)');
+    c.fillStyle=gr;c.beginPath();c.arc(gx,gy,16,0,Math.PI*2);c.fill();
+    c.fillStyle='rgba(235,245,255,.55)';c.beginPath();c.arc(gx,gy,5.5,0,Math.PI*2);c.fill();
+    c.strokeStyle='rgba(255,255,255,.8)';c.lineWidth=1;c.stroke();
+    c.font='bold 9px -apple-system,sans-serif';c.fillStyle='rgba(220,235,255,.75)';c.textAlign='center';c.fillText('GHOST',gx,gy-11);
+  }
+  // 自分
+  if(prev){
+    const mx=X(prev.x),my=Y(prev.y),v=(prev.spd||0)*3.6;
+    const gr=c.createRadialGradient(mx,my,0,mx,my,18);gr.addColorStop(0,speedColor(v,0.55));gr.addColorStop(1,'rgba(0,0,0,0)');
+    c.fillStyle=gr;c.beginPath();c.arc(mx,my,18,0,Math.PI*2);c.fill();
+    c.save();c.shadowColor=speedColor(v,1);c.shadowBlur=12;c.fillStyle=speedColor(v,1);c.beginPath();c.arc(mx,my,5,0,Math.PI*2);c.fill();c.restore();
+    c.fillStyle='rgba(255,255,255,.9)';c.beginPath();c.arc(mx,my,2,0,Math.PI*2);c.fill();
+  }
+}
+let raf=null;
+function loop(){
+  raf=null;
+  if(!sec.classList.contains('active'))return;
+  updateDash();drawMap();
+  raf=requestAnimationFrame(loop);
+}
+window.addEventListener('resize',function(){if(sec.classList.contains('active')){mapResize();drawMap();}});
+window.__circuitShow=function(){
+  mapResize();onTrackChange();startWatch();
+  if(!raf)raf=requestAnimationFrame(loop);
+};
+window.__circuitHide=function(){if(!running)stopWatch();};
+window.__circuitTest={onFix:onFix,state:function(){return {running:running,lap:lap,ghost:ghost,curDelta:curDelta,store:store};}};
+onTrackChange();
+if(sec.classList.contains('active'))window.__circuitShow(); // 前回サーキットモードで閉じた場合
+})();
 </script>
 </body>
 </html>
