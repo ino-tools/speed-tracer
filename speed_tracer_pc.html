@@ -3797,7 +3797,7 @@ function startWatch(){
   if(watchId!=null||demo)return;
   if(!navigator.geolocation||window.isSecureContext===false){
     elGps.textContent='GPS ×';elGps.className='cirGps ng';
-    toastIo('この開き方ではスマホのGPSが使えません。https://inoueminiyuki-cyber.github.io/speed-tracer/ のアプリで開いてください(マイコンの192.168.4.1から開いた画面では使えません)。');
+    toastIo('この開き方ではスマホのGPSが使えません。GitHub Pages(https)のアプリで開いてください(マイコンの192.168.4.1から開いた画面では使えません)。');
     return;
   }
   watchId=navigator.geolocation.watchPosition(function(pos){
