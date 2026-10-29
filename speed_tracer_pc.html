@@ -1099,12 +1099,12 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div class="pnl" id="fbPnl">
   <div class="plbl">💬 アプリの改善要望を送る</div>
   <div class="engNote" style="margin-bottom:6px">
-    「ここが使いにくい」「こんな表示がほしい」などを書いて送ってください。メールアプリが開くので、そのまま送信します。
+    「ここが使いにくい」「こんな表示がほしい」などを書いて「送る」を押してください。名前やアカウントは不要です。
     届いた要望は毎日まとめて確認し、アプリに反映します(内容によっては反映できないこともあります)。
   </div>
   <textarea id="fbText" rows="4" maxlength="1500" placeholder="例: メーター画面の水温の文字をもっと大きくしてほしい"
     style="width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:8px;padding:8px;font-size:14px;font-family:inherit;resize:vertical;user-select:text;-webkit-user-select:text"></textarea>
-  <button class="sbtn" id="fbSendBtn" style="width:100%;margin-top:6px;padding:10px 0;font-size:13px">✉️ 要望をメールで送る</button>
+  <button class="sbtn" id="fbSendBtn" style="width:100%;margin-top:6px;padding:10px 0;font-size:13px">📨 要望を送る</button>
   <div class="engNote" id="fbInfo" style="margin-top:4px"></div>
 </div>
 <div class="pnl" id="thrCalPnl">
@@ -2883,17 +2883,25 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
 }
 
 
-// ---- 改善要望をメールで送る(件名の[SpeedTracer要望]で自動処理が拾う) ----
+// ---- 改善要望を送る(Googleフォームへ直接書き込む。届いた要望はメールで転送され、毎日の自動更新が拾う) ----
 (function(){
-  const to=['inoueminiyuki','gmail.com'].join('@');
+  const FORM='https://docs.google.com/forms/d/e/1FAIpQLSemziGzO2vudfExjnmNedmi06CX9QeRMe8cmbAgFEud4cqzUg/formResponse';
+  const ENTRY='entry.99303828';
+  let sending=false;
   $('fbSendBtn').addEventListener('click',function(){
+    if(sending)return;
     const txt=($('fbText').value||'').trim();
     if(txt.length<4){$('fbInfo').textContent='要望の内容を書いてください。';return;}
+    if(navigator.onLine===false||MCU_MODE){$('fbInfo').textContent='インターネットにつながっていないため送れません。スマホの通信が使える状態で、GitHub Pagesのアプリから送ってください。';return;}
     const ver=($('verTag')&&$('verTag').textContent)||'';
-    const subj='[SpeedTracer要望] '+txt.replace(/\s+/g,' ').slice(0,30);
     const body=txt+'\n\n----\nアプリ: '+ver+'\n画面: '+curMode+'\n接続: '+src+' / '+measureSrc+'\n端末: '+navigator.userAgent;
-    location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
-    $('fbInfo').textContent='メールアプリで「送信」を押すと届きます。ありがとうございます!';
+    const fd=new URLSearchParams();fd.append(ENTRY,body);
+    sending=true;$('fbSendBtn').disabled=true;$('fbInfo').textContent='送信中…';
+    fetch(FORM,{method:'POST',mode:'no-cors',body:fd}).then(function(){
+      $('fbText').value='';$('fbInfo').textContent='送信しました。ありがとうございます!(毎日まとめて確認します)';
+    }).catch(function(){
+      $('fbInfo').textContent='送れませんでした。通信の状態を確認して、もう一度押してください。';
+    }).finally(function(){sending=false;$('fbSendBtn').disabled=false;});
   });
 })();
 

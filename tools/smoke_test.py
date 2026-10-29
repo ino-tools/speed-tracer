@@ -34,7 +34,8 @@ with sync_playwright() as p:
         ctx = b.new_context(viewport=vp)
         ctx.route('https://pages.test/**', lambda r: r.fulfill(status=200, content_type='text/html; charset=utf-8', body=html)
                   if r.request.url.split('?')[0].endswith('.html') else r.fulfill(status=404, body=''))
-        ctx.route('mailto:*', lambda r: r.abort())
+        posts = []
+        ctx.route('https://docs.google.com/forms/**', lambda r: (posts.append(r.request.post_data or ''), r.fulfill(status=200, body='ok')))
         pg = ctx.new_page()
         errs = []
         pg.on('pageerror', lambda e: errs.append(str(e)))
@@ -61,7 +62,8 @@ with sync_playwright() as p:
         pg.click('.modeBtn[data-mode="setting"]')
         pg.fill('#fbText', 'テストの要望です')
         pg.click('#fbSendBtn')
-        check('送信' in pg.inner_text('#fbInfo'), f'{vp}: 要望送信ボタンが動く')
+        pg.wait_for_timeout(800)
+        check('送信しました' in pg.inner_text('#fbInfo') and any('entry.' in x for x in posts), f'{vp}: 要望がフォームへ送られる')
         check(not errs, f'{vp}: JSエラーなし {errs[:3]}')
         ctx.close()
     b.close()
