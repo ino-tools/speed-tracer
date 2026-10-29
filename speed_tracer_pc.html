@@ -286,6 +286,10 @@ body.gfsOn #modeBar{display:none;}
 .advd > summary::after{content:" ▾";color:var(--dim);}
 .advd[open] > summary{margin-bottom:8px;}
 .advd[open] > summary::after{content:" ▴";}
+.thrCalNow{display:flex;gap:8px;}
+.thrCalNow > div{flex:1;background:#161b24;border-radius:8px;padding:8px;text-align:center;}
+.thrCalNow .cl{font-size:10px;color:var(--dim);}
+.thrCalNow .cv{font-family:var(--mono);font-size:22px;font-weight:700;margin-top:2px;}
 .mmrow{display:flex;gap:6px;align-items:stretch;}
 .mmrow .mmwrap{flex:1;min-width:0;}
 .mmrow .gfsbtn{margin-left:0;white-space:nowrap;}
@@ -502,6 +506,60 @@ function drawStreaks(aNeedle,k,t){
   cx.restore();
 }
 
+// 体操選手の針(針の向き=x軸、長さの単位はR)。赤いタイツ・白いシャツ、脚は開脚
+function drawGymnast(R,shake,t){
+  const u=function(v){return v*R;};
+  cx.scale(1,1.3); // 体の太さ
+  const kick=shake*Math.sin(t*38)*0.04; // 振り切れた時、後ろ脚がブルブル
+  cx.lineCap='round';cx.lineJoin='round';
+  // 全体の赤い光(元の針と同じ雰囲気)
+  cx.shadowColor=RED;cx.shadowBlur=22;
+  // 後ろ脚(開脚している側)
+  const la=-0.72+kick, hipX=u(0.52), hipY=u(-0.012);
+  const fx2=hipX+Math.cos(la)*u(0.40), fy2=hipY+Math.sin(la)*u(0.40);
+  limb(hipX,hipY,fx2,fy2,u(0.040),u(0.024),'#c8141c','#ff4a3a');
+  foot(fx2,fy2,la);
+  // 腕(2本、少し開いて鉄棒を握る)
+  cx.shadowBlur=10;
+  limb(u(0.235),u(0.032),u(0.01),u(0.012),u(0.026),u(0.019),'#d9a07e','#ffd9bf');
+  limb(u(0.235),u(-0.032),u(0.01),u(-0.012),u(0.026),u(0.019),'#c98e6c','#f7cfb2');
+  // 胴体: 白いシャツ(肩〜腰の手前)
+  cx.shadowColor=RED;cx.shadowBlur=18;
+  const tg=cx.createLinearGradient(0,u(-0.04),0,u(0.04));tg.addColorStop(0,'#ffffff');tg.addColorStop(0.55,'#f3eef0');tg.addColorStop(1,'#cfc4c8');
+  cx.fillStyle=tg;cx.beginPath();
+  cx.moveTo(u(0.225),u(-0.042));cx.quadraticCurveTo(u(0.36),u(-0.046),u(0.47),u(-0.032));
+  cx.lineTo(u(0.47),u(0.032));cx.quadraticCurveTo(u(0.36),u(0.046),u(0.225),u(0.042));
+  cx.quadraticCurveTo(u(0.205),0,u(0.225),u(-0.042));cx.fill();
+  // 腰〜お尻: 赤いタイツ
+  const rg=cx.createLinearGradient(0,u(-0.04),0,u(0.04));rg.addColorStop(0,'#ff5a46');rg.addColorStop(0.5,'#e01e22');rg.addColorStop(1,'#9a0c12');
+  cx.fillStyle=rg;cx.beginPath();
+  cx.moveTo(u(0.46),u(-0.034));cx.quadraticCurveTo(u(0.53),u(-0.042),u(0.56),u(-0.018));
+  cx.lineTo(u(0.56),u(0.024));cx.quadraticCurveTo(u(0.53),u(0.044),u(0.46),u(0.034));cx.closePath();cx.fill();
+  // 前脚(目盛りを指す側、まっすぐ)
+  const fx1=u(0.93),fy1=u(0.018);
+  limb(u(0.54),u(0.012),fx1,fy1,u(0.040),u(0.022),'#c8141c','#ff4a3a');
+  foot(fx1,fy1,0.0);
+  // 頭(腕の間、肩のすぐ先)
+  cx.shadowBlur=8;
+  // 頭(後ろ姿なので髪がほとんど。首の部分だけ肌色)
+  cx.fillStyle='#e8b896';cx.beginPath();cx.ellipse(u(0.225),0,u(0.016),u(0.02),0,0,Math.PI*2);cx.fill();
+  const hg=cx.createRadialGradient(u(0.19),u(-0.012),0,u(0.2),0,u(0.04));hg.addColorStop(0,'#5a3a2c');hg.addColorStop(1,'#1a0f0b');
+  cx.fillStyle=hg;cx.beginPath();cx.ellipse(u(0.2),0,u(0.035),u(0.031),0,0,Math.PI*2);cx.fill();
+  cx.shadowBlur=0;
+  function limb(x1,y1,x2,y2,w1,w2,cDark,cLite){
+    // 根元が太く先が細い手足(台形+丸い端)
+    const ang=Math.atan2(y2-y1,x2-x1),nx=-Math.sin(ang),ny=Math.cos(ang);
+    const g=cx.createLinearGradient(x1+nx*w1/2,y1+ny*w1/2,x1-nx*w1/2,y1-ny*w1/2);g.addColorStop(0,cDark);g.addColorStop(0.45,cLite);g.addColorStop(1,cDark);
+    cx.fillStyle=g;cx.beginPath();
+    cx.moveTo(x1+nx*w1/2,y1+ny*w1/2);cx.lineTo(x2+nx*w2/2,y2+ny*w2/2);
+    cx.arc(x2,y2,w2/2,ang+Math.PI/2,ang-Math.PI/2,true);
+    cx.lineTo(x1-nx*w1/2,y1-ny*w1/2);cx.arc(x1,y1,w1/2,ang-Math.PI/2,ang+Math.PI/2,true);cx.fill();
+  }
+  function foot(x,y,ang){ // 白い体操シューズ(つま先を伸ばす)
+    cx.save();cx.translate(x,y);cx.rotate(ang);cx.shadowColor='rgba(255,255,255,.8)';cx.shadowBlur=10;
+    cx.fillStyle='#ffffff';cx.beginPath();cx.ellipse(u(0.022),0,u(0.03),u(0.013),0,0,Math.PI*2);cx.fill();cx.restore();
+  }
+}
 function drawGlints(t,on,shake){
   const rc=R*0.7285, w=R*0.127; if(on<0.95)return;
   cx.save();cx.globalCompositeOperation='lighter';
@@ -559,11 +617,9 @@ function frame(t){
   cx.restore();
   // 光の帯
   drawStreaks(a,cl((t-1.6)/0.4)*(1-cl((t-4.2)/0.4)),t);
-  // 針
+  // 針: 鉄棒(中心のキャップ)を握って倒立する体操選手。手が中心、つま先が目盛りを指す
   cx.save();cx.rotate(a);
-  cx.shadowColor=RED;cx.shadowBlur=22;
-  const ng=cx.createLinearGradient(-R*0.12,0,R*0.95,0);ng.addColorStop(0,'#7a0d08');ng.addColorStop(0.3,'#ff3a24');ng.addColorStop(1,'#ffd2c8');
-  cx.fillStyle=ng;cx.beginPath();cx.moveTo(-R*0.14,-R*0.022);cx.lineTo(R*0.94,-R*0.006);cx.lineTo(R*0.94,R*0.006);cx.lineTo(-R*0.14,R*0.022);cx.closePath();cx.fill();
+  drawGymnast(R,shake,t);
   cx.restore();
   // 中心のキャップ
   cx.save();const cg=cx.createRadialGradient(-R*0.03,-R*0.03,0,0,0,R*0.11);cg.addColorStop(0,'#5d6676');cg.addColorStop(1,'#151a22');
@@ -635,7 +691,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-26.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-29.1</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
@@ -1040,6 +1096,26 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <div class="pinfo" id="canExtraInfo"></div>
 </div>
 
+<div class="pnl" id="thrCalPnl">
+  <div class="plbl">アクセル開度の0点合わせ(スロットル PID 11)</div>
+  <div class="engNote" style="margin-bottom:6px">
+    車から来る値は、アクセルを離していても0%になりません(多くの車で10〜20%前後)。
+    アクセルを離した状態で「0点を記録」を押すと、そこを0%として表示します。
+    全開の位置も合わせたい場合は、停車・エンジン停止(IG ON)でアクセルを奥まで踏んだまま「100点を記録」を押してください。
+  </div>
+  <div class="thrCalNow">
+    <div><div class="cl">いまの生の値</div><div class="cv" id="thrRaw">--%</div></div>
+    <div><div class="cl">補正後</div><div class="cv" id="thrCor" style="color:#4ade80">--%</div></div>
+  </div>
+  <div class="srow" style="margin-top:8px">
+    <button class="sbtn" id="thrCal0Btn">🦶 0点を記録(離した状態)</button>
+    <button class="sbtn" id="thrCal100Btn">⬇️ 100点を記録(全開)</button>
+  </div>
+  <div class="prow" style="margin-top:6px">
+    <button class="pbtn del" id="thrCalResetBtn">補正をやめる</button>
+    <span class="engNote" id="thrCalInfo"></span>
+  </div>
+</div>
 <div class="pnl" id="calPnl" style="display:none">
   <div class="plbl">アナログ校正(CDY個体差の調整、デフォルト: 10V=200km/h)</div>
   <div class="prow">
@@ -2795,6 +2871,37 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
   if(Number.isFinite(batteryV)){valBattery.textContent=batteryV.toFixed(1);updateBatteryGauge(batteryV,DIAG_BATTERY_MIN,DIAG_BATTERY_MAX);}
 }
 
+
+// ---- アクセル(スロットル)開度の0点/100点合わせ(この端末に保存) ----
+let thrCal=(function(){try{return JSON.parse(localStorage.getItem('thrCal')||'null');}catch(e){return null;}})()||{z:null,f:null};
+let thrRawLast=null;
+function thrCorrect(raw){
+  if(!Number.isFinite(raw))return raw;
+  const z=thrCal.z, f=thrCal.f;
+  if(z==null&&f==null)return raw;
+  const z0=z==null?0:z, f0=(f!=null&&f>z0+5)?f:100;
+  return Math.max(0,Math.min(100,(raw-z0)/(f0-z0)*100));
+}
+function thrCalRender(){
+  const z=thrCal.z,f=thrCal.f;
+  $('thrCalInfo').textContent=(z==null&&f==null)?'補正なし(車の値をそのまま表示)':
+    ('0点 '+(z==null?'未設定':z.toFixed(1)+'%')+' / 100点 '+(f==null?'未設定(100%)':f.toFixed(1)+'%'));
+  $('thrRaw').textContent=thrRawLast==null?'--%':thrRawLast.toFixed(1)+'%';
+  $('thrCor').textContent=thrRawLast==null?'--%':thrCorrect(thrRawLast).toFixed(1)+'%';
+}
+function thrCalSave(){try{localStorage.setItem('thrCal',JSON.stringify(thrCal));}catch(e){}thrCalRender();}
+$('thrCal0Btn').addEventListener('click',function(){
+  if(thrRawLast==null){$('thrCalInfo').textContent='まだ値が届いていません。接続して「CAN」→「全部(RPM等も)」にしてください。';return;}
+  thrCal.z=thrRawLast;if(thrCal.f!=null&&thrCal.f<=thrCal.z+5)thrCal.f=null;thrCalSave();
+});
+$('thrCal100Btn').addEventListener('click',function(){
+  if(thrRawLast==null){$('thrCalInfo').textContent='まだ値が届いていません。接続して「CAN」→「全部(RPM等も)」にしてください。';return;}
+  const z0=thrCal.z==null?0:thrCal.z;
+  if(thrRawLast<=z0+5){$('thrCalInfo').textContent='0点との差が小さすぎます。アクセルを奥まで踏んだまま押してください。';return;}
+  thrCal.f=thrRawLast;thrCalSave();
+});
+$('thrCalResetBtn').addEventListener('click',function(){thrCal={z:null,f:null};thrCalSave();});
+thrCalRender();
 function updateExtraInfo(csv){
   // 期待フォーマット: "rpm,coolant,throttle,load,map,iat,maf,timing,moduleV,fuel"
   const p=csv.split(',');
@@ -2802,8 +2909,12 @@ function updateExtraInfo(csv){
     canExtraInfo.textContent='RPM:'+p[0]+'  水温:'+p[1]+'°C  スロットル:'+p[2]+'%  エンジン負荷:'+p[3]+'%';
     canConfirmRow.style.display='flex';
     canWaterTemp.textContent=p[1]+'°C';
-    canThrottlePos.textContent=p[2]+'%';
-    const thr=parseFloat(p[2]);
+    const thrRaw=parseFloat(p[2]);
+    if(Number.isFinite(thrRaw)){
+      thrRawLast=thrRaw;const thr=thrCorrect(thrRaw);
+      canThrottlePos.textContent=thr.toFixed(1)+'%';thrCalRender();
+      checkAutoAccelCapture(thr); // 補正後の開度で自動記録を判定
+    }else canThrottlePos.textContent=p[2]+'%';
   }
   // 全画面時の透かしゲージも更新
   if(p.length>=2) gfwUpdCoolant(parseFloat(p[1]));
@@ -2812,7 +2923,7 @@ function updateExtraInfo(csv){
   if(p.length>=10) gfwUpdFuel(parseFloat(p[9]));
   if(p.length>=9) gfwUpdBattery(parseFloat(p[8]));
   // ダイアグ画面も同じデータで更新
-  updateDiagDashboard(parseFloat(p[0]),parseFloat(p[1]),parseFloat(p[2]),parseFloat(p[4]),p.length>=9?parseFloat(p[8]):NaN);
+  updateDiagDashboard(parseFloat(p[0]),parseFloat(p[1]),thrCorrect(parseFloat(p[2])),parseFloat(p[4]),p.length>=9?parseFloat(p[8]):NaN);
 }
 btnSrcAnalog.addEventListener('click',function(){
   measureSrc='analog';localStorage.setItem('measureSrc','analog');
