@@ -1096,6 +1096,17 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <div class="pinfo" id="canExtraInfo"></div>
 </div>
 
+<div class="pnl" id="fbPnl">
+  <div class="plbl">💬 アプリの改善要望を送る</div>
+  <div class="engNote" style="margin-bottom:6px">
+    「ここが使いにくい」「こんな表示がほしい」などを書いて送ってください。メールアプリが開くので、そのまま送信します。
+    届いた要望は毎日まとめて確認し、アプリに反映します(内容によっては反映できないこともあります)。
+  </div>
+  <textarea id="fbText" rows="4" maxlength="1500" placeholder="例: メーター画面の水温の文字をもっと大きくしてほしい"
+    style="width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:8px;padding:8px;font-size:14px;font-family:inherit;resize:vertical;user-select:text;-webkit-user-select:text"></textarea>
+  <button class="sbtn" id="fbSendBtn" style="width:100%;margin-top:6px;padding:10px 0;font-size:13px">✉️ 要望をメールで送る</button>
+  <div class="engNote" id="fbInfo" style="margin-top:4px"></div>
+</div>
 <div class="pnl" id="thrCalPnl">
   <div class="plbl">アクセル開度の0点合わせ(スロットル PID 11)</div>
   <div class="engNote" style="margin-bottom:6px">
@@ -2871,6 +2882,20 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
   if(Number.isFinite(batteryV)){valBattery.textContent=batteryV.toFixed(1);updateBatteryGauge(batteryV,DIAG_BATTERY_MIN,DIAG_BATTERY_MAX);}
 }
 
+
+// ---- 改善要望をメールで送る(件名の[SpeedTracer要望]で自動処理が拾う) ----
+(function(){
+  const to=['inoueminiyuki','gmail.com'].join('@');
+  $('fbSendBtn').addEventListener('click',function(){
+    const txt=($('fbText').value||'').trim();
+    if(txt.length<4){$('fbInfo').textContent='要望の内容を書いてください。';return;}
+    const ver=($('verTag')&&$('verTag').textContent)||'';
+    const subj='[SpeedTracer要望] '+txt.replace(/\s+/g,' ').slice(0,30);
+    const body=txt+'\n\n----\nアプリ: '+ver+'\n画面: '+curMode+'\n接続: '+src+' / '+measureSrc+'\n端末: '+navigator.userAgent;
+    location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    $('fbInfo').textContent='メールアプリで「送信」を押すと届きます。ありがとうございます!';
+  });
+})();
 
 // ---- アクセル(スロットル)開度の0点/100点合わせ(この端末に保存) ----
 let thrCal=(function(){try{return JSON.parse(localStorage.getItem('thrCal')||'null');}catch(e){return null;}})()||{z:null,f:null};
