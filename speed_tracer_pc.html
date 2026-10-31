@@ -124,6 +124,9 @@ canvas#minimap{width:100%;height:34px;display:block;cursor:pointer;touch-action:
 .gd{width:10px;height:3px;border-radius:2px;}
 .gfsbtn{font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid var(--edge);
   background:var(--panel);color:var(--ink);cursor:pointer;margin-left:8px;}
+/* 車速トレース中は全画面ボタンを赤枠で点滅させて目立たせる(要望対応) */
+.gfsbtn.attn{border:2px solid #ef4444;color:#fff;animation:gfsBlink 1s ease-in-out infinite;}
+@keyframes gfsBlink{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.0);border-color:#ef4444;}50%{box-shadow:0 0 8px 2px rgba(239,68,68,.75);border-color:rgba(239,68,68,.25);}}
 /* 全画面時の透かし表示(グラフの背面、診断アプリ風HUDゲージ) */
 .gfs-watermark{display:none;position:absolute;inset:0;z-index:0;pointer-events:none;
   justify-content:center;align-items:center;opacity:.55;}
@@ -691,7 +694,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-29.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-31.1</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
@@ -3745,6 +3748,10 @@ startBtn.addEventListener('click',function(){
   }else pauseRun();
 });
 resetBtn.addEventListener('click',resetAll);
+// 計測中(開始ボタンが「停止」の間)は全画面ボタンを点滅させる。全画面表示中は不要なので止める
+function updGfsAttn(){ btnGraphFs.classList.toggle('attn', startBtn.classList.contains('run') && !graphFsOn); }
+new MutationObserver(updGfsAttn).observe(startBtn,{attributes:true,attributeFilter:['class']});
+new MutationObserver(updGfsAttn).observe(document.body,{attributes:true,attributeFilter:['class']});
 csvBtn.addEventListener('click',function(){
   if(!runLog.length){setStatus('記録データがありません');return;}
   let c='time_s,target_kmh,actual_kmh,diff_kmh,pattern,source\n';
