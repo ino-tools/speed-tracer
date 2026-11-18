@@ -302,6 +302,7 @@ body.gfsOn #modeBar{display:none;}
 .wiCopy.ok{background:var(--tgt);color:#0B1011;}
 .wifiInfo .wiHow{font-size:11px;color:var(--dim);line-height:1.6;margin-top:6px;}
 .wifiInfo .wiV{font-family:var(--mono);font-weight:700;color:var(--ink);user-select:all;-webkit-user-select:all;}
+.manualBtn{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:10px;border:1px solid #2b5a56;background:#0A1C1A;color:var(--tgt);font-weight:700;font-size:14px;text-decoration:none;}
 .mmrow{display:flex;gap:6px;align-items:stretch;}
 .mmrow .mmwrap{flex:1;min-width:0;}
 .mmrow .gfsbtn{margin-left:0;white-space:nowrap;}
@@ -703,8 +704,9 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.2</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.3</span></div>
   <div class="hright">
+    <a class="badge" id="manualLink" href="./manual.html" style="text-decoration:none;cursor:pointer" title="使い方(説明書)" aria-label="使い方(説明書)">📖</a>
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
     <span class="badge tgt" id="phaseLabel">待機中</span>
@@ -1116,6 +1118,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <div class="pinfo" id="canExtraInfo"></div>
 </div>
 
+<a class="manualBtn" id="manualLink2" href="./manual.html">📖 使い方(図解の説明書)を見る</a>
 <div class="pnl" id="fbPnl">
   <div class="plbl">💬 アプリの改善要望を送る</div>
   <div class="engNote" style="margin-bottom:6px">
@@ -3828,6 +3831,9 @@ rszAll();drawG(0);drawMM(0);
 setSrc((MCU_MODE||!BLE_SUPPORTED)?'wifi':'ble');refreshSel();updateInfo();
 patSel.value='WLTC_Class3b';selectPat('WLTC_Class3b'); // WLTCをデフォルトの走行パターンにする
 
+
+// ---- 説明書へのリンク(マイコン配信の画面では公開版の説明書を開く) ----
+if(MCU_MODE){['manualLink','manualLink2'].forEach(function(id){const a=$(id);if(a){a.href='https://ino-tools.github.io/speed-tracer/manual.html';a.target='_blank';a.rel='noopener';}});}
 window.__stUtil={speedColor:speedColor,catmull:catmull}; // サーキットモード用
 // 起動時: 前回のモードで開く(すべての定義が済んだ最後に呼ぶ)
 setMode((function(){try{return localStorage.getItem('st_mode')||'trace';}catch(e){return 'trace';}})());

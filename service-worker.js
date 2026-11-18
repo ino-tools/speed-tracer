@@ -1,9 +1,14 @@
 // Speed Tracer PWA service worker
 // キャッシュ名はアプリのバージョン(footer表記)と合わせて更新すること。
 // 更新するたびにCACHE_NAMEの数字を変えないと、古いキャッシュが使われ続けます。
-const CACHE_NAME = 'speed-tracer-cache-v2026-11-18.2';
+const CACHE_NAME = 'speed-tracer-cache-v2026-11-18.3';
 const APP_SHELL = [
   './speed_tracer_pc.html',
+  './manual.html',
+  './manual/setting.jpg',
+  './manual/trace.jpg',
+  './manual/circuit.jpg',
+  './manual/meter.jpg',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',

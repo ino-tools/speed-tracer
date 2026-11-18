@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10161C">
+<title>SpeedTracer 使い方</title>
+<style>
+:root{--ink:#15191E;--sub:#4A535B;--paper:#F6F7F5;--card:#FFFFFF;--edge:#D5DADE;--teal:#0B6E66;--teal-l:#EEF7F6;--warn:#B34E00;--warn-l:#FFF4E8;--dark:#10161C}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--teal)}
+.top{position:sticky;top:0;z-index:5;background:var(--dark);color:#fff;display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;background:#0A2A28;border:1px solid #2A6B65;color:#7FE3D8;font-weight:800;text-decoration:none;font-size:14px}
+.top .t{font-weight:800;font-size:15px;letter-spacing:.04em}
+.toc{display:flex;gap:6px;overflow-x:auto;padding:10px 14px;background:#1A222A;position:sticky;top:60px;z-index:4}
+.toc a{flex:0 0 auto;color:#C9D2D8;text-decoration:none;font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid #33404B}
+main{max-width:760px;margin:0 auto;padding:18px 16px calc(env(safe-area-inset-bottom,0px) + 40px)}
+section{scroll-margin-top:120px;margin-bottom:34px}
+h1{font-size:26px;margin:6px 0 4px;font-weight:900}
+h2{font-size:22px;margin:0 0 12px;font-weight:900;display:flex;align-items:baseline;gap:10px;border-bottom:3px solid var(--ink);padding-bottom:8px}
+h2 .no{font-size:13px;color:var(--teal);font-weight:900}
+h3{font-size:17px;margin:0 0 6px;font-weight:900}
+p,li{font-size:15px;line-height:1.75}
+.lead{color:var(--sub);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.flow{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.flow{flex-wrap:nowrap}.flow svg{max-width:100%}.flow .n{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.flow .n b{font-size:13px;line-height:1.35}.flow .n small{font-size:12px;color:var(--sub);line-height:1.5}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+.feat .k{font-size:12px;font-weight:800;color:var(--teal);letter-spacing:.1em}
+.feat h3{margin:2px 0 4px}.feat p{margin:0;font-size:14px;color:#3D464E}
+.step{display:flex;gap:14px}
+.step .num{flex:0 0 40px;height:40px;border-radius:20px;background:var(--teal);color:#fff;font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
+.step .body{flex:1;min-width:0}
+.code{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:#fff;border:1px solid #C9D9D6;border-radius:6px;padding:6px 8px;word-break:break-all;display:block;margin:6px 0}
+.note{font-size:13px;color:var(--sub);line-height:1.6;margin:6px 0 0}
+.warn{background:var(--warn-l);border:2px solid #E39A4E;border-radius:14px;padding:14px 18px;color:#3B2200}
+.warn h3{color:#4D2A00}
+.shot{display:block;width:100%;max-width:300px;margin:0 auto 10px;border-radius:16px;border:5px solid var(--dark)}
+.shotwrap{position:relative;max-width:300px;margin:0 auto 12px}
+.shotwrap .shot{margin:0}
+.pin{position:absolute;width:28px;height:28px;border-radius:14px;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;color:#10161C}
+.conn{border-width:2px}
+.tag{display:inline-block;font-size:12px;font-weight:800;border-radius:6px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.kv{display:flex;gap:8px;margin-top:8px}
+.kv div{flex:1;background:#F1F2F3;border-radius:10px;padding:8px 12px}
+.kv small{display:block;font-size:12px;color:var(--sub)}
+.kv b{font-family:ui-monospace,Menlo,monospace;font-size:18px}
+.copy{margin-top:6px;min-height:36px;padding:0 12px;border-radius:8px;border:1px solid #2b5a56;background:var(--teal-l);color:var(--teal);font-weight:800;font-size:13px;cursor:pointer}
+.bar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--dark);border-radius:12px;padding:8px}
+.bar div{text-align:center;color:#fff;font-size:12px;font-weight:800;padding:6px 2px;border-radius:8px}
+.bar div small{display:block;font-size:10px;font-weight:500;color:#C9D2D8;margin-top:2px}
+.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:620px){.modes{grid-template-columns:1fr}}
+.modes img{width:100%;max-width:260px;display:block;margin:0 auto 8px;border-radius:14px;border:4px solid var(--dark)}
+.qa{display:grid;grid-template-columns:150px minmax(0,1fr);background:var(--card);border:1px solid var(--edge);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.qa .q{background:var(--dark);color:#fff;font-weight:800;font-size:14px;padding:12px 14px}
+.qa .a{font-size:14px;line-height:1.7;padding:10px 14px}
+@media (max-width:440px){.qa{grid-template-columns:1fr}}
+ol,ul{padding-left:22px;margin:6px 0}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="back" href="./speed_tracer_pc.html">← アプリに戻る</a>
+  <span class="t">SpeedTracer 使い方</span>
+</div>
+<nav class="toc" aria-label="目次">
+  <a href="#whole">全体像</a><a href="#setup">準備</a><a href="#connect">つなぐ</a><a href="#screens">画面の見方</a><a href="#trouble">困ったとき</a><a href="#safety">安全のために</a>
+</nav>
+<main>
+
+<section id="whole">
+  <h1>かんたん説明書</h1>
+  <p class="lead">はじめて使う人へ。車につないで、スマホで走りを見るための道具です。</p>
+  <div class="card">
+    <h3>しくみ</h3>
+    <div class="flow">
+      <div class="n">
+        <svg width="90" height="64" viewBox="0 0 120 90" aria-hidden="true"><path d="M12 62 L22 38 Q26 30 36 30 L84 30 Q94 30 98 38 L108 62 Z" fill="none" stroke="#15191E" stroke-width="3"/><rect x="6" y="60" width="108" height="14" rx="6" fill="none" stroke="#15191E" stroke-width="3"/><circle cx="30" cy="78" r="9" fill="#F6F7F5" stroke="#15191E" stroke-width="3"/><circle cx="90" cy="78" r="9" fill="#F6F7F5" stroke="#15191E" stroke-width="3"/><rect x="46" y="48" width="28" height="12" rx="2" fill="#0B6E66"/></svg>
+        <b>車</b><small>足元のOBD2端子</small>
+      </div>
+      <svg width="28" height="20" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 12 H34 M26 4 L36 12 L26 20" fill="none" stroke="#0B6E66" stroke-width="3" stroke-linecap="round"/></svg>
+      <div class="n">
+        <svg width="90" height="64" viewBox="0 0 120 90" aria-hidden="true"><rect x="20" y="22" width="80" height="50" rx="10" fill="#10161C"/><rect x="34" y="12" width="52" height="14" rx="3" fill="none" stroke="#15191E" stroke-width="3"/><circle cx="86" cy="36" r="4" fill="#7FE3D8"/></svg>
+        <b>SpeedTracer 本体</b><small>差すだけで情報を読む</small>
+      </div>
+      <svg width="34" height="24" viewBox="0 0 56 40" aria-hidden="true"><path d="M10 20 Q20 8 30 20 T50 20" fill="none" stroke="#0B6E66" stroke-width="3" stroke-linecap="round"/></svg>
+      <div class="n">
+        <svg width="50" height="64" viewBox="0 0 70 90" aria-hidden="true"><rect x="10" y="4" width="50" height="82" rx="9" fill="none" stroke="#15191E" stroke-width="3"/><rect x="17" y="14" width="36" height="58" rx="3" fill="#10161C"/><path d="M22 60 Q30 30 48 26" fill="none" stroke="#7FE3D8" stroke-width="3"/></svg>
+        <b>スマホのアプリ</b><small>Bluetooth か WiFi</small>
+      </div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card feat"><div class="k">トレース</div><h3>決まった速度に合わせて走る</h3><p>WLTC などの走行パターンの線に、自分の速度を重ねて練習。</p></div>
+    <div class="card feat"><div class="k">サーキット</div><h3>ゴーストとタイム勝負</h3><p>自分のベストと比べて、勝ち負けを大きく表示。</p></div>
+    <div class="card feat"><div class="k">メーター</div><h3>車の状態を見る</h3><p>回転数・水温・ブースト・電圧・アクセル開度と、エンジンの使い方のグラフ。</p></div>
+    <div class="card feat"><div class="k">サーチ</div><h3>車のデータを調べる</h3><p>その車で読める項目を探す。故障コードの確認も。</p></div>
+  </div>
+</section>
+
+<section id="setup">
+  <h2><span class="no">STEP 1–3</span>準備</h2>
+  <div class="card step"><div class="num">1</div><div class="body">
+    <h3>アプリを入れる</h3>
+    <p><b>Android:</b> Play ストアのテスト版を使います。下のリンクを開いて「テストに参加」→ インストール。</p>
+    <span class="code">https://play.google.com/apps/internaltest/4699975890017423763</span>
+    <p class="note">※ 事前に持ち主へ Google アカウントを伝えて、テスターに登録してもらう必要があります。</p>
+    <p><b>アプリを入れない場合:</b> Chrome で次のアドレスを開くだけでも使えます(Bluetooth が使えない端末があります)。</p>
+    <span class="code">https://ino-tools.github.io/speed-tracer/speed_tracer_pc.html</span>
+  </div></div>
+  <div class="card step"><div class="num">2</div><div class="body">
+    <h3>本体を車に差す</h3>
+    <p>差し込み口(OBD2端子)は <b>運転席の足元・ハンドルの下あたり</b>。カバーが付いている車もあります。<b>エンジンを止めてから</b>、奥までまっすぐ差し込みます。</p>
+    <svg width="100%" height="170" viewBox="0 0 250 200" role="img" aria-label="運転席の足元、ハンドル下にあるOBD2端子の位置" style="max-width:300px;display:block;margin:6px auto">
+      <path d="M0 40 H250" stroke="#15191E" stroke-width="3"/><path d="M0 40 L0 110 Q40 120 90 110 L90 40" fill="#E4E7EA" stroke="#15191E" stroke-width="2"/>
+      <circle cx="160" cy="60" r="44" fill="none" stroke="#15191E" stroke-width="5"/><path d="M160 60 L160 104" stroke="#15191E" stroke-width="5"/><rect x="140" y="104" width="40" height="40" fill="#C9CED3"/>
+      <rect x="56" y="122" width="44" height="22" rx="4" fill="#0B6E66"/><rect x="64" y="128" width="28" height="10" rx="2" fill="#fff"/>
+      <circle cx="78" cy="133" r="30" fill="none" stroke="#B34E00" stroke-width="3" stroke-dasharray="6 5"/>
+      <rect x="150" y="170" width="26" height="22" rx="3" fill="#8A939B"/><rect x="196" y="164" width="30" height="28" rx="3" fill="#8A939B"/>
+      <text x="78" y="186" text-anchor="middle" font-size="13" font-weight="700" fill="#B34E00">OBD2端子</text>
+      <text x="210" y="158" text-anchor="middle" font-size="11" fill="#4A535B">ペダル</text><text x="160" y="24" text-anchor="middle" font-size="11" fill="#4A535B">ハンドル</text>
+    </svg>
+    <p class="note">ケーブルがペダルに絡まない位置にしてください。</p>
+  </div></div>
+  <div class="card step"><div class="num">3</div><div class="body">
+    <h3>エンジンをかける</h3>
+    <p>エンジンをかける(または電源を ON にする)と本体が動き出します。次の手順でスマホとつなぎます。</p>
+    <p class="note">しばらく車を使わないときは本体を抜いておくと、バッテリー上がりの心配がありません。</p>
+  </div></div>
+</section>
+
+<section id="connect">
+  <h2><span class="no">STEP 4</span>スマホとつなぐ</h2>
+  <p class="lead">画面下の「セッティング」で行います。</p>
+  <div class="shotwrap">
+    <img class="shot" src="./manual/setting.jpg" alt="セッティング画面" loading="lazy">
+    <span class="pin" style="left:1%;top:4.6%;background:#F28C28">B</span>
+    <span class="pin" style="left:25%;top:4.6%;background:#7FE3D8">W</span>
+    <span class="pin" style="left:72%;top:11.5%;background:#fff;border-color:#10161C">接</span>
+    <span class="pin" style="left:91%;top:23.7%;background:#7FE3D8">P</span>
+  </div>
+  <div class="card conn" style="border-color:#F28C28">
+    <h3>Bluetooth でつなぐ <span class="tag" style="background:#FFF4E8;color:#B34E00">Android アプリならこちら</span></h3>
+    <ol>
+      <li>スマホの Bluetooth をオンにする</li>
+      <li>「セッティング」で <b>Bluetooth</b> を選ぶ(B)</li>
+      <li><b>「接続」</b>を押す(接)</li>
+      <li>一覧に出る <b>SpeedTracer-ESP32</b> を選ぶ</li>
+      <li>「Bluetooth接続済み」と出たら完了</li>
+    </ol>
+    <p class="note">初回は「付近のデバイス」などの許可を聞かれます。「許可」を選んでください。</p>
+  </div>
+  <div class="card conn" style="border-color:#3FB3A8">
+    <h3>WiFi でつなぐ <span class="tag" style="background:#EEF7F6;color:#0B6E66">iPhone・ブラウザならこちら</span></h3>
+    <ol>
+      <li>パスワードをコピー(下のボタン、またはセッティングの P)</li>
+      <li>スマホの設定 → WiFi で <b>SpeedTracer</b> を選び、パスワード欄に貼り付け</li>
+      <li>「インターネットに接続されていません」→ <b>接続を維持</b></li>
+      <li>アプリに戻り <b>WiFi</b> を選んで <b>「接続」</b>(接)</li>
+    </ol>
+    <div class="kv">
+      <div><small>WiFi名</small><b>SpeedTracer</b><br><button class="copy" type="button" data-copy="SpeedTracer">コピー</button></div>
+      <div><small>パスワード</small><b>speed1234</b><br><button class="copy" type="button" data-copy="speed1234">コピー</button></div>
+    </div>
+  </div>
+  <div class="card" style="background:#10161C;color:#fff;border-color:#10161C">
+    <h3>つながったら</h3>
+    <p style="margin:0;color:#D6DEE3">画面下の「トレース」や「メーター」に切り替えて使います。WiFi はスマホが覚えるので、次からは近くで電源を入れるだけで自動でつながります。</p>
+  </div>
+</section>
+
+<section id="screens">
+  <h2><span class="no">STEP 5</span>画面の見方</h2>
+  <p class="lead">画面下のバーで切り替えます。</p>
+  <div class="bar" aria-hidden="true">
+    <div>トレース<small>速度に合わせる</small></div><div>サーキット<small>ゴーストと勝負</small></div><div>メーター<small>車の状態</small></div><div>サーチ<small>データを調べる</small></div><div>セッティング<small>接続・設定</small></div>
+  </div>
+  <div class="modes" style="margin-top:14px">
+    <div class="card"><img src="./manual/trace.jpg" alt="トレース画面" loading="lazy"><h3>トレース</h3>
+      <ol><li>「走行パターン」を選ぶ</li><li>「開始」を押して走る</li><li>目標の線に自分の速度の線を重ねる</li><li>終わったら「走行結果DL」で保存</li></ol></div>
+    <div class="card"><img src="./manual/circuit.jpg" alt="サーキット画面" loading="lazy"><h3>サーキット</h3>
+      <ol><li>コース上のラインで「ここをスタート/ゴールに設定」</li><li>走る前に「計測スタート」</li><li>大きな数字が <b style="color:#0B7A3A">−(緑)なら勝ち</b>、<b style="color:#B32A1A">+(赤)なら負け</b></li><li>1周目のタイムが次からゴーストに</li></ol></div>
+    <div class="card"><img src="./manual/meter.jpg" alt="メーター画面" loading="lazy"><h3>メーター</h3>
+      <ol><li>速度・回転数・ブースト・水温・電圧・アクセル開度を表示</li><li>下のグラフは、エンジンをどの回転数・負荷で使ったかの軌跡</li></ol></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>サーチ</h3><p style="margin:0">「取得できる項目を探す」で、その車から読めるデータの一覧が出ます。故障コード(DTC)の確認もここ。</p></div>
+    <div class="card"><h3>セッティング</h3><p style="margin:0">接続、アクセル開度の0点合わせ、アプリへの要望の送信はここから。</p></div>
+  </div>
+</section>
+
+<section id="trouble">
+  <h2>困ったとき</h2>
+  <div class="qa"><div class="q">つながらない</div><div class="a">エンジン(または電源)が ON か確認 → スマホの Bluetooth がオンか確認 → 本体の近くで、アプリを一度閉じてから「接続」をやり直す。</div></div>
+  <div class="qa"><div class="q">WiFi がすぐ切れる</div><div class="a">「接続を維持」を選んだか確認。モバイル通信に切り替わっていたら、WiFi で SpeedTracer を選び直す。</div></div>
+  <div class="qa"><div class="q">回転数や水温が出ない</div><div class="a">セッティングの「計測入力ソース」で <b>CAN</b> と <b>全部(RPM等も)</b> を選ぶ。サーチの「取得できる項目を探す」で、その車が出しているか確認できます。</div></div>
+  <div class="qa"><div class="q">アクセル開度がずれる</div><div class="a">セッティングの「アクセル開度の0点合わせ」で、アクセルを離したまま <b>0点を記録</b>。全開も合わせるなら停車・エンジン停止(電源 ON)で踏み込んで <b>100点を記録</b>。</div></div>
+  <div class="qa"><div class="q">画面が古いまま</div><div class="a">アプリは自動で新しくなります。閉じて開き直すのを <b>2回</b> すると反映。左上の版の日付で確認できます。</div></div>
+  <div class="qa"><div class="q" style="background:#0B6E66">こうしてほしい</div><div class="a">セッティングの「アプリの改善要望を送る」に書いて送ってください。名前やアカウントは不要です。</div></div>
+</section>
+
+<section id="safety">
+  <div class="warn">
+    <h3>⚠ 安全に使うために</h3>
+    <ul>
+      <li><b>運転中はスマホを操作しない。</b>設定や開始ボタンは停車中に。</li>
+      <li>スマホはホルダーに固定。画面はチラッと見る程度に。</li>
+      <li>サーキットモードは <b>サーキットなど公道以外</b>で。</li>
+      <li>本体の抜き差しは <b>エンジンを止めてから</b>。</li>
+      <li>ケーブルがペダルや足に絡まないように。</li>
+      <li>長く車を使わないときは本体を抜く(バッテリー上がり防止)。</li>
+    </ul>
+  </div>
+  <p style="text-align:center;margin-top:24px"><a class="back" href="./speed_tracer_pc.html" style="background:#10161C">← アプリに戻る</a></p>
+</section>
+</main>
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.dataset.copy,done=function(){b.textContent='コピー済み ✓';setTimeout(function(){b.textContent='コピー';},1600);};
+    var fb=function(){var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();};
+    try{if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(done,fb);else fb();}catch(e){fb();}
+  });
+});
+</script>
+</body>
+</html>
