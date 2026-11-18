@@ -293,6 +293,11 @@ body.gfsOn #modeBar{display:none;}
 .thrCalNow > div{flex:1;background:#161b24;border-radius:8px;padding:8px;text-align:center;}
 .thrCalNow .cl{font-size:10px;color:var(--dim);}
 .thrCalNow .cv{font-family:var(--mono);font-size:22px;font-weight:700;margin-top:2px;}
+.wifiInfo{margin-top:8px;background:#161b24;border:1px solid var(--edge);border-radius:8px;padding:8px 10px;}
+.wifiInfo .wiT{font-size:11px;color:var(--dim);margin-bottom:4px;}
+.wifiInfo .wiR{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:2px 0;}
+.wifiInfo .wiL{color:var(--dim);}
+.wifiInfo .wiV{font-family:var(--mono);font-weight:700;color:var(--ink);user-select:all;-webkit-user-select:all;}
 .mmrow{display:flex;gap:6px;align-items:stretch;}
 .mmrow .mmwrap{flex:1;min-width:0;}
 .mmrow .gfsbtn{margin-left:0;white-space:nowrap;}
@@ -694,7 +699,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-10-31.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.1</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
@@ -1074,6 +1079,12 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div class="mcuLinkRow" id="mcuLinkRow" style="display:none">
   <label>マイコン内アプリ使用</label>
   <a id="wifiFallbackLink" href="http://192.168.4.1/" target="_blank" rel="noopener">wifi接続先 変更後クリック</a>
+</div>
+<div class="wifiInfo">
+  <div class="wiT">📶 SpeedTracer のWiFi</div>
+  <div class="wiR"><span class="wiL">WiFi名</span><span class="wiV">SpeedTracer</span></div>
+  <div class="wiR"><span class="wiL">パスワード</span><span class="wiV">speed1234</span></div>
+  <div class="wiR"><span class="wiL">マイコンの画面</span><span class="wiV">http://192.168.4.1</span></div>
 </div>
 </div>
 <div class="pnl" id="canPnl" style="display:none">
