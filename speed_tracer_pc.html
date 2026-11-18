@@ -744,7 +744,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.4</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.5</span></div>
   <div class="hright">
     <a class="badge" id="manualLink" href="./manual.html" style="text-decoration:none;cursor:pointer" title="使い方(説明書)" aria-label="使い方(説明書)">📖</a>
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
@@ -2969,7 +2969,7 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
   const FORM='https://docs.google.com/forms/d/e/1FAIpQLSemziGzO2vudfExjnmNedmi06CX9QeRMe8cmbAgFEud4cqzUg/formResponse';
   const ENTRY='entry.99303828';
   // スクショ添付: 受け取り用の Apps Script Web App の URL が入っているときだけ使える(空なら非表示)
-  const WEBAPP='';
+  const WEBAPP='https://script.google.com/macros/s/AKfycbxgCnnVe8m82bQv-HA0FSzEgrHa9npjsVi5gclmlA6GQYv_Pav7JUWb0FVidbsucWuMvQ/exec';
   let img=null; // data:image/jpeg;base64,...
   function setImg(d){img=d;$('fbImgPrev').style.display=d?'block':'none';$('fbImgDel').style.display=d?'inline-block':'none';if(d)$('fbImgPrev').src=d;}
   function loadImg(file){
