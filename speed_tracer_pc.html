@@ -296,7 +296,11 @@ body.gfsOn #modeBar{display:none;}
 .wifiInfo{margin-top:8px;background:#161b24;border:1px solid var(--edge);border-radius:8px;padding:8px 10px;}
 .wifiInfo .wiT{font-size:11px;color:var(--dim);margin-bottom:4px;}
 .wifiInfo .wiR{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:2px 0;}
-.wifiInfo .wiL{color:var(--dim);}
+.wifiInfo .wiL{color:var(--dim);flex:1;}
+.wifiInfo .wiR{align-items:center;}
+.wiCopy{font-family:inherit;font-size:11px;font-weight:700;padding:5px 10px;border-radius:7px;border:1px solid #2b5a56;background:#0A1C1A;color:var(--tgt);cursor:pointer;min-width:72px;}
+.wiCopy.ok{background:var(--tgt);color:#0B1011;}
+.wifiInfo .wiHow{font-size:11px;color:var(--dim);line-height:1.6;margin-top:6px;}
 .wifiInfo .wiV{font-family:var(--mono);font-weight:700;color:var(--ink);user-select:all;-webkit-user-select:all;}
 .mmrow{display:flex;gap:6px;align-items:stretch;}
 .mmrow .mmwrap{flex:1;min-width:0;}
@@ -699,7 +703,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.2</span></div>
   <div class="hright">
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
     <span class="badge" id="srcBadge">GPS</span>
@@ -1082,9 +1086,11 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 </div>
 <div class="wifiInfo">
   <div class="wiT">📶 SpeedTracer のWiFi</div>
-  <div class="wiR"><span class="wiL">WiFi名</span><span class="wiV">SpeedTracer</span></div>
-  <div class="wiR"><span class="wiL">パスワード</span><span class="wiV">speed1234</span></div>
+  <div class="wiR"><span class="wiL">WiFi名</span><span class="wiV">SpeedTracer</span><button type="button" class="wiCopy" data-copy="SpeedTracer">コピー</button></div>
+  <div class="wiR"><span class="wiL">パスワード</span><span class="wiV">speed1234</span><button type="button" class="wiCopy" data-copy="speed1234">コピー</button></div>
   <div class="wiR"><span class="wiL">マイコンの画面</span><span class="wiV">http://192.168.4.1</span></div>
+  <div class="wiHow">つなぎ方: 「パスワード」の<b>コピー</b>を押す → スマホの設定のWiFiで「SpeedTracer」を選ぶ → パスワード欄を長押しして貼り付け。
+    「インターネットに接続されていません」と出たら「接続を維持」を選んでください。一度つなげば、次からは自動でつながります。</div>
 </div>
 </div>
 <div class="pnl" id="canPnl" style="display:none">
@@ -2918,6 +2924,15 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
     }).finally(function(){sending=false;$('fbSendBtn').disabled=false;});
   });
 })();
+
+// ---- SpeedTracer のWiFi名・パスワードをワンタップでコピー ----
+document.querySelectorAll('.wiCopy').forEach(function(b){
+  b.addEventListener('click',function(){
+    const t=b.dataset.copy, done=function(){b.textContent='コピー済み ✓';b.classList.add('ok');setTimeout(function(){b.textContent='コピー';b.classList.remove('ok');},1800);};
+    const fallback=function(){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();};
+    try{if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(done,fallback);else fallback();}catch(e){fallback();}
+  });
+});
 
 // ---- アクセル(スロットル)開度の0点/100点合わせ(この端末に保存) ----
 let thrCal=(function(){try{return JSON.parse(localStorage.getItem('thrCal')||'null');}catch(e){return null;}})()||{z:null,f:null};
