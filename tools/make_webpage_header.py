@@ -23,6 +23,9 @@ def main() -> int:
     html, n = re.subn(r"<!--OPENING_START.*?<!--OPENING_END-->\n?", "", html, flags=re.S)
     if n:
         print(f"オープニング部分を {n} か所取り除きました")
+    html, n2 = re.subn(r"<!--NOTICE_START.*?<!--NOTICE_END-->\n?", "", html, flags=re.S)
+    if n2:
+        print(f"お知らせ部分を {n2} か所取り除きました")
     if ")" + DELIM + '"' in html:
         print(f'{src} に )' + DELIM + '" が含まれているため、生文字列として埋め込めません', file=sys.stderr)
         return 1

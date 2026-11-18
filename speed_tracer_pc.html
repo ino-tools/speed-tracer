@@ -698,13 +698,53 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 })();
 </script>
 <!--OPENING_END-->
+<!--NOTICE_START (期間限定のお知らせ。ファームには入れない: tools/make_webpage_header.py が取り除く) -->
+<style>
+#stNt{position:fixed;inset:0;z-index:99998;background:rgba(5,8,12,.82);display:none;align-items:center;justify-content:center;padding:16px}
+#stNt .box{background:#10151d;border:1px solid #2a3442;border-radius:14px;max-width:440px;width:100%;max-height:88vh;overflow:auto;padding:16px 16px 14px;color:#e8edf3;font-size:13px;line-height:1.7}
+#stNt h3{margin:0 0 6px;font-size:16px}
+#stNt .sub{color:#8b97a7;font-size:11px;margin-bottom:8px}
+#stNt ol{margin:6px 0 8px 18px;padding:0}
+#stNt li{margin-bottom:6px}
+#stNt .btns{display:flex;gap:8px;margin-top:10px}
+#stNt .btns a,#stNt .btns button{flex:1;text-align:center;padding:10px 0;border-radius:9px;border:1px solid #2a3442;background:#1a2230;color:#e8edf3;font-size:13px;text-decoration:none;font-family:inherit}
+#stNt .btns .pri{background:#0B6E66;border-color:#0B6E66;font-weight:700}
+</style>
+<div id="stNt"><div class="box">
+  <h3>📢 友達のテストでわかったこと</h3>
+  <div class="sub">11/25 までのお知らせです</div>
+  <div>「192.168.4.1 にアクセスできない」(WiFi は見えるのに開けない)ときの、考えられる原因です。</div>
+  <ol>
+    <li><b>スマホがモバイルデータを使い続けている</b><br>WiFi「SpeedTracer」はインターネットにつながらないため、スマホが通信をモバイルデータに戻すことがあります。WiFi につないだ時に「インターネットに接続されていません」と出たら <b>接続を維持</b>。それでもだめなら、モバイルデータを一時的にオフにしてみてください。</li>
+    <li><b>会社管理のスマホの VPN などで止められている</b><br>機器への通信がブロックされている場合があります。Play ストア版アプリは WiFi に通信を固定するので、こちらの方が有利です。</li>
+    <li><b>https:// で開いている</b><br>アドレス欄に <b>http://</b>192.168.4.1 と、http:// から入力してください。</li>
+  </ol>
+  <div class="sub">Play ストア版アプリなら、1 は自動で対処されます。渡した HTML ファイルは更新されないので、アプリへの切り替えをおすすめします。</div>
+  <div class="btns"><a href="./manual.html#trouble">📖 説明書を見る</a><button type="button" class="pri" id="stNtOk">閉じる</button></div>
+</div></div>
+<script>
+(function(){
+  try{
+    var KEY='st_notice_1118';
+    if(location.protocol!=='https:')return;
+    if(new Date()>=new Date(2026,10,26))return;           // 11/25 まで
+    if(localStorage.getItem(KEY)==='1')return;
+    var el=document.getElementById('stNt');if(!el)return;
+    document.getElementById('stNtOk').onclick=function(){el.style.display='none';try{localStorage.setItem(KEY,'1');}catch(e){}};
+    var n=0,t=setInterval(function(){                       // オープニングが終わってから出す
+      n++;if(!document.getElementById('stOp')||n>60){clearInterval(t);el.style.display='flex';}
+    },300);
+  }catch(e){}
+})();
+</script>
+<!--NOTICE_END-->
 <video id="noSleepVideo" playsinline loop muted style="position:fixed;top:-100px;left:-100px;width:2px;height:2px;opacity:0.01;pointer-events:none" src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAMXbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAkF0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAIAAAACAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAPoAAAAAAABAAAAAAG5bWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABAAAAAQABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABZG1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAASRzdGJsAAAAwHN0c2QAAAAAAAAAAQAAALBhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAIAAgBIAAAASAAAAAAAAAABFUxhdmM2MC4zMS4xMDIgbGlieDI2NAAAAAAAAAAAAAAAGP//AAAANmF2Y0MBZAAK/+EAGWdkAAqs2V+IiMBEAAADAAQAAAMACDxIllgBAAZo6+PLIsD9+PgAAAAAEHBhc3AAAAABAAAAAQAAABRidHJ0AAAAAAAAFigAABYoAAAAGHN0dHMAAAAAAAAAAQAAAAEAAEAAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAABAAAAAQAAABRzdHN6AAAAAAAAAsUAAAABAAAAFHN0Y28AAAAAAAAAAQAAA0cAAABidWR0YQAAAFptZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAAC1pbHN0AAAAJal0b28AAAAdZGF0YQAAAAEAAAAATGF2ZjYwLjE2LjEwMAAAAAhmcmVlAAACzW1kYXQAAAKtBgX//6ncRem95tlIt5Ys2CDZI+7veDI2NCAtIGNvcmUgMTY0IHIzMTA4IDMxZTE5ZjkgLSBILjI2NC9NUEVHLTQgQVZDIGNvZGVjIC0gQ29weWxlZnQgMjAwMy0yMDIzIC0gaHR0cDovL3d3dy52aWRlb2xhbi5vcmcveDI2NC5odG1sIC0gb3B0aW9uczogY2FiYWM9MSByZWY9MyBkZWJsb2NrPTE6MDowIGFuYWx5c2U9MHgzOjB4MTEzIG1lPWhleCBzdWJtZT03IHBzeT0xIHBzeV9yZD0xLjAwOjAuMDAgbWl4ZWRfcmVmPTEgbWVfcmFuZ2U9MTYgY2hyb21hX21lPTEgdHJlbGxpcz0xIDh4OGRjdD0xIGNxbT0wIGRlYWR6b25lPTIxLDExIGZhc3RfcHNraXA9MSBjaHJvbWFfcXBfb2Zmc2V0PS0yIHRocmVhZHM9MSBsb29rYWhlYWRfdGhyZWFkcz0xIHNsaWNlZF90aHJlYWRzPTAgbnI9MCBkZWNpbWF0ZT0xIGludGVybGFjZWQ9MCBibHVyYXlfY29tcGF0PTAgY29uc3RyYWluZWRfaW50cmE9MCBiZnJhbWVzPTMgYl9weXJhbWlkPTIgYl9hZGFwdD0xIGJfYmlhcz0wIGRpcmVjdD0xIHdlaWdodGI9MSBvcGVuX2dvcD0wIHdlaWdodHA9MiBrZXlpbnQ9MjUwIGtleWludF9taW49MSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTQwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAABBliIQAFf/+98nvwKbr29+B"></video>
 
 <div id="mcuWatermark">マイコンで稼働中</div>
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.3</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.4</span></div>
   <div class="hright">
     <a class="badge" id="manualLink" href="./manual.html" style="text-decoration:none;cursor:pointer" title="使い方(説明書)" aria-label="使い方(説明書)">📖</a>
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
@@ -1118,6 +1158,19 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <div class="pinfo" id="canExtraInfo"></div>
 </div>
 
+<div class="pnl" id="updPnl">
+  <div class="plbl">🔄 アプリの更新</div>
+  <div class="engNote" id="updVer" style="margin-bottom:6px"></div>
+  <button class="sbtn" id="updBtn" style="width:100%;padding:10px 0;font-size:13px">🔄 最新版に更新する</button>
+  <div class="engNote" id="updInfo" style="margin-top:4px"></div>
+  <details style="margin-top:6px"><summary style="font-size:12px;color:var(--dim);cursor:pointer">192.168.4.1 に開けないとき</summary>
+    <div class="engNote" style="margin-top:4px">
+      ① WiFi につないだとき「インターネットに接続されていません」と出たら<b>接続を維持</b>。それでもだめならモバイルデータを一時オフ。<br>
+      ② 会社管理のスマホは VPN で止められることがあります(Play ストア版アプリなら WiFi に固定してつなぎます)。<br>
+      ③ アドレスは <b>http://</b>192.168.4.1 と、http:// から入力。
+    </div>
+  </details>
+</div>
 <a class="manualBtn" id="manualLink2" href="./manual.html">📖 使い方(図解の説明書)を見る</a>
 <div class="pnl" id="fbPnl">
   <div class="plbl">💬 アプリの改善要望を送る</div>
@@ -1127,6 +1180,11 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   </div>
   <textarea id="fbText" rows="4" maxlength="1500" placeholder="例: メーター画面の水温の文字をもっと大きくしてほしい"
     style="width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:8px;padding:8px;font-size:14px;font-family:inherit;resize:vertical;user-select:text;-webkit-user-select:text"></textarea>
+  <div id="fbImgRow" style="display:none;margin-top:6px;align-items:center;gap:8px">
+    <label class="sbtn" style="padding:7px 10px;font-size:12px;cursor:pointer">🖼 スクショを付ける<input type="file" id="fbImg" accept="image/*" style="display:none"></label>
+    <img id="fbImgPrev" alt="" style="display:none;height:44px;border-radius:6px;border:1px solid var(--edge)">
+    <button type="button" class="sbtn" id="fbImgDel" style="display:none;padding:7px 10px;font-size:12px">外す</button>
+  </div>
   <button class="sbtn" id="fbSendBtn" style="width:100%;margin-top:6px;padding:10px 0;font-size:13px">📨 要望を送る</button>
   <div class="engNote" id="fbInfo" style="margin-top:4px"></div>
 </div>
@@ -2910,6 +2968,29 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
 (function(){
   const FORM='https://docs.google.com/forms/d/e/1FAIpQLSemziGzO2vudfExjnmNedmi06CX9QeRMe8cmbAgFEud4cqzUg/formResponse';
   const ENTRY='entry.99303828';
+  // スクショ添付: 受け取り用の Apps Script Web App の URL が入っているときだけ使える(空なら非表示)
+  const WEBAPP='';
+  let img=null; // data:image/jpeg;base64,...
+  function setImg(d){img=d;$('fbImgPrev').style.display=d?'block':'none';$('fbImgDel').style.display=d?'inline-block':'none';if(d)$('fbImgPrev').src=d;}
+  function loadImg(file){
+    if(!file||!/^image\//.test(file.type))return;
+    const fr=new FileReader();
+    fr.onload=function(){const im=new Image();im.onload=function(){
+      const k=Math.min(1,1280/Math.max(im.width,im.height)),c=document.createElement('canvas');
+      c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);setImg(c.toDataURL('image/jpeg',0.75));
+    };im.onerror=function(){$('fbInfo').textContent='画像を読み込めませんでした。';};im.src=fr.result;};
+    fr.readAsDataURL(file);
+  }
+  if(WEBAPP){
+    $('fbImgRow').style.display='flex';
+    $('fbImg').addEventListener('change',function(){loadImg(this.files&&this.files[0]);this.value='';});
+    $('fbImgDel').addEventListener('click',function(){setImg(null);});
+    $('fbText').addEventListener('paste',function(e){
+      const it=[].find.call((e.clipboardData&&e.clipboardData.items)||[],function(x){return /^image\//.test(x.type);});
+      if(it){e.preventDefault();loadImg(it.getAsFile());}
+    });
+  }
   let sending=false;
   $('fbSendBtn').addEventListener('click',function(){
     if(sending)return;
@@ -2917,14 +2998,43 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
     if(txt.length<4){$('fbInfo').textContent='要望の内容を書いてください。';return;}
     if(navigator.onLine===false||MCU_MODE){$('fbInfo').textContent='インターネットにつながっていないため送れません。スマホの通信が使える状態で、GitHub Pagesのアプリから送ってください。';return;}
     const ver=($('verTag')&&$('verTag').textContent)||'';
-    const body=txt+'\n\n----\nアプリ: '+ver+'\n画面: '+curMode+'\n接続: '+src+' / '+measureSrc+'\n端末: '+navigator.userAgent;
-    const fd=new URLSearchParams();fd.append(ENTRY,body);
+    const meta='\n\n----\nアプリ: '+ver+'\n画面: '+curMode+'\n接続: '+src+' / '+measureSrc+'\n端末: '+navigator.userAgent;
     sending=true;$('fbSendBtn').disabled=true;$('fbInfo').textContent='送信中…';
-    fetch(FORM,{method:'POST',mode:'no-cors',body:fd}).then(function(){
-      $('fbText').value='';$('fbInfo').textContent='送信しました。ありがとうございます!(毎日まとめて確認します)';
+    let req;
+    if(img&&WEBAPP){
+      req=fetch(WEBAPP,{method:'POST',mode:'no-cors',body:JSON.stringify({text:txt+meta,image:img.split(',')[1],name:'screenshot.jpg'})});
+    }else{
+      const fd=new URLSearchParams();fd.append(ENTRY,txt+meta);
+      req=fetch(FORM,{method:'POST',mode:'no-cors',body:fd});
+    }
+    req.then(function(){
+      $('fbText').value='';setImg(null);$('fbInfo').textContent='送信しました。ありがとうございます!(毎日まとめて確認します)';
     }).catch(function(){
       $('fbInfo').textContent='送れませんでした。通信の状態を確認して、もう一度押してください。';
     }).finally(function(){sending=false;$('fbSendBtn').disabled=false;});
+  });
+})();
+
+// ---- アプリの更新(古いキャッシュを消して読み込み直す) ----
+(function(){
+  const PAGES='https://ino-tools.github.io/speed-tracer/speed_tracer_pc.html';
+  const isMcu=(!window.isSecureContext)||location.hostname==='192.168.4.1';
+  const ver=($('verTag')&&$('verTag').textContent)||'';
+  const app=(window.STAndroid&&STAndroid.appVersion)?(' / Playストア版アプリ '+STAndroid.appVersion()):'';
+  $('updVer').textContent='今の版: '+ver+app;
+  if(isMcu){$('updBtn').style.display='none';$('updInfo').textContent='マイコン内の画面です。更新するには、ファームウェアの書き込みが必要です(スマホのアプリ/Pages版は自動で最新になります)。';return;}
+  if(location.protocol==='file:'||location.protocol==='content:'){
+    $('updBtn').textContent='🌐 最新版を開く(Pages版)';
+    $('updInfo').textContent='このファイルは自動では更新されません。最新版のページか、Playストア版アプリを使ってください。';
+    $('updBtn').addEventListener('click',function(){location.href=PAGES;});return;
+  }
+  $('updBtn').addEventListener('click',async function(){
+    $('updBtn').disabled=true;$('updInfo').textContent='更新中…';
+    try{
+      if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(function(k){return caches.delete(k);}));}
+      if(navigator.serviceWorker){const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(function(r){return r.unregister();}));}
+    }catch(e){}
+    location.replace(location.pathname+'?u='+Date.now());
   });
 })();
 

@@ -46,6 +46,11 @@ with sync_playwright() as p:
             check(pg.evaluate("!document.getElementById('stOp')"), f'{vp}: オープニングが終わって消える')
         else:
             print(f'---- {vp}: オープニングは表示されない(期限切れ、または無効)')
+        if pg.evaluate("new Date()<new Date(2026,10,26)"):  # 11/25 までは起動お知らせが出る
+            pg.wait_for_timeout(500)
+            check(pg.evaluate("getComputedStyle(document.getElementById('stNt')).display!=='none'"), f'{vp}: 起動お知らせが出る')
+            pg.click('#stNtOk')
+            check(pg.evaluate("getComputedStyle(document.getElementById('stNt')).display==='none'"), f'{vp}: お知らせを閉じられる')
         modes = pg.evaluate("[...document.querySelectorAll('.modeBtn')].map(b=>b.dataset.mode)")
         check(len(modes) >= 5, f'{vp}: モードボタンがある ({modes})')
         for m in modes:
@@ -64,6 +69,7 @@ with sync_playwright() as p:
         pg.click('#fbSendBtn')
         pg.wait_for_timeout(800)
         check('送信しました' in pg.inner_text('#fbInfo') and any('entry.' in x for x in posts), f'{vp}: 要望がフォームへ送られる')
+        check(pg.evaluate("!!document.getElementById('updBtn')&&document.getElementById('updVer').textContent.includes('v2026')"), f'{vp}: 更新ボタンと版表示がある')
         check(not errs, f'{vp}: JSエラーなし {errs[:3]}')
         ctx.close()
     b.close()
