@@ -47,7 +47,8 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          mkdir -p /tmp/st && cp android/build.log /tmp/st/build.log 2>/dev/null || echo "no log" > /tmp/st/build.log
+          mkdir -p /tmp/st/out && cp android/out/*.aab /tmp/st/out/ 2>/dev/null || true
+          cp android/build.log /tmp/st/build.log 2>/dev/null || echo "no log" > /tmp/st/build.log
           echo "result=${{ steps.build.outcome }} sha=${GITHUB_SHA} ref=${GITHUB_REF_NAME} run=${GITHUB_RUN_NUMBER}" > /tmp/st/STATUS
           git fetch origin android-build-status || true
           git checkout -B android-build-status
@@ -55,7 +56,9 @@ jobs:
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           tail -c 200000 /tmp/st/build.log > build.log
           cp /tmp/st/STATUS STATUS
-          git add STATUS build.log
+          # Play Console へブラウザから直接アップロードできるよう .aab も置く(raw.githubusercontent.com は CORS 可)
+          cp /tmp/st/out/*.aab . 2>/dev/null || true
+          git add -A
           git commit -qm "android build ${GITHUB_RUN_NUMBER}: ${{ steps.build.outcome }}" || true
           git push -f origin android-build-status
 
