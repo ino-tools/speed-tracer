@@ -1,2 +1,7 @@
 firmware/speed_tracer_production/webpage_html.h
 out/
+android/.gradle/
+android/build/
+android/app/build/
+android/build.log
+android/local.properties
