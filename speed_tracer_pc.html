@@ -400,7 +400,7 @@ body.gfsOn #modeBar{display:none;}
 (function(){
 "use strict";
 // ===== 起動時オープニング(メーターが振り切れる演出) =====
-const OP={title:'86',sub:'× SPEED TRACER',tag:'TASUKU TRACE SPECIAL',max:90,major:10,red:70,over:'TASUKU',dur:6.4};
+const OP={title:'86',sub:'× SPEED TRACER',tag:'TASUKU TRACE SPECIAL',max:90,major:10,red:70,over:'フィードバックよろしゅう！',dur:6.4};
 const BLUE='#58a8ff', BLUE_HI='#bfe0ff', RED='#ff2a1f';
 const op=document.getElementById('stOp'), cv=document.getElementById('opCv'), cx=cv.getContext('2d');
 // 表示する条件: GitHub Pages(https)で開いたときだけ / 期限まで / この端末で ?op=off を一度開いていない
@@ -630,9 +630,11 @@ function frame(t){
   cx.restore();
   // 光の帯
   drawStreaks(a,cl((t-1.6)/0.4)*(1-cl((t-4.2)/0.4)),t);
-  // 針: 鉄棒(中心のキャップ)を握って倒立する体操選手。手が中心、つま先が目盛りを指す
+  // 針(元の赤い針に戻した。体操選手の針 drawGymnast は未使用で残してある)
   cx.save();cx.rotate(a);
-  drawGymnast(R,shake,t);
+  cx.shadowColor=RED;cx.shadowBlur=22;
+  const ng=cx.createLinearGradient(-R*0.12,0,R*0.95,0);ng.addColorStop(0,'#7a0d08');ng.addColorStop(0.3,'#ff3a24');ng.addColorStop(1,'#ffd2c8');
+  cx.fillStyle=ng;cx.beginPath();cx.moveTo(-R*0.14,-R*0.022);cx.lineTo(R*0.94,-R*0.006);cx.lineTo(R*0.94,R*0.006);cx.lineTo(-R*0.14,R*0.022);cx.closePath();cx.fill();
   cx.restore();
   // 中心のキャップ
   cx.save();const cg=cx.createRadialGradient(-R*0.03,-R*0.03,0,0,0,R*0.11);cg.addColorStop(0,'#5d6676');cg.addColorStop(1,'#151a22');
@@ -641,8 +643,9 @@ function frame(t){
   // 振り切れた瞬間の閃光と「OVER」表示
   if(shake>0){
     const f=0.5+0.5*Math.sin(t*30);
-    cx.save();cx.textAlign='center';cx.textBaseline='middle';cx.font='900 '+Math.round(R*0.13)+'px OpTitle, system-ui, sans-serif';
-    cx.shadowColor=RED;cx.shadowBlur=24;cx.fillStyle='rgba(255,70,50,'+(0.6+0.4*f)*shake+')';cx.fillText(OP.over,0,R*0.5);cx.restore();
+    cx.save();cx.setTransform(DPR,0,0,DPR,0,0); // 画面の中央に水平に出す(文字が長いので画面幅に合わせる)
+    cx.textAlign='center';cx.textBaseline='middle';cx.font='900 '+Math.round(Math.min(R*0.13,W*0.9/OP.over.length))+'px OpTitle, system-ui, sans-serif';
+    cx.shadowColor=RED;cx.shadowBlur=24;cx.fillStyle='rgba(255,70,50,'+(0.6+0.4*f)*shake+')';cx.fillText(OP.over,W/2,H*0.74);cx.restore();
   }
   cx.restore();
   cx.setTransform(DPR,0,0,DPR,0,0);
@@ -744,7 +747,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-18.5</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-20.1</span></div>
   <div class="hright">
     <a class="badge" id="manualLink" href="./manual.html" style="text-decoration:none;cursor:pointer" title="使い方(説明書)" aria-label="使い方(説明書)">📖</a>
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
