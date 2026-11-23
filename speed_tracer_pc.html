@@ -715,15 +715,16 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 </style>
 <div id="stNt"><div class="box">
   <h3>📢 アプリが新しくなりました</h3>
-  <div class="sub">11/30 までのお知らせです</div>
+  <div class="sub">11/30 まで、アプリを開くたびに表示します</div>
   <ol>
     <li><b>🩺 CAN かんたん診断</b>(セッティング)<br>「車速や水温が出ない」ときに、通信の状態を調べて原因の候補を教えてくれます。マツダ CX-5 のかたの要望で追加しました。</li>
     <li><b>🔄 最新版に更新する</b>(セッティング)<br>画面が古いままのときに押すと、すぐ最新になります。</li>
-    <li><b>🔧 マイコンの更新</b>(セッティング)<br>パソコンなしで、スマホからマイコンのプログラムを新しくできます。項目ごとに更新の速さを変えられる機能が入りました。</li>
+    <li><b>🔧 マイコンの更新</b>(セッティングの一番上)<br>パソコンなしで、<b>スマホだけで</b>マイコンのプログラムを新しくできます。項目ごとに更新の速さを変えられる機能が入りました。</li>
     <li><b>🖼 要望にスクショを付けられます</b><br>うまく動かない画面、表示がおかしいところは、<b>スクショ付きで送ってもらえると助かります</b>。「こうなってほしい」「ここが使いにくい」も、ぜひ送ってください。みなさんの声で毎日アプリが良くなります。</li>
   </ol>
   <div class="sub">「192.168.4.1 にアクセスできない」ときは、WiFi につないだ時の「接続を維持」と、アドレスを http:// から入力するのを確認してください(説明書にも載せています)。</div>
-  <div class="btns"><button type="button" id="stNtFb">📝 要望を送る</button><button type="button" class="pri" id="stNtOk">閉じる</button></div>
+  <div class="btns"><button type="button" id="stNtFw">🔧 マイコンを更新</button><button type="button" id="stNtFb">📝 要望を送る</button></div>
+  <div class="btns"><button type="button" class="pri" id="stNtOk">閉じる</button></div>
 </div></div>
 <script>
 (function(){
@@ -731,10 +732,10 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
     var KEY='st_notice_1123';
     if(location.protocol!=='https:')return;
     if(new Date()>=new Date(2026,11,1))return;            // 11/30 まで
-    if(localStorage.getItem(KEY)==='1')return;
-    var el=document.getElementById('stNt');if(!el)return;
-    var done=function(){el.style.display='none';try{localStorage.setItem(KEY,'1');}catch(e){}};
+        var el=document.getElementById('stNt');if(!el)return;
+    var done=function(){el.style.display='none';};
     document.getElementById('stNtOk').onclick=done;
+    document.getElementById('stNtFw').onclick=function(){done();var b=document.querySelector('.modeBtn[data-mode="setting"]');if(b)b.click();setTimeout(function(){var f=document.getElementById('fwPnl');if(f)f.scrollIntoView({behavior:'smooth',block:'start'});},250);};
     document.getElementById('stNtFb').onclick=function(){done();var b=document.querySelector('.modeBtn[data-mode="setting"]');if(b)b.click();setTimeout(function(){var f=document.getElementById('fbPnl');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});},250);};
     var n=0,t=setInterval(function(){                       // オープニングが終わってから出す
       n++;if(!document.getElementById('stOp')||n>60){clearInterval(t);el.style.display='flex';}
@@ -749,7 +750,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-23.2</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-23.3</span></div>
   <div class="hright">
     <a class="badge" id="manualLink" href="./manual.html" style="text-decoration:none;cursor:pointer" title="使い方(説明書)" aria-label="使い方(説明書)">📖</a>
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
@@ -1115,6 +1116,19 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 </section>
 
 <section class="mode" id="modeSetting" data-mode="setting">
+<div class="pnl" id="fwPnl" style="border:1px solid #4FD1C5;box-shadow:0 0 12px rgba(79,209,197,.25)">
+  <div class="plbl">🔧 マイコンの更新 <span style="background:#0B6E66;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;margin-left:4px">スマホだけでできます</span></div>
+  <div class="engNote" style="margin-bottom:6px">新しい機能(監視パラメータごとの更新間隔など)を使うには、マイコン内のプログラムも新しくします。USB もパソコンも要りません。下の手順で、スマホだけで 3〜5 分で終わります。</div>
+  <div class="engNote" id="fwNow" style="margin-bottom:6px">今のマイコンの版: 接続すると表示されます(最新は 2026-11-23.1)</div>
+  <ol class="engNote" style="margin:0 0 6px 18px;padding:0;line-height:1.8">
+    <li><b>モバイル通信(または家の WiFi)</b>のうちに、下の「① ファイルをダウンロード」を押して保存する(speed_tracer_production.ino.bin)</li>
+    <li>スマホの WiFi を <b>SpeedTracer</b> につなぐ(パスワードは下の WiFi 欄でコピーできます)</li>
+    <li>「② 更新ページを開く」を押し、「ファイルを選択」で保存した .bin を選んで送信。1〜2 分待つと、マイコンが再起動して完了です</li>
+  </ol>
+  <a class="manualBtn" id="fwDl" href="https://github.com/ino-tools/speed-tracer/releases/latest/download/speed_tracer_production.ino.bin" target="_blank" rel="noopener">① ファイルをダウンロード(.bin)</a>
+  <a class="manualBtn" id="fwOpen" href="http://192.168.4.1/update" style="margin-top:6px">② 更新ページを開く(SpeedTracer の WiFi につないでから)</a>
+  <div class="engNote" style="margin-top:6px">※ 更新の途中で電源を切らないでください。終わったら、アプリの戻るボタンで戻れます。うまくいかないときは、このまま「要望」から状況を送ってください。</div>
+</div>
 <div class="pnl"><div class="plbl">接続</div>
 <div class="srow">
   <button class="sbtn" id="btnBle">🔵 Bluetooth</button>
@@ -1169,19 +1183,6 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <div class="pinfo" id="canExtraInfo"></div>
 </div>
 
-<div class="pnl" id="fwPnl">
-  <div class="plbl">🔧 マイコン(ファームウェア)の更新</div>
-  <div class="engNote" style="margin-bottom:6px">新しい機能(監視パラメータごとの更新間隔など)を使うには、マイコン内のプログラムも新しくします。USB もパソコンも要りません。</div>
-  <div class="engNote" id="fwNow" style="margin-bottom:6px">今のマイコンの版: 接続すると表示されます(最新は 2026-11-23.1)</div>
-  <ol class="engNote" style="margin:0 0 6px 18px;padding:0;line-height:1.8">
-    <li><b>モバイル通信(または家の WiFi)</b>のうちに、下の「① ファイルをダウンロード」を押して保存する(speed_tracer_production.ino.bin)</li>
-    <li>スマホの WiFi を <b>SpeedTracer</b> につなぐ(パスワードは上の WiFi 欄でコピーできます)</li>
-    <li>「② 更新ページを開く」を押し、「ファイルを選択」で保存した .bin を選んで送信。1〜2 分待つと、マイコンが再起動して完了です</li>
-  </ol>
-  <a class="manualBtn" id="fwDl" href="https://github.com/ino-tools/speed-tracer/releases/latest/download/speed_tracer_production.ino.bin" target="_blank" rel="noopener">① ファイルをダウンロード(.bin)</a>
-  <a class="manualBtn" id="fwOpen" href="http://192.168.4.1/update" style="margin-top:6px">② 更新ページを開く(SpeedTracer の WiFi につないでから)</a>
-  <div class="engNote" style="margin-top:6px">※ 更新の途中で電源を切らないでください。終わったら、アプリの戻るボタンで戻れます。うまくいかないときは、このまま「要望」から状況を送ってください。</div>
-</div>
 <div class="pnl" id="updPnl">
   <div class="plbl">🔄 アプリの更新</div>
   <div class="engNote" id="updVer" style="margin-bottom:6px"></div>
