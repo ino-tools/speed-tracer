@@ -714,26 +714,28 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 #stNt .btns .pri{background:#0B6E66;border-color:#0B6E66;font-weight:700}
 </style>
 <div id="stNt"><div class="box">
-  <h3>📢 友達のテストでわかったこと</h3>
-  <div class="sub">11/25 までのお知らせです</div>
-  <div>「192.168.4.1 にアクセスできない」(WiFi は見えるのに開けない)ときの、考えられる原因です。</div>
+  <h3>📢 アプリが新しくなりました</h3>
+  <div class="sub">11/30 までのお知らせです</div>
   <ol>
-    <li><b>スマホがモバイルデータを使い続けている</b><br>WiFi「SpeedTracer」はインターネットにつながらないため、スマホが通信をモバイルデータに戻すことがあります。WiFi につないだ時に「インターネットに接続されていません」と出たら <b>接続を維持</b>。それでもだめなら、モバイルデータを一時的にオフにしてみてください。</li>
-    <li><b>会社管理のスマホの VPN などで止められている</b><br>機器への通信がブロックされている場合があります。Play ストア版アプリは WiFi に通信を固定するので、こちらの方が有利です。</li>
-    <li><b>https:// で開いている</b><br>アドレス欄に <b>http://</b>192.168.4.1 と、http:// から入力してください。</li>
+    <li><b>🩺 CAN かんたん診断</b>(セッティング)<br>「車速や水温が出ない」ときに、通信の状態を調べて原因の候補を教えてくれます。マツダ CX-5 のかたの要望で追加しました。</li>
+    <li><b>🔄 最新版に更新する</b>(セッティング)<br>画面が古いままのときに押すと、すぐ最新になります。</li>
+    <li><b>🔧 マイコンの更新</b>(セッティング)<br>パソコンなしで、スマホからマイコンのプログラムを新しくできます。項目ごとに更新の速さを変えられる機能が入りました。</li>
+    <li><b>🖼 要望にスクショを付けられます</b><br>うまく動かない画面、表示がおかしいところは、<b>スクショ付きで送ってもらえると助かります</b>。「こうなってほしい」「ここが使いにくい」も、ぜひ送ってください。みなさんの声で毎日アプリが良くなります。</li>
   </ol>
-  <div class="sub">Play ストア版アプリなら、1 は自動で対処されます。渡した HTML ファイルは更新されないので、アプリへの切り替えをおすすめします。</div>
-  <div class="btns"><a href="./manual.html#trouble">📖 説明書を見る</a><button type="button" class="pri" id="stNtOk">閉じる</button></div>
+  <div class="sub">「192.168.4.1 にアクセスできない」ときは、WiFi につないだ時の「接続を維持」と、アドレスを http:// から入力するのを確認してください(説明書にも載せています)。</div>
+  <div class="btns"><button type="button" id="stNtFb">📝 要望を送る</button><button type="button" class="pri" id="stNtOk">閉じる</button></div>
 </div></div>
 <script>
 (function(){
   try{
-    var KEY='st_notice_1118';
+    var KEY='st_notice_1123';
     if(location.protocol!=='https:')return;
-    if(new Date()>=new Date(2026,10,26))return;           // 11/25 まで
+    if(new Date()>=new Date(2026,11,1))return;            // 11/30 まで
     if(localStorage.getItem(KEY)==='1')return;
     var el=document.getElementById('stNt');if(!el)return;
-    document.getElementById('stNtOk').onclick=function(){el.style.display='none';try{localStorage.setItem(KEY,'1');}catch(e){}};
+    var done=function(){el.style.display='none';try{localStorage.setItem(KEY,'1');}catch(e){}};
+    document.getElementById('stNtOk').onclick=done;
+    document.getElementById('stNtFb').onclick=function(){done();var b=document.querySelector('.modeBtn[data-mode="setting"]');if(b)b.click();setTimeout(function(){var f=document.getElementById('fbPnl');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});},250);};
     var n=0,t=setInterval(function(){                       // オープニングが終わってから出す
       n++;if(!document.getElementById('stOp')||n>60){clearInterval(t);el.style.display='flex';}
     },300);
@@ -747,7 +749,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-23.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-23.2</span></div>
   <div class="hright">
     <a class="badge" id="manualLink" href="./manual.html" style="text-decoration:none;cursor:pointer" title="使い方(説明書)" aria-label="使い方(説明書)">📖</a>
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
@@ -1167,6 +1169,19 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <div class="pinfo" id="canExtraInfo"></div>
 </div>
 
+<div class="pnl" id="fwPnl">
+  <div class="plbl">🔧 マイコン(ファームウェア)の更新</div>
+  <div class="engNote" style="margin-bottom:6px">新しい機能(監視パラメータごとの更新間隔など)を使うには、マイコン内のプログラムも新しくします。USB もパソコンも要りません。</div>
+  <div class="engNote" id="fwNow" style="margin-bottom:6px">今のマイコンの版: 接続すると表示されます(最新は 2026-11-23.1)</div>
+  <ol class="engNote" style="margin:0 0 6px 18px;padding:0;line-height:1.8">
+    <li><b>モバイル通信(または家の WiFi)</b>のうちに、下の「① ファイルをダウンロード」を押して保存する(speed_tracer_production.ino.bin)</li>
+    <li>スマホの WiFi を <b>SpeedTracer</b> につなぐ(パスワードは上の WiFi 欄でコピーできます)</li>
+    <li>「② 更新ページを開く」を押し、「ファイルを選択」で保存した .bin を選んで送信。1〜2 分待つと、マイコンが再起動して完了です</li>
+  </ol>
+  <a class="manualBtn" id="fwDl" href="https://github.com/ino-tools/speed-tracer/releases/latest/download/speed_tracer_production.ino.bin" target="_blank" rel="noopener">① ファイルをダウンロード(.bin)</a>
+  <a class="manualBtn" id="fwOpen" href="http://192.168.4.1/update" style="margin-top:6px">② 更新ページを開く(SpeedTracer の WiFi につないでから)</a>
+  <div class="engNote" style="margin-top:6px">※ 更新の途中で電源を切らないでください。終わったら、アプリの戻るボタンで戻れます。うまくいかないときは、このまま「要望」から状況を送ってください。</div>
+</div>
 <div class="pnl" id="updPnl">
   <div class="plbl">🔄 アプリの更新</div>
   <div class="engNote" id="updVer" style="margin-bottom:6px"></div>
@@ -2341,6 +2356,7 @@ function handleUnmatched(t){
   if(t.length===0)return;
   if(engHandleLine(t))return; // エンジンモニターが出した照会への応答
   if(window.__canDiagLine&&window.__canDiagLine(t)){appendRawLog(t);return;}
+  {const mf=t.match(/^FWINFO:ver=(\S+)/);if(mf&&$('fwNow')){$('fwNow').textContent='今のマイコンの版: '+mf[1]+(mf[1]<'2026-11-23'?'(新しい版があります)':'(最新です)');}}
   let m;
   if(t.indexOf('CHCFGVAL:')===0||t.indexOf('CHPERVAL:')===0){ if(handleChanCfgVal(t)){appendRawLog(t);return;} }
   // 接続直後に送る"status"の応答。機体(全端末共通)の現在設定にこちらを合わせる(最初の1回だけ)。
@@ -3083,7 +3099,7 @@ function updateDiagDashboard(rpm,coolant,throttle,mapKpa,batteryV){
   const ver=($('verTag')&&$('verTag').textContent)||'';
   const app=(window.STAndroid&&STAndroid.appVersion)?(' / Playストア版アプリ '+STAndroid.appVersion()):'';
   $('updVer').textContent='今の版: '+ver+app;
-  if(isMcu){$('updBtn').style.display='none';$('updInfo').textContent='マイコン内の画面です。更新するには、ファームウェアの書き込みが必要です(スマホのアプリ/Pages版は自動で最新になります)。';return;}
+  if(isMcu){var fp=$('fwPnl');if(fp)fp.style.display='none';$('updBtn').style.display='none';$('updInfo').textContent='マイコン内の画面です。更新するには、ファームウェアの書き込みが必要です(スマホのアプリ/Pages版は自動で最新になります)。';return;}
   if(location.protocol==='file:'||location.protocol==='content:'){
     $('updBtn').textContent='🌐 最新版を開く(Pages版)';
     $('updInfo').textContent='このファイルは自動では更新されません。最新版のページか、Playストア版アプリを使ってください。';

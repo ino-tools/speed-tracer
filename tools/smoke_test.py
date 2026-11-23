@@ -46,7 +46,7 @@ with sync_playwright() as p:
             check(pg.evaluate("!document.getElementById('stOp')"), f'{vp}: オープニングが終わって消える')
         else:
             print(f'---- {vp}: オープニングは表示されない(期限切れ、または無効)')
-        if pg.evaluate("new Date()<new Date(2026,10,26)"):  # 11/25 までは起動お知らせが出る
+        if pg.evaluate("new Date()<new Date(2026,11,1)"):  # 11/30 までは起動お知らせが出る
             pg.wait_for_timeout(500)
             check(pg.evaluate("getComputedStyle(document.getElementById('stNt')).display!=='none'"), f'{vp}: 起動お知らせが出る')
             pg.click('#stNtOk')
