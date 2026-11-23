@@ -23,6 +23,7 @@
 //   clear           → DTCクリア(シリアルのみ、デバッグ用)
 //   log on/log off  → 生CANフレームログ(シリアルのみ、デバッグ用)
 //   status          → 現在の設定を表示
+//   CHPER:<番号>:<ms> → 監視パラメータ(0〜9)の更新間隔。0=自動、100〜60000ms。CHPER:GET で現在値を取得
 //   canstat         → CANバスの実際の通信状態(エラーカウンタ等)を表示
 //   canreset        → CANドライバをソフトウェア的に再初期化(BUS_OFFからの復帰用)
 //   BAUD:500        → CAN通信速度を500kbpsに設定し再初期化(デフォルト)
@@ -480,6 +481,13 @@ float g_chanVal[NUM_CHANNELS] = {0};
 int g_extraCycleIndex = 0;
 const int EXTRA_SIGNAL_COUNT = NUM_CHANNELS;
 Preferences chanPrefs;
+// 各チャンネルの更新間隔(ms)。0=自動(従来どおり順番に1つずつ)。値があれば、その間隔より早くは照会しない。
+// 変動の大きい項目(回転数など)は短く、変動の緩やかな項目(水温など)は長くできる。
+uint32_t g_chanPeriodMs[NUM_CHANNELS] = {0};
+unsigned long g_chanLastMs[NUM_CHANNELS] = {0};
+uint8_t g_chanFail[NUM_CHANNELS] = {0};
+const uint8_t  CHAN_FAIL_LIMIT = 3;       // この回数連続で車が答えなかった項目は、
+const uint32_t CHAN_BACKOFF_MS = 10000;   // この間隔までゆっくりにする(答えない項目で他の項目が遅れないように)
 
 void setDefaultChannels() {
   // 元の固定10項目(RPM/水温/スロットル/負荷/ブースト/吸気温/MAF/点火時期/電圧/燃料)と同じ設定
@@ -504,6 +512,23 @@ void loadChannels() {
   }
   chanPrefs.end();
 }
+void loadChanPeriods() {
+  chanPrefs.begin("chcfg", true);
+  if (chanPrefs.getBytesLength("per") == sizeof(g_chanPeriodMs)) chanPrefs.getBytes("per", g_chanPeriodMs, sizeof(g_chanPeriodMs));
+  chanPrefs.end();
+}
+void saveChanPeriods() {
+  chanPrefs.begin("chcfg", false);
+  chanPrefs.putBytes("per", g_chanPeriodMs, sizeof(g_chanPeriodMs));
+  chanPrefs.end();
+}
+void broadcastChanPeriods() {
+  for (int i = 0; i < NUM_CHANNELS; i++) {
+    String s = "CHPERVAL:" + String(i) + ":" + String((unsigned long)g_chanPeriodMs[i]);
+    Serial.println(s);
+    broadcastText(s);
+  }
+}
 void saveChannels() {
   chanPrefs.begin("chcfg", false);
   chanPrefs.putBytes("chan", g_chan, sizeof(g_chan));
@@ -527,26 +552,36 @@ bool updateCanSpeed(float& outSpeed) {
   return false;
 }
 void updateOneExtraSignal() {
-  int i = g_extraCycleIndex;
-  ChanConfig &c = g_chan[i];
-  if (c.pidOrDid != 0xFFFF) {
-    long raw = 0; bool ok = false;
-    // マルチフレーム対応により、開始バイト(byteOffset)は5バイト目以降も指定できる
-    uint8_t d[ISOTP_MAX_PAYLOAD]; uint8_t len = 0;
-    if (c.mode == 1) {
-      ok = requestPID01((uint8_t)c.pidOrDid, d, sizeof(d), len);
-    } else if (c.mode == 22) {
-      uint32_t respId; uint8_t nrc;
-      ok = (requestPID22(c.header, c.pidOrDid, d, sizeof(d), len, respId, nrc) == PID22_OK);
-    }
-    if (ok && (int)len >= (int)c.byteOffset + (int)c.byteCount) {
-      for (int k = 0; k < c.byteCount; k++) raw = raw * 256 + d[c.byteOffset + k];
-    } else {
-      ok = false;
-    }
-    if (ok) g_chanVal[i] = raw * c.scale + c.offset;
+  unsigned long now = millis();
+  // 更新の時刻が来ている項目を、前回の続きから順番に探す(なければ今回は照会しない)
+  int i = -1;
+  for (int k = 0; k < NUM_CHANNELS; k++) {
+    int j = (g_extraCycleIndex + k) % NUM_CHANNELS;
+    if (g_chan[j].pidOrDid == 0xFFFF) continue;
+    uint32_t per = g_chanPeriodMs[j];
+    if (g_chanFail[j] >= CHAN_FAIL_LIMIT && per < CHAN_BACKOFF_MS) per = CHAN_BACKOFF_MS;
+    if (per == 0 || now - g_chanLastMs[j] >= per) { i = j; break; }
   }
-  g_extraCycleIndex = (g_extraCycleIndex + 1) % NUM_CHANNELS;
+  if (i < 0) return;
+  g_extraCycleIndex = (i + 1) % NUM_CHANNELS;
+  g_chanLastMs[i] = now;
+  ChanConfig &c = g_chan[i];
+  long raw = 0; bool ok = false;
+  // マルチフレーム対応により、開始バイト(byteOffset)は5バイト目以降も指定できる
+  uint8_t d[ISOTP_MAX_PAYLOAD]; uint8_t len = 0;
+  if (c.mode == 1) {
+    ok = requestPID01((uint8_t)c.pidOrDid, d, sizeof(d), len);
+  } else if (c.mode == 22) {
+    uint32_t respId; uint8_t nrc;
+    ok = (requestPID22(c.header, c.pidOrDid, d, sizeof(d), len, respId, nrc) == PID22_OK);
+  }
+  if (ok && (int)len >= (int)c.byteOffset + (int)c.byteCount) {
+    for (int k = 0; k < c.byteCount; k++) raw = raw * 256 + d[c.byteOffset + k];
+  } else {
+    ok = false;
+  }
+  if (ok) { g_chanVal[i] = raw * c.scale + c.offset; g_chanFail[i] = 0; }
+  else if (g_chanFail[i] < 255) g_chanFail[i]++;
 }
 
 void printCanStatus() {
@@ -1386,6 +1421,23 @@ void processCommand(String cmd) {
     broadcastText("SLEEP:ENTERING");
     delay(200); // broadcastが送信バッファに乗る猶予
     enterDeepSleep();
+  } else if (cmd == "CHPER:GET") {
+    broadcastChanPeriods();
+  } else if (cmd.startsWith("CHPER:")) {
+    // 書式: CHPER:<チャンネル番号>:<更新間隔ms>  (0=自動、100〜60000)
+    int c2 = cmd.indexOf(':', 6);
+    if (c2 > 0) {
+      int idx = cmd.substring(6, c2).toInt();
+      long ms = cmd.substring(c2 + 1).toInt();
+      if (idx >= 0 && idx < NUM_CHANNELS && (ms == 0 || (ms >= 100 && ms <= 60000))) {
+        g_chanPeriodMs[idx] = (uint32_t)ms;
+        g_chanFail[idx] = 0;
+        saveChanPeriods();
+        Serial.println("CHPER:OK"); broadcastText("CHPER:OK");
+      } else {
+        Serial.println("CHPER:範囲外"); broadcastText("CHPER:ERR");
+      }
+    }
   } else if (cmd == "CHCFG:GET") {
     broadcastChannelConfig();
   } else if (cmd == "CHCFG:RESET") {
@@ -1524,6 +1576,7 @@ void setup() {
 
   loadSettings();
   loadChannels();
+  loadChanPeriods();
   Serial.println("=== 車速取り込みツール 本番仕様 起動 ===");
   printStatus();
 

@@ -747,7 +747,7 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
 <div id="app">
 
 <header>
-  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-20.1</span></div>
+  <div class="title">Speed Tracer <span id="verTag" style="color:#4ade80;font-size:11px;letter-spacing:0;font-weight:600;vertical-align:middle">v2026-11-23.1</span></div>
   <div class="hright">
     <a class="badge" id="manualLink" href="./manual.html" style="text-decoration:none;cursor:pointer" title="使い方(説明書)" aria-label="使い方(説明書)">📖</a>
     <span class="badge" id="wakeBadge" style="cursor:pointer">💡</span>
@@ -1137,6 +1137,12 @@ setTimeout(function(){if(!t0){try{start();}catch(e){finish();}}},2500); // 文�
   <div class="wiHow">つなぎ方: 「パスワード」の<b>コピー</b>を押す → スマホの設定のWiFiで「SpeedTracer」を選ぶ → パスワード欄を長押しして貼り付け。
     「インターネットに接続されていません」と出たら「接続を維持」を選んでください。一度つなげば、次からは自動でつながります。</div>
 </div>
+</div>
+<div class="pnl" id="canDiagPnl" style="display:none">
+  <div class="plbl">🩺 CAN かんたん診断(車速や水温が出ないとき)</div>
+  <div class="engNote" style="margin-bottom:6px">エンジンをかけた(または電源 ON)状態で、車につないだまま押してください。CAN の通信状態を調べて、考えられる原因と次の手を表示します。</div>
+  <button class="sbtn" id="btnCanDiag" style="width:100%;padding:10px 0;font-size:13px">🩺 診断する</button>
+  <div class="engNote" id="canDiagOut" style="margin-top:6px;white-space:pre-wrap;line-height:1.7"></div>
 </div>
 <div class="pnl" id="canPnl" style="display:none">
   <div class="plbl">計測入力ソース(マイコン側)</div>
@@ -2208,6 +2214,7 @@ function updatePanelVisibility(){
   const isConnType=(src==='serial'||src==='ble'||src==='wifi');
   canPnl.style.display=isConnType?'':'none';
   calPnl.style.display=(isConnType&&measureSrc==='analog')?'':'none';
+  const dp=$('canDiagPnl');if(dp)dp.style.display=(isConnType&&measureSrc==='can')?'':'none';
 }
 
 // =========================================================
@@ -2280,6 +2287,46 @@ const btnListenOn=$('btnListenOn'),btnListenOff=$('btnListenOff');
 const btnSelfOn=$('btnSelfOn'),btnSelfSend=$('btnSelfSend'),btnSelfOff=$('btnSelfOff');
 const btnGpioTest=$('btnGpioTest'),btnGpioTest2=$('btnGpioTest2'),btnI2cScan=$('btnI2cScan');
 
+
+// ---- CAN かんたん診断: canstat の結果を読んで、考えられる原因を日本語で出す ----
+(function(){
+  let waiting=false,timer=null;
+  function out(msg){$('canDiagOut').textContent=msg;}
+  window.__canDiagInterpret=function(line){
+    const g=function(k){const m=line.match(new RegExp(k+'=([A-Z_]+|\\d+)'));return m?m[1]:null;};
+    const st=g('state'),tx=+g('tx_err'),rx=+g('rx_err'),fail=+g('tx_failed'),miss=+g('rx_missed'),bus=+g('bus_err');
+    const head='結果: 状態='+st+' / 送信エラー='+tx+' / 受信エラー='+rx+' / 送信失敗='+fail+' / バスエラー='+bus+'\n\n';
+    if(st==='BUS_OFF'||st==='RECOVERING'||tx>=96||bus>=50)
+      return head+'→ CAN の線に問題がありそうです。\n'+
+        '① OBD コネクタの CAN-H / CAN-L の配線(逆・接触不良・断線)を確認\n'+
+        '② デバッグの「250kbps」を押してから、もう一度診断(500kbps でない車もあります)\n'+
+        '③ 「canreset」を押して復帰を試す\n'+
+        '④ トランシーバ(MCP2562FD)の電源 5V が来ているか確認';
+    if(st==='RUNNING'&&fail>0&&rx<8)
+      return head+'→ 車からの返事(ACK)がありません。\n'+
+        '① エンジンをかける、または電源を ON にしてから再診断\n'+
+        '② 通信速度が合っていない可能性。「250kbps」を押して再診断\n'+
+        '③ 配線は正しくても、車側がこのコネクタでは CAN を出していない車種もあります';
+    if(st==='RUNNING')
+      return head+'→ 線の状態は正常に見えます。車が車速などの問い合わせに答えていない可能性です。\n'+
+        '① 「サーチ」モードの「取得できる項目を探す」で、その車が答える項目を探す\n'+
+        '② 設定の「監視パラメータ」で、答えない項目を外す(新しいファームでは自動でゆっくりになります)\n'+
+        '③ それでも出なければ、この診断の結果と車種(年式・型式)を「要望」で送ってください';
+    return head+'→ 状態を判断できませんでした。接続を確認してもう一度押してください。';
+  };
+  window.__canDiagLine=function(t){
+    if(!waiting||t.indexOf('CANSTAT:')!==0)return false;
+    waiting=false;clearTimeout(timer);
+    if(t.indexOf('ERROR')>=0){out('CAN の状態を取得できませんでした。ファームの CAN 初期化に失敗している可能性があります。配線と電源を確認してください。');return true;}
+    out(window.__canDiagInterpret(t));return true;
+  };
+  $('btnCanDiag').addEventListener('click',function(){
+    out('調べています…');waiting=true;
+    Promise.resolve().then(function(){return sendCommand('canstat');}).catch(function(){waiting=false;out('マイコンにつながっていません。先に「接続」をしてください。');});
+    clearTimeout(timer);timer=setTimeout(function(){if(waiting){waiting=false;out('返事がありません。マイコンにつながっているか確認してください。\n(古いファームの場合は、デバッグの「canstat」でも試してください)');}},4000);
+  });
+})();
+
 function appendRawLog(line){
   const atBottom=rawLog.scrollHeight-rawLog.scrollTop-rawLog.clientHeight<20;
   const div=document.createElement('div');
@@ -2293,8 +2340,9 @@ let statusAutoSynced=false; // 接続直後の1回だけ機体設定を取り込
 function handleUnmatched(t){
   if(t.length===0)return;
   if(engHandleLine(t))return; // エンジンモニターが出した照会への応答
+  if(window.__canDiagLine&&window.__canDiagLine(t)){appendRawLog(t);return;}
   let m;
-  if(t.indexOf('CHCFGVAL:')===0){ if(handleChanCfgVal(t)){appendRawLog(t);return;} }
+  if(t.indexOf('CHCFGVAL:')===0||t.indexOf('CHPERVAL:')===0){ if(handleChanCfgVal(t)){appendRawLog(t);return;} }
   // 接続直後に送る"status"の応答。機体(全端末共通)の現在設定にこちらを合わせる(最初の1回だけ)。
   // (逆に、こちらのローカル設定を機体へ押し付けると、複数端末で接続し合った時に
   //  後から繋いだ端末の初期値で他の端末の設定が無言で上書きされてしまうため)
@@ -2713,9 +2761,16 @@ function buildChanRowsUI(){
       +'<input class="chanScale" data-i="'+i+'" placeholder="倍率" title="scale" style="flex:1;min-width:0;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px;font-size:11px">'
       +'<input class="chanOfs" data-i="'+i+'" placeholder="オフセット" title="offset" style="flex:1;min-width:0;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px;font-size:11px">'
       +'</div>'
+      +'<div style="display:flex;gap:6px;align-items:center;margin-top:4px"><span style="font-size:11px;color:var(--dim)">更新の間隔</span>'
+      +'<select class="chanPer" data-i="'+i+'" style="flex:1;background:var(--bg);color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px;font-size:12px">'
+      +'<option value="0">自動(順番に)</option><option value="200">0.2秒(速い)</option><option value="500">0.5秒</option><option value="1000">1秒</option><option value="2000">2秒</option><option value="5000">5秒</option><option value="10000">10秒(ゆっくり)</option><option value="30000">30秒</option></select></div>'
       +'</div>';
   }
   chanRows.innerHTML=html;
+  chanRows.querySelectorAll('.chanPer').forEach(sel=>{sel.addEventListener('change',()=>{
+    const i=sel.dataset.i;chanStatus.textContent='更新の間隔を送っています…';
+    Promise.resolve().then(()=>sendCommand('CHPER:'+i+':'+sel.value)).then(()=>{chanStatus.textContent='更新の間隔を設定しました(チャンネル'+i+')。新しいファームが必要です。';}).catch(()=>{chanStatus.textContent='未接続です。先に接続してください。';});
+  });});
   chanRows.querySelectorAll('.chanPreset').forEach(sel=>{
     sel.addEventListener('change',function(){
       const i=this.dataset.i;
@@ -2773,6 +2828,7 @@ btnChanGet.addEventListener('click',async()=>{
   chanGetReceived=new Set();
   chanStatus.textContent='機体から現在の設定を取得中…';
   await sendCommand('CHCFG:GET');
+  try{await sendCommand('CHPER:GET');}catch(e){} // 更新間隔(新しいファームのみ。古いファームは無視される)
   clearTimeout(chanGetTimer);
   chanGetTimer=setTimeout(()=>{
     const missing=[];
@@ -2786,6 +2842,8 @@ btnChanGet.addEventListener('click',async()=>{
 });
 // CHCFGVAL:応答を受け取ってフォームに反映
 function handleChanCfgVal(t){
+  const mp=t.match(/^CHPERVAL:(\d+):(\d+)$/);
+  if(mp){const sel=chanRows.querySelector('.chanPer[data-i="'+parseInt(mp[1])+'"]');if(sel){const v=String(parseInt(mp[2]));if(![...sel.options].some(o=>o.value===v)){const o=document.createElement('option');o.value=v;o.textContent=(v/1000)+'秒';sel.appendChild(o);}sel.value=v;}return true;}
   const m=t.match(/^CHCFGVAL:(\d+):(\d+):([0-9A-Fa-f]+):([0-9A-Fa-f]+):(\d+):(\d+):([\-\d.]+):([\-\d.]+):([^:]*):(.*)$/);
   if(!m)return false;
   const i=parseInt(m[1]);
